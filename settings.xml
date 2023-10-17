@@ -1,0 +1,45 @@
+<settings>
+    <servers>
+        <server>
+            <id>my-scm-server</id>
+            <username>kamilmucik</username>
+            <privateKey>~/.ssh/id_rsa</privateKey>
+        </server>
+    </servers>
+    <pluginGroups>
+        <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+    </pluginGroups>
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Optional URL to server. Default value is http://localhost:9000 -->
+                <sonar.login>admin</sonar.login>
+                <sonar.password>!QAZse4</sonar.password>
+                <sonar.host.url>
+                    http://localhost:9001
+                </sonar.host.url>
+
+            </properties>
+            <repositories>
+                <!--repository>
+                        <id>mvn</id>
+                        <name>mvn central</name>
+                        <url>https://repo.maven.apache.org/maven2/</url>
+                </repository -->
+
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots/>
+                    <id>mvn</id>
+                    <name>mvn central</name>
+                    <url>https://repo.maven.apache.org/maven2/</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</settings>
