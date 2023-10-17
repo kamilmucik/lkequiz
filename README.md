@@ -1,21 +1,30 @@
 # lkequiz
 LKEQuiz3
 
-webapp:
+## webapp:
 
-tworzenie nowej aplikacji:
+### tworzenie nowej aplikacji:
 
  - npx create-react-app webapp
 
-sprawdzanie kodu:
+### sprawdzanie kodu:
 
 - mvn clean install sonar:sonar -Psonar --settings=../settings.xml
 
-budowanie paczki javascript
+### budowanie paczki javascript
 
 - mvn clean install
 
-tworzenie nowej aplikacji
+### tworzenie nowej aplikacji
 
 - mvn -B -DdevelopmentVersion="0.0.2-SNAPSHOT" -DreleaseVersion="0.0.1" -Dresume=false release:prepare release:perform
 
+## mobileapp
+ 
+### tworzenie nowej aplikacji:
+
+- npx react-native@0.71.8 init mobileapp
+
+### synchronizacja wersji mvn i npm
+
+- npm run sync-pom-version

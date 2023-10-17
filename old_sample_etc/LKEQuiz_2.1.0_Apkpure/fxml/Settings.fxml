@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="568.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.estrix.lkequiz.controller.settings.SettingsController">
+   <children>
+      <AnchorPane layoutY="31.0" maxWidth="1.7976931348623157E308" prefHeight="354.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="508.0" prefWidth="320.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ustawienia" />
+                  <Button mnemonicParsing="false" onAction="#onUpdateDatabase" prefHeight="40.0" text="Aktualizuj bazę" />
+               </children>
+            </VBox>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>
