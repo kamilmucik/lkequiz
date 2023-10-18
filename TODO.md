@@ -17,3 +17,5 @@
 14. Jenkins CI/CD skrypty, docker
 15. Liczenie kosztów
 16. Mikroserwis heartbeat, który będzie sprawdzał kady serwis po gRPC 
+17. Sprawdzanie OWASP
+18. Generate OpenApi

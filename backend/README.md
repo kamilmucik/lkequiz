@@ -52,6 +52,9 @@ touch pkg/pb/product.proto pkg/db/db.go pkg/models/stock_decrease_log.go pkg/mod
 make proto
 
 
+Test and code coverage
+go test -coverprofile=coverage.out ./...         
+go tool cover -html=coverage.out -o coverage.html
 
 
 TODO:
