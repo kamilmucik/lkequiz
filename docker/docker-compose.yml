@@ -1,0 +1,22 @@
+version: "3"
+services:
+  question_db:
+    container_name: question_db
+    image: postgres:14.3-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=question_user
+      - POSTGRES_PASSWORD=postgres
+      - DATABASE_HOST=127.0.0.1
+    ports:
+      - '5432:5432'
+  user_db:
+    container_name: user_db
+    image: postgres:14.3-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=user_db
+      - POSTGRES_PASSWORD=postgres
+      - DATABASE_HOST=127.0.0.1
+    ports:
+      - '5433:5432'

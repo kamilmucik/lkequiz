@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package department;
+
+option go_package = "./pkg/department/pb";
+
+service DepartmentService {
+  rpc FindOne(FindOneRequest) returns (FindOneResponse) {}
+  rpc FindAll(FindAllRequest) returns (FindAllResponse) {}
+}
+// FindOne
+
+message FindOneData {
+  int64 id = 1;
+  string name = 2;
+}
+
+message FindOneRequest { int64 id = 1; }
+
+message FindOneResponse {
+  int64 status = 1;
+  string error = 2;
+  FindOneData data = 3;
+}
+
+
+// FindAll
+message FindData {
+  int64 id = 1;
+  string name = 2;
+}
+message FindAllRequest { int64 id = 1; }
+
+message FindAllResponse {
+  int64 status = 1;
+  string error = 2;
+  repeated FindData data = 3;
+}

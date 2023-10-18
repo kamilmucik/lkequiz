@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package category;
+
+option go_package = "./pkg/pb";
+
+service CategoryService {
+//  rpc FindOneCategory(FindOneCategoryRequest) returns (FindOneCategoryResponse) {}
+  rpc FindAllCategories(FindAllCategoriesRequest) returns (FindAllCategoriesResponse) {}
+}
+
+// FindOne
+message FindOneCategoryData {
+  int64 id = 1;
+  string name = 2;
+}
+
+message FindOneCategoryRequest { int64 id = 1; }
+
+message FindOneCategoryResponse {
+  int64 status = 1;
+  string error = 2;
+  FindOneCategoryData data = 3;
+}
+
+// FindAll
+message FindCategoryData {
+  int64 id = 1;
+  string name = 2;
+  int64 department_id = 3;
+}
+message FindAllCategoriesRequest { int64 id = 1; }
+
+message FindAllCategoriesResponse {
+  int64 status = 1;
+  string error = 2;
+  repeated FindCategoryData data = 3;
+}

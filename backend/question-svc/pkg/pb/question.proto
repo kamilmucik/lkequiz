@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package question;
+
+option go_package = "./pkg/pb";
+
+service QuestionService {
+  rpc FindAllQuestions(FindAllQuestionsRequest) returns (FindAllQuestionsResponse) {}
+}
+
+// FindOne
+message FindOneQuestionData {
+  int64 id = 1;
+  string name = 2;
+}
+
+message FindOneQuestionRequest { int64 id = 1; }
+
+message FindOneQuestionResponse {
+  int64 status = 1;
+  string error = 2;
+  FindOneQuestionData data = 3;
+}
+
+// FindAll
+message FindQuestionData {
+  int64 id = 1;
+  string code = 2;
+  string question = 3;
+  int64 question_id = 4;
+  repeated FindAnswerData answers = 5;
+}
+message FindAnswerData {
+  int64 id = 1;
+  string answer = 2;
+  string correct = 3;
+  int64 question_id = 4;
+}
+message FindAllQuestionsRequest { int64 id = 1; }
+
+message FindAllQuestionsResponse {
+  int64 status = 1;
+  string error = 2;
+  repeated FindQuestionData data = 3;
+}

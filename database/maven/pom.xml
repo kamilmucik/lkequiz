@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <artifactId>lkequiz-maven-database</artifactId>
+    <name>lkequiz/mvn/Database</name>
+    <groupId>pl.estrix</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <flyway.version>9.17.0</flyway.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>default-config-values</id>
+            <activation>
+                <property>
+                    <name>!env</name>
+                </property>
+            </activation>
+            <properties>
+                <d3s.database.driver>org.postgresql.Driver</d3s.database.driver>
+                <d3s.database.url>jdbc:postgresql://localhost:5432/postgres</d3s.database.url>
+                <d3s.database.user>question_user</d3s.database.user>
+                <d3s.database.password>postgres</d3s.database.password>
+                <d3s.database.ddl.generation>none</d3s.database.ddl.generation>
+            </properties>
+        </profile>
+        <profile>
+            <id>db-question</id>
+            <activation>
+                <property>
+                    <name>db</name>
+                    <value>question</value>
+                </property>
+            </activation>
+            <properties>
+                <d3s.database.driver>org.postgresql.Driver</d3s.database.driver>
+                <d3s.database.url>jdbc:postgresql://localhost:5432/postgres</d3s.database.url>
+                <d3s.database.user>question_user</d3s.database.user>
+                <d3s.database.password>postgres</d3s.database.password>
+                <d3s.database.locations>filesystem:src/main/question/resources/db/migration</d3s.database.locations>
+                <d3s.database.ddl.generation>none</d3s.database.ddl.generation>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>db-user</id>
+            <activation>
+                <property>
+                    <name>db</name>
+                    <value>user</value>
+                </property>
+            </activation>
+            <properties>
+                <d3s.database.driver>org.postgresql.Driver</d3s.database.driver>
+                <d3s.database.url>jdbc:postgresql://localhost:5433/postgres</d3s.database.url>
+                <d3s.database.user>user_db</d3s.database.user>
+                <d3s.database.password>postgres</d3s.database.password>
+                <d3s.database.locations>filesystem:src/main/user/resources/db/migration</d3s.database.locations>
+                <d3s.database.ddl.generation>none</d3s.database.ddl.generation>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-core</artifactId>
+                        <version>${flyway.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>${d3s.database.driver}</driver>
+                    <url>${d3s.database.url}</url>
+                    <user>${d3s.database.user}</user>
+                    <password>${d3s.database.password}</password>
+                    <locations>${d3s.database.locations}</locations>
+                    <cleanDisabled>false</cleanDisabled>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
