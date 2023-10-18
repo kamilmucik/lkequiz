@@ -125,19 +125,10 @@
                 <goal>install-node-and-npm</goal>
               </goals>
               <configuration>
-                <nodeVersion>v12.18.3</nodeVersion>
-                <npmVersion>6.14.8</npmVersion>
+                <nodeVersion>v18.18.2</nodeVersion>
+                <npmVersion>9.6.7</npmVersion>
               </configuration>
             </execution>
-            <execution>
-              <id>sync version to package.json</id>
-              <goals>
-                  <goal>npm</goal>
-              </goals>
-              <configuration>
-                  <arguments>sync-pom-version</arguments>
-              </configuration>
-          </execution>
             <execution>
               <id>npm install</id>
               <goals>
@@ -149,6 +140,15 @@
               </configuration>
             </execution>
             <execution>
+              <id>sync version to package.json</id>
+              <goals>
+                  <goal>npm</goal>
+              </goals>
+              <configuration>
+                  <arguments>run sync-pom-version</arguments>
+              </configuration>
+          </execution>
+            <execution>
               <id>npm run build</id>
               <goals>
                 <goal>npm</goal>
@@ -159,27 +159,60 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.1.1</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <appendAssemblyId>false</appendAssemblyId>
+                <descriptors>
+                  <descriptor>assembly/zip.xml</descriptor>
+                </descriptors>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>3.1.0</version>
+          <executions>
+            <execution>
+              <id>Tests artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>bash</executable>
+                <commandlineArgs>./libs/test.sh</commandlineArgs>
+                <environmentVariables>
+                </environmentVariables>
+              </configuration>
+            </execution>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>assembly/zip.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
+            <!-- <execution>
+              <id>Run artifacts</id>
+              <phase>install</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+              <configuration>
+                <executable>bash</executable>
+                <commandlineArgs>./libs/run.sh</commandlineArgs>
+                <environmentVariables>
+                </environmentVariables>
+              </configuration>
+            </execution> -->
+          </executions>
+        </plugin>
+        
       </plugins>
     </build>
 

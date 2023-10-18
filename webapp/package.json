@@ -1,5 +1,5 @@
 {
-  "name": "build",
+  "name": "webapp",
   "version": "0.0.1-SNAPSHOT",
   "private": true,
   "dependencies": {
@@ -24,6 +24,24 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/path/to/dir/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    },
+    "coverageReporters": [
+      "text"
     ]
   },
   "browserslist": {
