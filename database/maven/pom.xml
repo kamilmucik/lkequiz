@@ -27,11 +27,11 @@
                 </property>
             </activation>
             <properties>
-                <d3s.database.driver>org.postgresql.Driver</d3s.database.driver>
-                <d3s.database.url>jdbc:postgresql://localhost:5432/postgres</d3s.database.url>
-                <d3s.database.user>question_user</d3s.database.user>
-                <d3s.database.password>postgres</d3s.database.password>
-                <d3s.database.ddl.generation>none</d3s.database.ddl.generation>
+                <database.driver>org.postgresql.Driver</database.driver>
+                <database.url>jdbc:postgresql://localhost:5432/postgres</database.url>
+                <database.user>question_user</database.user>
+                <database.password>postgres</database.password>
+                <database.ddl.generation>none</database.ddl.generation>
             </properties>
         </profile>
         <profile>
@@ -43,12 +43,12 @@
                 </property>
             </activation>
             <properties>
-                <d3s.database.driver>org.postgresql.Driver</d3s.database.driver>
-                <d3s.database.url>jdbc:postgresql://localhost:5432/postgres</d3s.database.url>
-                <d3s.database.user>question_user</d3s.database.user>
-                <d3s.database.password>postgres</d3s.database.password>
-                <d3s.database.locations>filesystem:src/main/question/resources/db/migration</d3s.database.locations>
-                <d3s.database.ddl.generation>none</d3s.database.ddl.generation>
+                <database.driver>org.postgresql.Driver</database.driver>
+                <database.url>jdbc:postgresql://localhost:5432/postgres</database.url>
+                <database.user>question_user</database.user>
+                <database.password>postgres</database.password>
+                <database.locations>filesystem:src/main/question/resources/db/migration</database.locations>
+                <database.ddl.generation>none</database.ddl.generation>
             </properties>
         </profile>
 
@@ -61,12 +61,12 @@
                 </property>
             </activation>
             <properties>
-                <d3s.database.driver>org.postgresql.Driver</d3s.database.driver>
-                <d3s.database.url>jdbc:postgresql://localhost:5433/postgres</d3s.database.url>
-                <d3s.database.user>user_db</d3s.database.user>
-                <d3s.database.password>postgres</d3s.database.password>
-                <d3s.database.locations>filesystem:src/main/user/resources/db/migration</d3s.database.locations>
-                <d3s.database.ddl.generation>none</d3s.database.ddl.generation>
+                <database.driver>org.postgresql.Driver</database.driver>
+                <database.url>jdbc:postgresql://localhost:5433/postgres</database.url>
+                <database.user>user_db</database.user>
+                <database.password>postgres</database.password>
+                <database.locations>filesystem:src/main/user/resources/db/migration</database.locations>
+                <database.ddl.generation>none</database.ddl.generation>
             </properties>
         </profile>
     </profiles>
@@ -93,11 +93,11 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <driver>${d3s.database.driver}</driver>
-                    <url>${d3s.database.url}</url>
-                    <user>${d3s.database.user}</user>
-                    <password>${d3s.database.password}</password>
-                    <locations>${d3s.database.locations}</locations>
+                    <driver>${database.driver}</driver>
+                    <url>${database.url}</url>
+                    <user>${database.user}</user>
+                    <password>${database.password}</password>
+                    <locations>${database.locations}</locations>
                     <cleanDisabled>false</cleanDisabled>
                 </configuration>
             </plugin>
