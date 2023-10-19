@@ -57,6 +57,11 @@ go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html
 
 
+docker build -t api-gateway-test1 -f Dockerfile.gateway .
+docker build -t svc-auth-test1 -f Dockerfile.auth .
+docker build -t svc-question-test1 -f Dockerfile.question .
+
+
 TODO:
 - serwis z autoryzacją i bez
 - relacje jeden do wielu (lista pytań z listą odpowiedzi w obiekcie)

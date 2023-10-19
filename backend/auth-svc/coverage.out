@@ -1,15 +1,15 @@
 mode: set
 github.com/kamilmucik/auth-svc/pkg/utils/hash.go:5.43,9.2 2 1
 github.com/kamilmucik/auth-svc/pkg/utils/hash.go:11.59,15.2 2 1
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:23.85,37.16 4 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:37.16,39.3 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:41.2,41.25 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:44.87,48.47 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:48.47,50.4 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:53.2,53.16 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:53.16,55.3 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:57.2,59.9 2 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:59.9,61.3 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:63.2,63.50 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:63.50,65.3 1 0
-github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:67.2,67.20 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:26.85,41.16 4 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:41.16,43.3 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:45.2,45.25 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:51.87,56.53 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:56.53,58.10 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:61.5,61.19 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:61.19,63.6 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:66.5,68.12 2 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:68.12,70.6 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:73.5,73.53 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:73.53,75.6 1 0
+github.com/kamilmucik/auth-svc/pkg/utils/jwt.go:77.5,77.23 1 0

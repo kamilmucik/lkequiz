@@ -1,5 +1,30 @@
 version: "3"
 services:
+  api-gateway:
+    container_name: gateway
+    image: api-gateway-test1
+    volumes:
+      - ./config/api-gateway/dev.env:/pkg/config/envs/dev.env
+    ports:
+      - '3001:3000'
+  svc-auth:
+    container_name: auth
+    image: svc-auth-test1
+    volumes:
+      - ./config/svc-auth/dev.env:/pkg/config/envs/dev.env
+    expose:
+      - 50051
+    ports:
+      - '50051:50051'
+  svc-question:
+    container_name: question
+    image: svc-question-test1
+    volumes:
+      - ./config/svc-question/dev.env:/pkg/config/envs/dev.env
+    expose:
+      - 50055
+    ports:
+      - '50055:50055'
   question_db:
     container_name: question_db
     image: postgres:14.3-alpine

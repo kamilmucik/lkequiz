@@ -196,23 +196,8 @@
                 </environmentVariables>
               </configuration>
             </execution>
-
-            <!-- <execution>
-              <id>Run artifacts</id>
-              <phase>install</phase>
-              <goals>
-                <goal>exec</goal>
-              </goals>
-              <configuration>
-                <executable>bash</executable>
-                <commandlineArgs>./libs/run.sh</commandlineArgs>
-                <environmentVariables>
-                </environmentVariables>
-              </configuration>
-            </execution> -->
           </executions>
         </plugin>
-        
       </plugins>
     </build>
 
