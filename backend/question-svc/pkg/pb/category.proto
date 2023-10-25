@@ -5,22 +5,8 @@ package category;
 option go_package = "./pkg/pb";
 
 service CategoryService {
-//  rpc FindOneCategory(FindOneCategoryRequest) returns (FindOneCategoryResponse) {}
   rpc FindAllCategories(FindAllCategoriesRequest) returns (FindAllCategoriesResponse) {}
-}
-
-// FindOne
-message FindOneCategoryData {
-  int64 id = 1;
-  string name = 2;
-}
-
-message FindOneCategoryRequest { int64 id = 1; }
-
-message FindOneCategoryResponse {
-  int64 status = 1;
-  string error = 2;
-  FindOneCategoryData data = 3;
+  rpc FindPaggedCategories(FindPaggedCategoriesRequest) returns (FindPaggedCategoriesResponse) {}
 }
 
 // FindAll
@@ -35,4 +21,25 @@ message FindAllCategoriesResponse {
   int64 status = 1;
   string error = 2;
   repeated FindCategoryData data = 3;
+}
+
+//FindPagged
+message FindPaggedCategoriesData {
+  int64 id = 1;
+  string name = 2;
+  int64 department_id = 3;
+  string code = 4;
+}
+
+message FindPaggedCategoriesRequest { 
+  int64 departmentId = 1; 
+  int64 currentPage = 2; 
+  int64 pageSize = 3; 
+}
+
+message FindPaggedCategoriesResponse {
+  int64 status = 1;
+  string error = 2;
+  int64 totalPage = 3; 
+  repeated FindPaggedCategoriesData data = 4;
 }

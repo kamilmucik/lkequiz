@@ -11,7 +11,7 @@
 8. Automatyczne testy UI
 9. Wybranie proxy nginx,apache,trafic,envoy
 10. Certyfikaty SSL
-11. Instalacja prometheus, loki, grafana
+11. Instalacja prometheus, loki + promtail, grafana + monitoring nginx
 12. Pobieranie logów z stdout
 13. Docker swarm do zarządzania dockerami
 14. Jenkins CI/CD skrypty, docker

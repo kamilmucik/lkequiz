@@ -15,9 +15,11 @@ func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient
 	}
 
 	routes := r.Group("/question")
-	routes.Use(a.AuthRequired)
+	routesSecured := r.Group("/department/secure")
+	routesSecured.Use(a.AuthRequired)
 	//routes.GET("/:id", svc.FindOne)
-	routes.GET("/:id", svc.FindAllQuestions)
+	// routes.GET("/:id/", svc.FindAllQuestions)
+	routes.GET("/:categoryId/:currentPage/:pageSize/", svc.FindPaggedQuestions)
 }
 
 //	func (svc *ServiceClient) FindOne(ctx *gin.Context) {
@@ -25,4 +27,7 @@ func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient
 //	}
 func (svc *ServiceClient) FindAllQuestions(ctx *gin.Context) {
 	routes.FindAllQuestions(ctx, svc.Client)
+}
+func (svc *ServiceClient) FindPaggedQuestions(ctx *gin.Context) {
+	routes.FindPaggedQuestions(ctx, svc.Client)
 }

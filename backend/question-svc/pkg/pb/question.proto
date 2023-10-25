@@ -6,6 +6,7 @@ option go_package = "./pkg/pb";
 
 service QuestionService {
   rpc FindAllQuestions(FindAllQuestionsRequest) returns (FindAllQuestionsResponse) {}
+  rpc FindPaggedQuestions(FindPaggedQuestionsRequest) returns (FindPaggedQuestionsResponse) {}
 }
 
 // FindOne
@@ -42,4 +43,25 @@ message FindAllQuestionsResponse {
   int64 status = 1;
   string error = 2;
   repeated FindQuestionData data = 3;
+}
+
+//FindPagged
+message FindPaggedQuestionsData {
+  int64 id = 1;
+  string name = 2;
+  int64 category_id = 3;
+  repeated FindAnswerData answers = 5;
+}
+
+message FindPaggedQuestionsRequest { 
+  int64 categoryId = 1; 
+  int64 currentPage = 2; 
+  int64 pageSize = 3; 
+}
+
+message FindPaggedQuestionsResponse {
+  int64 status = 1;
+  string error = 2;
+  int64 totalPage = 3; 
+  repeated FindQuestionData data = 4;
 }

@@ -7,9 +7,10 @@ option go_package = "./pkg/pb";
 service DepartmentService {
   rpc FindOne(FindOneRequest) returns (FindOneResponse) {}
   rpc FindAll(FindAllRequest) returns (FindAllResponse) {}
+  rpc FindPagged(FindPaggedRequest) returns (FindPaggedResponse) {}
 }
-
 // FindOne
+
 message FindOneData {
   int64 id = 1;
   string name = 2;
@@ -23,6 +24,7 @@ message FindOneResponse {
   FindOneData data = 3;
 }
 
+
 // FindAll
 message FindData {
   int64 id = 1;
@@ -34,4 +36,22 @@ message FindAllResponse {
   int64 status = 1;
   string error = 2;
   repeated FindData data = 3;
+}
+
+//FindPagged
+message FindPaggedData {
+  int64 id = 1;
+  string name = 2;
+}
+message FindPaggedRequest { 
+  int64 quizId = 1; 
+  int64 currentPage = 2; 
+  int64 pageSize = 3; 
+}
+
+message FindPaggedResponse {
+  int64 status = 1;
+  string error = 2;
+  int64 totalPage = 3; 
+  repeated FindPaggedData data = 4;
 }

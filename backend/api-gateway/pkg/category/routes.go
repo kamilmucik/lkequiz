@@ -8,16 +8,17 @@ import (
 )
 
 func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient) {
-	a := auth.InitAuthMiddleware(authSvc)
+	// a := auth.InitAuthMiddleware(authSvc)
 
 	svc := &ServiceClient{
 		Client: InitServiceClient(c),
 	}
 
 	routes := r.Group("/category")
-	routes.Use(a.AuthRequired)
+	// routes.Use(a.AuthRequired)
 	//routes.GET("/:id", svc.FindOne)
-	routes.GET("/:id", svc.FindAllCategories)
+	// routes.GET("/:id/", svc.FindAllCategories)
+	routes.GET("/:departmentId/:currentPage/:pageSize/", svc.FindPaggedCategories)
 }
 
 //	func (svc *ServiceClient) FindOne(ctx *gin.Context) {
@@ -25,4 +26,7 @@ func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient
 //	}
 func (svc *ServiceClient) FindAllCategories(ctx *gin.Context) {
 	routes.FindAllCategories(ctx, svc.Client)
+}
+func (svc *ServiceClient) FindPaggedCategories(ctx *gin.Context) {
+	routes.FindPaggedCategories(ctx, svc.Client)
 }

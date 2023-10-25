@@ -19,15 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CategoryService_FindAllCategories_FullMethodName = "/category.CategoryService/FindAllCategories"
+	CategoryService_FindAllCategories_FullMethodName    = "/category.CategoryService/FindAllCategories"
+	CategoryService_FindPaggedCategories_FullMethodName = "/category.CategoryService/FindPaggedCategories"
 )
 
 // CategoryServiceClient is the client API for CategoryService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CategoryServiceClient interface {
-	// rpc FindOneCategory(FindOneCategoryRequest) returns (FindOneCategoryResponse) {}
 	FindAllCategories(ctx context.Context, in *FindAllCategoriesRequest, opts ...grpc.CallOption) (*FindAllCategoriesResponse, error)
+	FindPaggedCategories(ctx context.Context, in *FindPaggedCategoriesRequest, opts ...grpc.CallOption) (*FindPaggedCategoriesResponse, error)
 }
 
 type categoryServiceClient struct {
@@ -47,12 +48,21 @@ func (c *categoryServiceClient) FindAllCategories(ctx context.Context, in *FindA
 	return out, nil
 }
 
+func (c *categoryServiceClient) FindPaggedCategories(ctx context.Context, in *FindPaggedCategoriesRequest, opts ...grpc.CallOption) (*FindPaggedCategoriesResponse, error) {
+	out := new(FindPaggedCategoriesResponse)
+	err := c.cc.Invoke(ctx, CategoryService_FindPaggedCategories_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CategoryServiceServer is the server API for CategoryService service.
 // All implementations should embed UnimplementedCategoryServiceServer
 // for forward compatibility
 type CategoryServiceServer interface {
-	// rpc FindOneCategory(FindOneCategoryRequest) returns (FindOneCategoryResponse) {}
 	FindAllCategories(context.Context, *FindAllCategoriesRequest) (*FindAllCategoriesResponse, error)
+	FindPaggedCategories(context.Context, *FindPaggedCategoriesRequest) (*FindPaggedCategoriesResponse, error)
 }
 
 // UnimplementedCategoryServiceServer should be embedded to have forward compatible implementations.
@@ -61,6 +71,9 @@ type UnimplementedCategoryServiceServer struct {
 
 func (UnimplementedCategoryServiceServer) FindAllCategories(context.Context, *FindAllCategoriesRequest) (*FindAllCategoriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAllCategories not implemented")
+}
+func (UnimplementedCategoryServiceServer) FindPaggedCategories(context.Context, *FindPaggedCategoriesRequest) (*FindPaggedCategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindPaggedCategories not implemented")
 }
 
 // UnsafeCategoryServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -92,6 +105,24 @@ func _CategoryService_FindAllCategories_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CategoryService_FindPaggedCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindPaggedCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CategoryServiceServer).FindPaggedCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CategoryService_FindPaggedCategories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CategoryServiceServer).FindPaggedCategories(ctx, req.(*FindPaggedCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CategoryService_ServiceDesc is the grpc.ServiceDesc for CategoryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +133,10 @@ var CategoryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindAllCategories",
 			Handler:    _CategoryService_FindAllCategories_Handler,
+		},
+		{
+			MethodName: "FindPaggedCategories",
+			Handler:    _CategoryService_FindPaggedCategories_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.12
-// source: pkg/question/pb/category.proto
+// source: pkg/question/pb/question.proto
 
 package pb
 
@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	QuestionService_FindAllQuestions_FullMethodName = "/question.QuestionService/FindAllQuestions"
+	QuestionService_FindAllQuestions_FullMethodName    = "/question.QuestionService/FindAllQuestions"
+	QuestionService_FindPaggedQuestions_FullMethodName = "/question.QuestionService/FindPaggedQuestions"
 )
 
 // QuestionServiceClient is the client API for QuestionService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QuestionServiceClient interface {
 	FindAllQuestions(ctx context.Context, in *FindAllQuestionsRequest, opts ...grpc.CallOption) (*FindAllQuestionsResponse, error)
+	FindPaggedQuestions(ctx context.Context, in *FindPaggedQuestionsRequest, opts ...grpc.CallOption) (*FindPaggedQuestionsResponse, error)
 }
 
 type questionServiceClient struct {
@@ -46,11 +48,21 @@ func (c *questionServiceClient) FindAllQuestions(ctx context.Context, in *FindAl
 	return out, nil
 }
 
+func (c *questionServiceClient) FindPaggedQuestions(ctx context.Context, in *FindPaggedQuestionsRequest, opts ...grpc.CallOption) (*FindPaggedQuestionsResponse, error) {
+	out := new(FindPaggedQuestionsResponse)
+	err := c.cc.Invoke(ctx, QuestionService_FindPaggedQuestions_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QuestionServiceServer is the server API for QuestionService service.
 // All implementations should embed UnimplementedQuestionServiceServer
 // for forward compatibility
 type QuestionServiceServer interface {
 	FindAllQuestions(context.Context, *FindAllQuestionsRequest) (*FindAllQuestionsResponse, error)
+	FindPaggedQuestions(context.Context, *FindPaggedQuestionsRequest) (*FindPaggedQuestionsResponse, error)
 }
 
 // UnimplementedQuestionServiceServer should be embedded to have forward compatible implementations.
@@ -59,6 +71,9 @@ type UnimplementedQuestionServiceServer struct {
 
 func (UnimplementedQuestionServiceServer) FindAllQuestions(context.Context, *FindAllQuestionsRequest) (*FindAllQuestionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAllQuestions not implemented")
+}
+func (UnimplementedQuestionServiceServer) FindPaggedQuestions(context.Context, *FindPaggedQuestionsRequest) (*FindPaggedQuestionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindPaggedQuestions not implemented")
 }
 
 // UnsafeQuestionServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -90,6 +105,24 @@ func _QuestionService_FindAllQuestions_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _QuestionService_FindPaggedQuestions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindPaggedQuestionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuestionServiceServer).FindPaggedQuestions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: QuestionService_FindPaggedQuestions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuestionServiceServer).FindPaggedQuestions(ctx, req.(*FindPaggedQuestionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // QuestionService_ServiceDesc is the grpc.ServiceDesc for QuestionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -101,7 +134,11 @@ var QuestionService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "FindAllQuestions",
 			Handler:    _QuestionService_FindAllQuestions_Handler,
 		},
+		{
+			MethodName: "FindPaggedQuestions",
+			Handler:    _QuestionService_FindPaggedQuestions_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pkg/question/pb/category.proto",
+	Metadata: "pkg/question/pb/question.proto",
 }

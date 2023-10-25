@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	DepartmentService_FindOne_FullMethodName = "/department.DepartmentService/FindOne"
-	DepartmentService_FindAll_FullMethodName = "/department.DepartmentService/FindAll"
+	DepartmentService_FindOne_FullMethodName    = "/department.DepartmentService/FindOne"
+	DepartmentService_FindAll_FullMethodName    = "/department.DepartmentService/FindAll"
+	DepartmentService_FindPagged_FullMethodName = "/department.DepartmentService/FindPagged"
 )
 
 // DepartmentServiceClient is the client API for DepartmentService service.
@@ -29,6 +30,7 @@ const (
 type DepartmentServiceClient interface {
 	FindOne(ctx context.Context, in *FindOneRequest, opts ...grpc.CallOption) (*FindOneResponse, error)
 	FindAll(ctx context.Context, in *FindAllRequest, opts ...grpc.CallOption) (*FindAllResponse, error)
+	FindPagged(ctx context.Context, in *FindPaggedRequest, opts ...grpc.CallOption) (*FindPaggedResponse, error)
 }
 
 type departmentServiceClient struct {
@@ -57,12 +59,22 @@ func (c *departmentServiceClient) FindAll(ctx context.Context, in *FindAllReques
 	return out, nil
 }
 
+func (c *departmentServiceClient) FindPagged(ctx context.Context, in *FindPaggedRequest, opts ...grpc.CallOption) (*FindPaggedResponse, error) {
+	out := new(FindPaggedResponse)
+	err := c.cc.Invoke(ctx, DepartmentService_FindPagged_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DepartmentServiceServer is the server API for DepartmentService service.
 // All implementations should embed UnimplementedDepartmentServiceServer
 // for forward compatibility
 type DepartmentServiceServer interface {
 	FindOne(context.Context, *FindOneRequest) (*FindOneResponse, error)
 	FindAll(context.Context, *FindAllRequest) (*FindAllResponse, error)
+	FindPagged(context.Context, *FindPaggedRequest) (*FindPaggedResponse, error)
 }
 
 // UnimplementedDepartmentServiceServer should be embedded to have forward compatible implementations.
@@ -74,6 +86,9 @@ func (UnimplementedDepartmentServiceServer) FindOne(context.Context, *FindOneReq
 }
 func (UnimplementedDepartmentServiceServer) FindAll(context.Context, *FindAllRequest) (*FindAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAll not implemented")
+}
+func (UnimplementedDepartmentServiceServer) FindPagged(context.Context, *FindPaggedRequest) (*FindPaggedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindPagged not implemented")
 }
 
 // UnsafeDepartmentServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -123,6 +138,24 @@ func _DepartmentService_FindAll_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DepartmentService_FindPagged_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindPaggedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentServiceServer).FindPagged(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DepartmentService_FindPagged_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentServiceServer).FindPagged(ctx, req.(*FindPaggedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DepartmentService_ServiceDesc is the grpc.ServiceDesc for DepartmentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -137,6 +170,10 @@ var DepartmentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindAll",
 			Handler:    _DepartmentService_FindAll_Handler,
+		},
+		{
+			MethodName: "FindPagged",
+			Handler:    _DepartmentService_FindPagged_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
