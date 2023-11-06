@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../store/AppContext";
 import GlobalStyle from "../utils/GlobalStyle";
+import { useSwipe } from '../hooks/UseSwipe'
 
 const QuestionsScreen = ({ navigation, route }) => {
   const { categoryId } = route.params;
@@ -12,8 +13,12 @@ const QuestionsScreen = ({ navigation, route }) => {
   const [totalPage, setTotalPage] = useState(1);
   const [isLoading, setLoading] = useState(false);
 
+
+  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
+
   const PAGE_SIZE = 5;
   const IP = '10.0.10.163';
+  // const IP = '172.17.64.27';
 
   const fetchQuestions = async (page) => {
       try {
@@ -36,22 +41,46 @@ const QuestionsScreen = ({ navigation, route }) => {
     // }
   }
 
+  function onSwipeLeft(){
+    console.log('SWIPE_LEFT');
+
+    currentPage > 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
+  }
+
+  function onSwipeRight(){
+      console.log('SWIPE_RIGHT')
+      currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
+  }
 
   useEffect(() => {
-    setLoading(true);
-    loadProperties();
     // Fetch initial page of data
     fetchQuestions(currentPage).then(json => {
         // console.log("data",json);
         setTotalPage(json.totalPage);
         setQuestions(json.data);
-        setLoading(false);
     });
+  }, [currentPage]);
+
+  useEffect(() => {
+    loadProperties();
+    setCurrentPage(1)
   }, []);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   loadProperties();
+  //   // Fetch initial page of data
+  //   fetchQuestions(currentPage).then(json => {
+  //       // console.log("data",json);
+  //       setTotalPage(json.totalPage);
+  //       setQuestions(json.data);
+  //       setLoading(false);
+  //   });
+  // }, []);
 
   const renderListItems = ({ item }) => {
     return (
-      <View>
+      <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4, marginTop:10  }} >
           {item.question}
         </Text>
@@ -61,21 +90,27 @@ const QuestionsScreen = ({ navigation, route }) => {
             keyExtractor={itemAnswer => itemAnswer.id.toString()}
             />
         
-      </View>
+      </ScrollView>
     );
   };
   const renderAnswerListItems = ({ item }) => {
     return (
       <View>
-        <Text style={{ fontSize: 10, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4 }} >
-         {item.correct == 1 ? (<Text>* </Text>) : null} {item.answer}
-        </Text>
+        {item.correct == 1 ? (
+          <Text style={{fontWeight: 'bold',fontSize: 12, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4 }}>{item.answer} </Text>
+        ): (
+          <Text style={{ fontSize: 10, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4 }} >
+          {item.answer}
+          </Text>
+        )}
+        
+
       </View>
     );
   };
 
   return (
-    <View style={{ flex: 1, paddingTop: 10 }}>
+    <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <Text style={{ fontSize: 8 }}>Kategoria: {categoryId} - {categoryName}</Text>
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
         {isLoading ? <ActivityIndicator /> :
@@ -87,7 +122,7 @@ const QuestionsScreen = ({ navigation, route }) => {
             />
         )}
         
-    </View>
+    </ScrollView>
   );
 };
 

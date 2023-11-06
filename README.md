@@ -28,3 +28,4 @@ LKEQuiz3
 ### synchronizacja wersji mvn i npm
 
 - npm run sync-pom-version
+- npm i cors

@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"math"
-	"log"
+	// "log"
 	"github.com/kamilmucik/question-svc/pkg/db"
 	"github.com/kamilmucik/question-svc/pkg/model"
 	pb "github.com/kamilmucik/question-svc/pkg/pb"

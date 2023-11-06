@@ -14,10 +14,9 @@ const CategoriesScreen = ({ navigation, route }) => {
 
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
 
-
-  // const DEPARTMENT_ID = 1;
   const PAGE_SIZE = 4;
   const IP = '10.0.10.163';
+  // const IP = '172.17.64.27';
 
   const fetchCategories = async (page) => {
       try {
@@ -44,14 +43,14 @@ const CategoriesScreen = ({ navigation, route }) => {
   function onSwipeLeft(){
     console.log('SWIPE_LEFT');
 
-    currentPage >= 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
+    currentPage > 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
   }
 
   function onSwipeRight(){
       console.log('SWIPE_RIGHT')
       currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
   }
-  
+
   useEffect(() => {
     // Fetch initial page of data
     fetchCategories(currentPage).then(json => {
@@ -63,12 +62,7 @@ const CategoriesScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     loadProperties();
-    // Fetch initial page of data
-    fetchCategories(currentPage).then(json => {
-        // console.log("data",json);
-        setTotalPage(json.totalPage);
-        setCategories(json.data);
-    });
+    setCurrentPage(1)
   }, []);
 
   const renderListItems = ({ item }) => {

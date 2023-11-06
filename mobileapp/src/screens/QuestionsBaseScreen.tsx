@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Fla
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../store/AppContext";
 import GlobalStyle from "../utils/GlobalStyle";
+import { useSwipe } from '../hooks/UseSwipe'
 
 const QuestionsBaseScreen = ({ navigation, route }) => {
   const { quizId } = route.params;
@@ -10,8 +11,12 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
+
+  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
+  
   const PAGE_SIZE = 5;
   const IP = '10.0.10.163';
+  // const IP = '172.17.64.27';
 
   const fetchDepartments = async (page) => {
     try {
@@ -34,15 +39,38 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
     // }
   }
 
+  function onSwipeLeft(){
+    console.log('SWIPE_LEFT');
+
+    currentPage > 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
+  }
+
+  function onSwipeRight(){
+      console.log('SWIPE_RIGHT')
+      currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
+  }
+
+  useEffect(() => {
+    // Fetch initial page of data
+    fetchDepartments(currentPage).then(json => {
+        // console.log("data",json);
+        setTotalPage(json.totalPage);
+        setDepartments(json.data);
+    });
+  }, [currentPage]);
 
   useEffect(() => {
     loadProperties();
-    // Fetch initial page of data
-    fetchDepartments(currentPage).then(json => {
-        console.log("data",json);
-        setDepartments(json.data);
-    });
+    setCurrentPage(1)
   }, []);
+  // useEffect(() => {
+  //   loadProperties();
+  //   // Fetch initial page of data
+  //   fetchDepartments(currentPage).then(json => {
+  //       console.log("data",json);
+  //       setDepartments(json.data);
+  //   });
+  // }, []);
 
   const renderListItems = ({ item }) => {
     return (
@@ -69,7 +97,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
 
   return (
     
-    <View style={{ flex: 1, paddingTop: 10 }}>
+    <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <Text style={{ fontSize: 8 }}>QuizId: {quizId} </Text>
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
         <FlatList
@@ -77,7 +105,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
             renderItem={renderListItems}
             keyExtractor={item => item.id.toString()}
             />
-    </View>
+    </ScrollView>
   );
 };
 

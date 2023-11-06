@@ -2,14 +2,16 @@ version: "3"
 services:
   api-gateway:
     container_name: gateway
-    image: api-gateway-test1
+    image: api-gateway:0.0.1
+    restart: always
     volumes:
       - ./config/api-gateway/dev.env:/pkg/config/envs/dev.env
     ports:
       - '3001:3000'
   svc-auth:
     container_name: auth
-    image: svc-auth-test1
+    image: auth-svc:0.0.2
+    restart: always
     volumes:
       - ./config/svc-auth/dev.env:/pkg/config/envs/dev.env
     expose:
@@ -18,7 +20,8 @@ services:
       - '50051:50051'
   svc-question:
     container_name: question
-    image: svc-question-test1
+    image: question-svc:0.0.2
+    restart: always
     volumes:
       - ./config/svc-question/dev.env:/pkg/config/envs/dev.env
     expose:

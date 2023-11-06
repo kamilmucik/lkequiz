@@ -7,6 +7,8 @@ go mod init github.com/kamilmucik/api-gateway
 go get github.com/gin-gonic/gin
 go get github.com/spf13/viper
 go get google.golang.org/grpc
+go get github.com/gin-contrib/cors
+
 
 mkdir -p cmd pkg/config/envs pkg/auth/pb pkg/auth/routes pkg/deparment/pb pkg/deparment/routes pkg/category/pb pkg/category/routes pkg/question/pb pkg/question/routes
 

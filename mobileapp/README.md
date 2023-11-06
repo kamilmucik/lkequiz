@@ -84,3 +84,8 @@ Zainstalowane paczki:
 npm install @react-navigation/native
 npm install @react-native-async-storage/async-storage
 ```
+
+przydasie
+```bash
+https://www.makeuseof.com/dynamically-load-data-with-custom-pagination-in-react-native/
+```

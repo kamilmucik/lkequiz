@@ -1,0 +1,92 @@
+
+1. Docker prune images 0.0.2
+REPOSITORY               TAG           IMAGE ID       CREATED          SIZE
+auth-svc                 0.0.1         caaaaf3ae5f0   6 minutes ago    23.6MB
+<none>                   <none>        dcd342528cf8   6 minutes ago    545MB
+question-svc             0.0.1         cb4170e3e1f4   39 minutes ago   23.6MB
+question-svc             0.0.2         cb4170e3e1f4   39 minutes ago   23.6MB
+<none>                   <none>        e86d4df0f358   39 minutes ago   545MB
+nginx                    2.0.2         a65a3c144e25   3 weeks ago      159MB
+<none>                   <none>        32f7518fb0f8   3 weeks ago      55.3MB
+trafex/php-nginx         latest        78516d22905a   4 weeks ago      120MB
+goapp-test2              latest        18e5da081801   2 months ago     6.72MB
+goapp-test               0.0.2         18e5da081801   2 months ago     6.72MB
+goapp-test               0.0.3         18e5da081801   2 months ago     6.72MB
+golang                   alpine        c9e410d017b6   2 months ago     221MB
+alpine                   3.17          1e0b8b5322fc   3 months ago     7.06MB
+nginx_tomcat             latest        0a611e0b273f   3 months ago     531MB
+<none>                   <none>        75adba4c254e   3 months ago     420MB
+nginx_react              latest        8277063d1966   3 months ago     579MB
+kamilmucik/proxy/nginx   1.1.1         da2b98036b2c   3 months ago     629MB
+ubuntu                   20.04         6df894023726   3 months ago     72.8MB
+kamilmucik/proxy/nginx   0.0.2         25f4957506a0   3 months ago     629MB
+kamilmucik/proxy/nginx   0.0.1         c361318b4e67   3 months ago     585MB
+ubuntu                   18.04         f9a80a55f492   5 months ago     63.2MB
+mysql                    8.0.32        412b8cc72e4a   7 months ago     531MB
+postgres                 14.3-alpine   5c100a8edd1e   17 months ago    216MB
+
+2. Docker: create image
+Sending build context to Docker daemon  106.5kB
+Step 1/12 : FROM golang:alpine AS builder
+ ---> c9e410d017b6
+Step 2/12 : RUN apk update && apk add --no-cache git
+ ---> Using cache
+ ---> 6eca2f3a0ac7
+Step 3/12 : ENV APP_HOME /go/src/app
+ ---> Using cache
+ ---> b5c7a49bea08
+Step 4/12 : RUN mkdir -p /go/target
+ ---> Using cache
+ ---> 16fd43aca637
+Step 5/12 : WORKDIR $APP_HOME
+ ---> Using cache
+ ---> 77230372a8dd
+Step 6/12 : COPY auth-svc/ .
+ ---> Using cache
+ ---> 60b96bc45d1a
+Step 7/12 : WORKDIR cmd
+ ---> Using cache
+ ---> 23e79e0ff354
+Step 8/12 : RUN go get -d -v
+ ---> Using cache
+ ---> cdad94e15c28
+Step 9/12 : RUN go build -o /go/target
+ ---> Using cache
+ ---> dcd342528cf8
+Step 10/12 : FROM scratch
+ ---> 
+Step 11/12 : COPY --from=builder /go/target/cmd /go/bin/app
+ ---> Using cache
+ ---> d10fe485aaa8
+Step 12/12 : ENTRYPOINT ["/go/bin/app"]
+ ---> Using cache
+ ---> caaaaf3ae5f0
+Successfully built caaaaf3ae5f0
+Successfully tagged auth-svc:0.0.2
+
+3. Docker images
+REPOSITORY               TAG           IMAGE ID       CREATED          SIZE
+auth-svc                 0.0.1         caaaaf3ae5f0   6 minutes ago    23.6MB
+auth-svc                 0.0.2         caaaaf3ae5f0   6 minutes ago    23.6MB
+<none>                   <none>        dcd342528cf8   6 minutes ago    545MB
+question-svc             0.0.1         cb4170e3e1f4   39 minutes ago   23.6MB
+question-svc             0.0.2         cb4170e3e1f4   39 minutes ago   23.6MB
+<none>                   <none>        e86d4df0f358   39 minutes ago   545MB
+nginx                    2.0.2         a65a3c144e25   3 weeks ago      159MB
+<none>                   <none>        32f7518fb0f8   3 weeks ago      55.3MB
+trafex/php-nginx         latest        78516d22905a   4 weeks ago      120MB
+goapp-test2              latest        18e5da081801   2 months ago     6.72MB
+goapp-test               0.0.2         18e5da081801   2 months ago     6.72MB
+goapp-test               0.0.3         18e5da081801   2 months ago     6.72MB
+golang                   alpine        c9e410d017b6   2 months ago     221MB
+alpine                   3.17          1e0b8b5322fc   3 months ago     7.06MB
+nginx_tomcat             latest        0a611e0b273f   3 months ago     531MB
+<none>                   <none>        75adba4c254e   3 months ago     420MB
+nginx_react              latest        8277063d1966   3 months ago     579MB
+kamilmucik/proxy/nginx   1.1.1         da2b98036b2c   3 months ago     629MB
+ubuntu                   20.04         6df894023726   3 months ago     72.8MB
+kamilmucik/proxy/nginx   0.0.2         25f4957506a0   3 months ago     629MB
+kamilmucik/proxy/nginx   0.0.1         c361318b4e67   3 months ago     585MB
+ubuntu                   18.04         f9a80a55f492   5 months ago     63.2MB
+mysql                    8.0.32        412b8cc72e4a   7 months ago     531MB
+postgres                 14.3-alpine   5c100a8edd1e   17 months ago    216MB
