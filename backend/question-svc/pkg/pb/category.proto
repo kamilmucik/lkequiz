@@ -29,6 +29,9 @@ message FindPaggedCategoriesData {
   string name = 2;
   int64 department_id = 3;
   string code = 4;
+  int64 time_limit = 5;
+  int64 question_limit = 6;
+  int64 max_question_limit = 7;
 }
 
 message FindPaggedCategoriesRequest { 

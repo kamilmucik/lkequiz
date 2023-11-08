@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  NavLink,
-  Route,
-  Routes,
-  useParams,
-} from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import {BrowserRouter as Router,useParams} from "react-router-dom";
 import Stack from 'react-bootstrap/Stack';
+import AppContext from '../store/AppContext';
+import { useNavigate } from "react-router-dom";
 
 
-const KnowlageCategoriesScreen = () => {
+const CategoriesScreen = () => {
+  const appCtx = useContext(AppContext);
+  const navigate = useNavigate();
   const { departmentId } = useParams();
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
-  const PAGE_SIZE = 8;
+  const PAGE_SIZE = 15;
   const HOST = 'info.e-strix.pl';
 
   const fetchCategories = async (page) => {
@@ -63,9 +61,26 @@ const KnowlageCategoriesScreen = () => {
         });
     }
 
+    const startQuizHandler = async (e) => {
+        e.preventDefault()
+        //capture the attributes of the element
+        let id = e.target.getAttribute("data-id");
+        let catCode = e.target.getAttribute("data-category-code");
+        let catName = e.target.getAttribute("data-category-name");
+        let timeLimit = e.target.getAttribute("data-time-limit");
+        let questionLimit = e.target.getAttribute("data-question-limit");
+
+        appCtx.setQuizCategoryId(id);
+        appCtx.setQuizCategoryName(catName);
+        appCtx.setQuizCategoryCode(catCode);
+        appCtx.setQuizTimeLimit(timeLimit);
+        appCtx.setQuizQuestionLimit(questionLimit);
+        navigate("/quiz/");
+    } 
+
     return <div className="container">
     <Stack direction="horizontal" gap={4}>
-        <div className="p-2 text-center"><h1 >Baza wiedzy: kategorie</h1></div>
+        <div className="p-2 text-center"><h1 >Kategorie</h1></div>
         <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
         <div className="p-2">{currentPage} z {totalPage}</div>
         <div className="p-2"><button onClick={increment}>Dalej</button></div>
@@ -73,18 +88,30 @@ const KnowlageCategoriesScreen = () => {
       <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
+                        <th>Kod</th>
                         <th>Tytuł</th>
+                        <th>Czas (min)</th>
+                        <th>Pytań</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {categories && categories.map(category =>
                         <tr key={category.id}>
+                            <td>{category.code}</td>
                             <td>{category.name}</td>
+                            <td>{category.time_limit}</td>
+                            <td>{category.question_limit} z {category.max_question_limit}</td>
                             <td>
-                                <NavLink to={`/knowlage/question/${category.id}`} >       
-                                    <span>wybierz</span>                 
-                                </NavLink>
+                                <a 
+                                    data-id={category.id}
+                                    data-category-code={category.code}
+                                    data-category-name={category.name}
+                                    data-time-limit={category.time_limit}
+                                    data-question-limit={category.question_limit}
+                                    onClick={ startQuizHandler } href="#">
+                                    Start
+                                </a>
                             </td>
                         </tr>
                     )}
@@ -94,4 +121,4 @@ const KnowlageCategoriesScreen = () => {
     </div>;
   };
   
-  export default KnowlageCategoriesScreen;
+  export default CategoriesScreen;

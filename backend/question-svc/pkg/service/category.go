@@ -66,7 +66,7 @@ func (s *CatServer) FindPaggedCategories(ctx context.Context, req *pb.FindPagged
 
 	defer rows.Close()
 	for _, category := range categories {
-		fd := pb.FindPaggedCategoriesData{Name: category.Name, Id: category.OwnId, DepartmentId: category.DepartmentId, Code: category.Code}
+		fd := pb.FindPaggedCategoriesData{Name: category.Name, Id: category.OwnId, DepartmentId: category.DepartmentId, Code: category.Code, TimeLimit: category.TimeLimit, QuestionLimit: category.QuestionLimit, MaxQuestionLimit: category.MaxQuestionLimit}
 		list = append(list, &fd)
 	}
 

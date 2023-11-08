@@ -22,10 +22,6 @@
         src: /home/ubuntu/docker/run/nginx/src/app/lkequiz-web-0.0.1-SNAPSHOT.zip
         dest: /home/ubuntu/docker/run/nginx/src/app/app_e_strix_pl/
         remote_src: True
-    # - name: Copy src directory
-    #   copy: src=/Users/kamilmuc/ws/lkequiz/webapp/build/ dest=/home/ubuntu/docker/run/nginx/src/app/app_e_strix_pl/ mode=0777
-    #   tags: lsout
-    #   register: myshell_output
     - name: copy the output to a local file
       copy:
         content: "{{ myshell_output.stdout }}"

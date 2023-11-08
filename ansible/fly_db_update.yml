@@ -6,28 +6,20 @@
     - name: Delete content & directory
       ansible.builtin.file:
         state: absent
-        path: /tmp/lkequiz/
+        path: /home/ubuntu/databases/lkequiz/
     - name: Creates directory
       file:
-        path: /tmp/lkequiz
+        path: /home/ubuntu/databases/lkequiz/
         state: directory
         # owner: www-data
         # group: www-data
         mode: 0775
-    - name: Transfer the script
-      copy: src=bk_question_svc_build.sh dest=/tmp/lkequiz/ mode=0777
-      tags: lsout
-      register: myshell_output
-    - name: Transfer the Dockerfile
-      copy: src=/Users/kamilmuc/ws/lkequiz/backend/Dockerfile.question dest=/tmp/lkequiz/ mode=0777
-      tags: lsout
-      register: myshell_output
-    - name: Copy src directory
-      copy: src=/Users/kamilmuc/ws/lkequiz/backend/question-svc/ dest=/tmp/lkequiz/question-svc/ mode=0777
+    - name: Copy SQL directory
+      copy: src=/Users/kamilmuc/ws/lkequiz/database/flyway/ dest=/home/ubuntu/databases/lkequiz/ mode=0777
       tags: lsout
       register: myshell_output
     - name: Execute the script
-      command: timeout 240 sh /tmp/lkequiz/bk_question_svc_build.sh {{version}}
+      command: timeout 60 sh /home/ubuntu/databases/lkequiz/run.sh
       become: yes
       become_method: sudo
       become_user: root

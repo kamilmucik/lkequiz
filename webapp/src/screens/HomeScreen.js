@@ -1,11 +1,99 @@
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import Stack from 'react-bootstrap/Stack';
+
 const HomeScreen = () => {
+
+  const [departments, setDepartments] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+
+    const  QUIZ_ID  = 1;
+    const PAGE_SIZE = 15;
+    const HOST = 'info.e-strix.pl';
+
+  const fetchDepartments = async (page) => {
+        try {
+            const response = await fetch(`http://${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`,
+                {
+                    method: "GET"
+                }
+            );
+            // console.log("response", response);
+            const json = await response.json();
+            // console.log("json", json);
+            return json;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+    useEffect(() => {
+        // Fetch initial page of data
+        fetchDepartments(currentPage).then(json => {
+            // console.log("data",json);
+            setTotalPage(json.totalPage);
+            setDepartments(json.data);
+        });
+      }, [currentPage]);
     
-  return (
-    <div className="container">
-        <h3 className="p-3 text-center">Home</h3>
-        
-    </div>
-  );
+      useEffect(() => {
+        setCurrentPage(1)
+      }, []);
+
+
+    function increment() {
+      setCurrentPage(function (prevCount) {
+          if (prevCount < totalPage) {
+              return (prevCount += 1); 
+          } else {
+              return (prevCount = totalPage);
+          }
+      });
+  }
+
+  function decrement() {
+      setCurrentPage(function (prevCount) {
+          if (prevCount > 1) {
+          return (prevCount -= 1); 
+          } else {
+          return (prevCount = 1);
+          }
+      });
+  }
+    
+      return (
+        <div className="container">
+            <Stack direction="horizontal" gap={4}>
+                <div className="p-2 text-center"><h1 >Quiz</h1></div>
+                <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
+                <div className="p-2">{currentPage} z {totalPage}</div>
+                <div className="p-2"><button onClick={increment}>Dalej</button></div>
+            </Stack>
+            <table className="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tytuł</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {departments && departments.map(department =>
+                        <tr key={department.id}>
+                            <td>{department.name}</td>
+                            <td>
+                                <NavLink
+                                    to={`/category/${department.id}`}
+                                    >       
+                                    <span>wybierz</span>                 
+                                </NavLink>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
 };
   
   export default HomeScreen;

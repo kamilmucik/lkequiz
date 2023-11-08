@@ -7,14 +7,13 @@ const KnowlageScreen = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
 
-    const  quizId  = 1;
-    const PAGE_SIZE = 5;
-    const IP = '162.19.227.81';
-    const PORT = '3001';
+    const QUIZ_ID  = 1;
+    const PAGE_SIZE = 15;
+    const HOST = 'info.e-strix.pl';
 
   const fetchDepartments = async (page) => {
         try {
-            const response = await fetch(`http://${IP}:${PORT}/department/1/1/5/`,
+            const response = await fetch(`http://${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`,
                 {
                     method: "GET"
                 }
@@ -55,9 +54,9 @@ const KnowlageScreen = () => {
     function decrement() {
         setCurrentPage(function (prevCount) {
             if (prevCount > 1) {
-            return (prevCount -= 1); 
+                return (prevCount -= 1); 
             } else {
-            return (prevCount = 1);
+                return (prevCount = 1);
             }
         });
     }
@@ -74,8 +73,8 @@ const KnowlageScreen = () => {
             <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Action</th>
+                        <th>Tytuł</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,9 +82,7 @@ const KnowlageScreen = () => {
                         <tr key={department.id}>
                             <td>{department.name}</td>
                             <td>
-                                <NavLink
-                                    to={`/knowlage/category/${department.id}`}
-                                    >       
+                                <NavLink to={`/knowlage/category/${department.id}`} >       
                                     <span>wybierz</span>                 
                                 </NavLink>
                             </td>

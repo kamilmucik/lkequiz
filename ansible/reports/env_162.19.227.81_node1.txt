@@ -1,18 +1,33 @@
 
-1. Docker prune images 0.0.2
+1. Docker prune images 0.0.4
 REPOSITORY               TAG           IMAGE ID       CREATED          SIZE
-auth-svc                 0.0.1         caaaaf3ae5f0   6 minutes ago    23.6MB
-<none>                   <none>        dcd342528cf8   6 minutes ago    545MB
-question-svc             0.0.1         cb4170e3e1f4   39 minutes ago   23.6MB
-question-svc             0.0.2         cb4170e3e1f4   39 minutes ago   23.6MB
-<none>                   <none>        e86d4df0f358   39 minutes ago   545MB
+api-gateway              0.0.6         5d56c72b9156   2 minutes ago    20.8MB
+<none>                   <none>        11067f4a66b3   2 minutes ago    652MB
+<none>                   <none>        bf9b587459d2   17 minutes ago   652MB
+question-svc             0.0.3         c0557e03eddb   34 minutes ago   23.6MB
+<none>                   <none>        25c0ba0a2753   34 minutes ago   545MB
+<none>                   <none>        e018afa86b23   17 hours ago     652MB
+api-gateway              0.0.3         c7a4fa13cbe8   17 hours ago     20.8MB
+api-gateway              0.0.5         c7a4fa13cbe8   17 hours ago     20.8MB
+<none>                   <none>        d8f4ddf08322   18 hours ago     467MB
+<none>                   <none>        b78ca945eb8f   18 hours ago     467MB
+api-gateway              0.0.2         163ebaa6d8b6   18 hours ago     20.8MB
+<none>                   <none>        893c53a030a6   18 hours ago     652MB
+api-gateway              0.0.1         240f72ff4732   30 hours ago     20.8MB
+<none>                   <none>        437a4be4a921   30 hours ago     652MB
+auth-svc                 0.0.1         caaaaf3ae5f0   30 hours ago     23.6MB
+auth-svc                 0.0.2         caaaaf3ae5f0   30 hours ago     23.6MB
+<none>                   <none>        dcd342528cf8   30 hours ago     545MB
+question-svc             0.0.1         cb4170e3e1f4   31 hours ago     23.6MB
+question-svc             0.0.2         cb4170e3e1f4   31 hours ago     23.6MB
+<none>                   <none>        e86d4df0f358   31 hours ago     545MB
 nginx                    2.0.2         a65a3c144e25   3 weeks ago      159MB
 <none>                   <none>        32f7518fb0f8   3 weeks ago      55.3MB
 trafex/php-nginx         latest        78516d22905a   4 weeks ago      120MB
 goapp-test2              latest        18e5da081801   2 months ago     6.72MB
 goapp-test               0.0.2         18e5da081801   2 months ago     6.72MB
 goapp-test               0.0.3         18e5da081801   2 months ago     6.72MB
-golang                   alpine        c9e410d017b6   2 months ago     221MB
+golang                   alpine        c9e410d017b6   3 months ago     221MB
 alpine                   3.17          1e0b8b5322fc   3 months ago     7.06MB
 nginx_tomcat             latest        0a611e0b273f   3 months ago     531MB
 <none>                   <none>        75adba4c254e   3 months ago     420MB
@@ -26,7 +41,7 @@ mysql                    8.0.32        412b8cc72e4a   7 months ago     531MB
 postgres                 14.3-alpine   5c100a8edd1e   17 months ago    216MB
 
 2. Docker: create image
-Sending build context to Docker daemon  106.5kB
+Sending build context to Docker daemon  191.5kB
 Step 1/12 : FROM golang:alpine AS builder
  ---> c9e410d017b6
 Step 2/12 : RUN apk update && apk add --no-cache git
@@ -41,52 +56,103 @@ Step 4/12 : RUN mkdir -p /go/target
 Step 5/12 : WORKDIR $APP_HOME
  ---> Using cache
  ---> 77230372a8dd
-Step 6/12 : COPY auth-svc/ .
- ---> Using cache
- ---> 60b96bc45d1a
+Step 6/12 : COPY question-svc/ .
+ ---> 92fabc627f4f
 Step 7/12 : WORKDIR cmd
- ---> Using cache
- ---> 23e79e0ff354
+ ---> Running in 42219c0e6505
+Removing intermediate container 42219c0e6505
+ ---> c789fd27d529
 Step 8/12 : RUN go get -d -v
- ---> Using cache
- ---> cdad94e15c28
+ ---> Running in 9c1dca668947
+[91mgo: downloading google.golang.org/grpc v1.59.0
+[0m[91mgo: downloading github.com/spf13/viper v1.17.0
+[0m[91mgo: downloading gorm.io/driver/postgres v1.5.3
+[0m[91mgo: downloading gorm.io/gorm v1.25.5
+[0m[91mgo: downloading google.golang.org/protobuf v1.31.0
+[0m[91mgo: downloading github.com/fsnotify/fsnotify v1.6.0
+[0m[91mgo: downloading github.com/mitchellh/mapstructure v1.5.0
+[0m[91mgo: downloading github.com/sagikazarmark/locafero v0.3.0
+[0m[91mgo: downloading github.com/sagikazarmark/slog-shim v0.1.0
+[0m[91mgo: downloading github.com/spf13/afero v1.10.0
+[0m[91mgo: downloading github.com/spf13/cast v1.5.1
+[0m[91mgo: downloading github.com/spf13/pflag v1.0.5
+[0m[91mgo: downloading github.com/jackc/pgx/v5 v5.4.3
+[0m[91mgo: downloading github.com/jinzhu/now v1.1.5
+[0m[91mgo: downloading golang.org/x/net v0.15.0
+[0m[91mgo: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20230920204549-e6e6cdab5c13
+[0m[91mgo: downloading golang.org/x/sys v0.12.0
+[0m[91mgo: downloading github.com/sourcegraph/conc v0.3.0
+[0m[91mgo: downloading golang.org/x/exp v0.0.0-20230905200255-921286631fa9
+[0m[91mgo: downloading golang.org/x/text v0.13.0
+[0m[91mgo: downloading github.com/subosito/gotenv v1.6.0
+[0m[91mgo: downloading github.com/hashicorp/hcl v1.0.0
+[0m[91mgo: downloading gopkg.in/ini.v1 v1.67.0
+[0m[91mgo: downloading github.com/magiconair/properties v1.8.7
+[0m[91mgo: downloading github.com/pelletier/go-toml/v2 v2.1.0
+[0m[91mgo: downloading gopkg.in/yaml.v3 v3.0.1
+[0m[91mgo: downloading github.com/jinzhu/inflection v1.0.0
+[0m[91mgo: downloading github.com/jackc/pgpassfile v1.0.0
+[0m[91mgo: downloading github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a
+[0m[91mgo: downloading golang.org/x/crypto v0.13.0
+[0m[91mgo: downloading github.com/golang/protobuf v1.5.3
+[0m[91mgo: downloading go.uber.org/multierr v1.9.0
+[0m[91mgo: downloading go.uber.org/atomic v1.9.0
+[0mRemoving intermediate container 9c1dca668947
+ ---> 4637c508ef39
 Step 9/12 : RUN go build -o /go/target
- ---> Using cache
- ---> dcd342528cf8
+ ---> Running in 2d662bdeacbd
+Removing intermediate container 2d662bdeacbd
+ ---> 1c470eb59374
 Step 10/12 : FROM scratch
  ---> 
 Step 11/12 : COPY --from=builder /go/target/cmd /go/bin/app
- ---> Using cache
- ---> d10fe485aaa8
+ ---> 981825e020fb
 Step 12/12 : ENTRYPOINT ["/go/bin/app"]
- ---> Using cache
- ---> caaaaf3ae5f0
-Successfully built caaaaf3ae5f0
-Successfully tagged auth-svc:0.0.2
+ ---> Running in 9c4516b40d14
+Removing intermediate container 9c4516b40d14
+ ---> 7b8e1401b9e0
+Successfully built 7b8e1401b9e0
+Successfully tagged question-svc:0.0.4
 
 3. Docker images
-REPOSITORY               TAG           IMAGE ID       CREATED          SIZE
-auth-svc                 0.0.1         caaaaf3ae5f0   6 minutes ago    23.6MB
-auth-svc                 0.0.2         caaaaf3ae5f0   6 minutes ago    23.6MB
-<none>                   <none>        dcd342528cf8   6 minutes ago    545MB
-question-svc             0.0.1         cb4170e3e1f4   39 minutes ago   23.6MB
-question-svc             0.0.2         cb4170e3e1f4   39 minutes ago   23.6MB
-<none>                   <none>        e86d4df0f358   39 minutes ago   545MB
-nginx                    2.0.2         a65a3c144e25   3 weeks ago      159MB
-<none>                   <none>        32f7518fb0f8   3 weeks ago      55.3MB
-trafex/php-nginx         latest        78516d22905a   4 weeks ago      120MB
-goapp-test2              latest        18e5da081801   2 months ago     6.72MB
-goapp-test               0.0.2         18e5da081801   2 months ago     6.72MB
-goapp-test               0.0.3         18e5da081801   2 months ago     6.72MB
-golang                   alpine        c9e410d017b6   2 months ago     221MB
-alpine                   3.17          1e0b8b5322fc   3 months ago     7.06MB
-nginx_tomcat             latest        0a611e0b273f   3 months ago     531MB
-<none>                   <none>        75adba4c254e   3 months ago     420MB
-nginx_react              latest        8277063d1966   3 months ago     579MB
-kamilmucik/proxy/nginx   1.1.1         da2b98036b2c   3 months ago     629MB
-ubuntu                   20.04         6df894023726   3 months ago     72.8MB
-kamilmucik/proxy/nginx   0.0.2         25f4957506a0   3 months ago     629MB
-kamilmucik/proxy/nginx   0.0.1         c361318b4e67   3 months ago     585MB
-ubuntu                   18.04         f9a80a55f492   5 months ago     63.2MB
-mysql                    8.0.32        412b8cc72e4a   7 months ago     531MB
-postgres                 14.3-alpine   5c100a8edd1e   17 months ago    216MB
+REPOSITORY               TAG           IMAGE ID       CREATED                  SIZE
+question-svc             0.0.4         7b8e1401b9e0   Less than a second ago   23.6MB
+<none>                   <none>        1c470eb59374   1 second ago             545MB
+api-gateway              0.0.6         5d56c72b9156   3 minutes ago            20.8MB
+<none>                   <none>        11067f4a66b3   3 minutes ago            652MB
+<none>                   <none>        bf9b587459d2   18 minutes ago           652MB
+<none>                   <none>        25c0ba0a2753   35 minutes ago           545MB
+question-svc             0.0.3         c0557e03eddb   35 minutes ago           23.6MB
+api-gateway              0.0.3         c7a4fa13cbe8   17 hours ago             20.8MB
+api-gateway              0.0.5         c7a4fa13cbe8   17 hours ago             20.8MB
+<none>                   <none>        e018afa86b23   17 hours ago             652MB
+<none>                   <none>        d8f4ddf08322   18 hours ago             467MB
+<none>                   <none>        b78ca945eb8f   18 hours ago             467MB
+api-gateway              0.0.2         163ebaa6d8b6   18 hours ago             20.8MB
+<none>                   <none>        893c53a030a6   18 hours ago             652MB
+api-gateway              0.0.1         240f72ff4732   30 hours ago             20.8MB
+<none>                   <none>        437a4be4a921   30 hours ago             652MB
+auth-svc                 0.0.1         caaaaf3ae5f0   30 hours ago             23.6MB
+auth-svc                 0.0.2         caaaaf3ae5f0   30 hours ago             23.6MB
+<none>                   <none>        dcd342528cf8   30 hours ago             545MB
+question-svc             0.0.1         cb4170e3e1f4   31 hours ago             23.6MB
+question-svc             0.0.2         cb4170e3e1f4   31 hours ago             23.6MB
+<none>                   <none>        e86d4df0f358   31 hours ago             545MB
+nginx                    2.0.2         a65a3c144e25   3 weeks ago              159MB
+<none>                   <none>        32f7518fb0f8   3 weeks ago              55.3MB
+trafex/php-nginx         latest        78516d22905a   4 weeks ago              120MB
+goapp-test2              latest        18e5da081801   2 months ago             6.72MB
+goapp-test               0.0.2         18e5da081801   2 months ago             6.72MB
+goapp-test               0.0.3         18e5da081801   2 months ago             6.72MB
+golang                   alpine        c9e410d017b6   3 months ago             221MB
+alpine                   3.17          1e0b8b5322fc   3 months ago             7.06MB
+nginx_tomcat             latest        0a611e0b273f   3 months ago             531MB
+<none>                   <none>        75adba4c254e   3 months ago             420MB
+nginx_react              latest        8277063d1966   3 months ago             579MB
+kamilmucik/proxy/nginx   1.1.1         da2b98036b2c   3 months ago             629MB
+ubuntu                   20.04         6df894023726   3 months ago             72.8MB
+kamilmucik/proxy/nginx   0.0.2         25f4957506a0   3 months ago             629MB
+kamilmucik/proxy/nginx   0.0.1         c361318b4e67   3 months ago             585MB
+ubuntu                   18.04         f9a80a55f492   5 months ago             63.2MB
+mysql                    8.0.32        412b8cc72e4a   7 months ago             531MB
+postgres                 14.3-alpine   5c100a8edd1e   17 months ago            216MB

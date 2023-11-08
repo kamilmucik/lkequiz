@@ -17,12 +17,11 @@ const KnowlageQuestionScreen = () => {
   const [isLoading, setLoading] = useState(false);
 
   const PAGE_SIZE = 5;
-  const IP = '162.19.227.81';
-  const PORT = '3001';
+  const HOST = 'info.e-strix.pl';
 
     const fetchQuestions = async (page) => {
         try {
-            const response = await fetch(`http://${IP}:${PORT}/question/${categoryId}/${page}/${PAGE_SIZE}/`);
+            const response = await fetch(`http://${HOST}/api/question/${categoryId}/${page}/${PAGE_SIZE}/`);
             // console.log("response", response);
             const json = await response.json();
             // console.log("json", json);
@@ -60,9 +59,9 @@ const KnowlageQuestionScreen = () => {
     function decrement() {
         setCurrentPage(function (prevCount) {
             if (prevCount > 1) {
-            return (prevCount -= 1); 
+                return (prevCount -= 1); 
             } else {
-            return (prevCount = 1);
+                return (prevCount = 1);
             }
         });
     }
@@ -75,11 +74,7 @@ const KnowlageQuestionScreen = () => {
         <div className="p-2"><button onClick={increment}>Dalej</button></div>
     </Stack>
       <table className="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
+
                 <tbody>
                     {questions && questions.map(question =>
                         <tr key={question.id}>

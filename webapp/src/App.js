@@ -9,8 +9,10 @@ import NoPageScreen from "./screens/NoPageScreen";
 import HomeScreen from "./screens/HomeScreen";
 import KnowlageScreen from "./screens/KnowlageScreen";
 import KnowlageCategoriesScreen from "./screens/KnowlageCategoriesScreen";
+import CategoriesScreen from "./screens/CategoriesScreen";
 import KnowlageQuestionScreen from "./screens/KnowlageQuestionScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import QuizScreen from "./screens/QuizScreen";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomeScreen />} />
+          <Route path="quiz" element={<QuizScreen />} />
+          <Route path="category/:departmentId" element={<CategoriesScreen />} />
           <Route path="knowlage" element={<KnowlageScreen />} />
           <Route path="knowlage/category/:departmentId" element={<KnowlageCategoriesScreen />} />
           <Route path="knowlage/question/:categoryId" element={<KnowlageQuestionScreen />} />

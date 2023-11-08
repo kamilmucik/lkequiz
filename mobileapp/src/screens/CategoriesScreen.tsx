@@ -15,12 +15,12 @@ const CategoriesScreen = ({ navigation, route }) => {
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
 
   const PAGE_SIZE = 4;
-  const IP = '10.0.10.163';
-  // const IP = '172.17.64.27';
+  const IP = '162.19.227.81';
+  const PORT = '3001';
 
   const fetchCategories = async (page) => {
       try {
-          const response = await fetch(`http://${IP}:3000/category/${departmentId}/${page}/${PAGE_SIZE}/`);
+          const response = await fetch(`http://${IP}:${PORT}/category/${departmentId}/${page}/${PAGE_SIZE}/`);
           // console.log("response", response);
           const json = await response.json();
           // console.log("json", json);
