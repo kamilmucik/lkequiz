@@ -35,7 +35,7 @@ const KnowlageQuestionScreen = () => {
     useEffect(() => {
       // Fetch initial page of data
         fetchQuestions(currentPage).then(json => {
-            console.log("data",json);
+            // console.log("data",json);
             setTotalPage(json.totalPage);
             setQuestions(json.data);
         });
@@ -80,11 +80,11 @@ const KnowlageQuestionScreen = () => {
                         <tr key={question.id}>
                             <td>
                                 {question.question}
-                                <lu>
-                                {question.answers && question.answers.map(answer =>
-                                    <li>{answer.answer}</li>
+                                <ul>
+                                {question.answers && question.answers.map( (answer,index) =>
+                                    <li key={index}>{answer.answer}</li>
                                 )}
-                                </lu>
+                                </ul>
                             </td>
                         </tr>
                     )}
