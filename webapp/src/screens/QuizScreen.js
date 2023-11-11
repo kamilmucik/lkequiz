@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import AppContext from '../store/AppContext';
+import classes from '../App.css';
 
 const QuizScreen = () => {
 
@@ -14,6 +15,9 @@ const QuizScreen = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [isLoading, setLoading] = useState(false);
+    const [answers, setAnswers] = useState([]);
+    const [showScore, setShowScore] = useState(false);
+    const [score, setScore] = useState(0);
 
     // const PAGE_SIZE = 5;
     const HOST = 'info.e-strix.pl';
@@ -49,15 +53,24 @@ const QuizScreen = () => {
     }, []);
 
     const handleAnswerSelection = (questionIndex, selectedAnswer) => {
-      // const updatedAnswers = [...answers];
-      // updatedAnswers[questionIndex] = selectedAnswer;
-      // setAnswers(updatedAnswers);
+      const updatedAnswers = [...answers];
+      updatedAnswers[questionIndex] = selectedAnswer.id;
+      setAnswers(updatedAnswers);
+      if (selectedAnswer.correct === "1") {
+        setScore(score + 1);
+      }
     };
 
     useEffect(() => {
       const interval = setInterval(() => {
-        setCountDownTime(countDownTime - 1);
-      }, 60_000);
+        
+        if (countDownTime > 0) {
+          setCountDownTime(countDownTime - 1);
+        }
+        if (countDownTime === 0) {
+          setShowScore(true);
+        }
+      }, 1000);
   
       return () => clearInterval(interval);
     }, [countDownTime]);
@@ -74,12 +87,12 @@ const QuizScreen = () => {
 
   function decrement() {
     setCurrentQuestion(function (prevCount) {
-          if (prevCount > 0) {
-              return (prevCount -= 1); 
-          } else {
-              return (prevCount = 0);
-          }
-      });
+      if (prevCount > 0) {
+        return (prevCount -= 1); 
+      } else {
+        return (prevCount = 0);
+      }
+    });
   }
 
     return (
@@ -90,38 +103,41 @@ const QuizScreen = () => {
                 <tr><td>Kategoria</td><td>{quizCategoryName}</td></tr>
                 <tr><td>Czas</td><td>{countDownTime}({quizTimeLimit})min.</td></tr> 
                 <tr><td>Pytań</td><td> {currentQuestion + 1} z {questions.length}</td></tr>  
+                {showScore ? (
+                <tr><td>Wynik</td><td> {score} </td></tr>
+          ) : (<tr><td></td><td></td></tr>  )}
             </tbody>
           </table>
 
-          {/* <h2>Question {currentQuestion + 1} : {isLoading ? 'true' : 'false'}</h2> */}
-          {questions && questions.length > 0 ?
-          <div>
-              <h5> {questions[currentQuestion].code}</h5> <h4>{questions[currentQuestion].question}</h4>
-              <ul>
-                {questions[currentQuestion].answers && questions[currentQuestion].answers.map( (answer,index) =>
-                    <li key={index}>
-                <input
-                  type="radio"
-                  name={`question${currentQuestion}`}
-                  value={answer.answer}
-                  onChange={() =>
-                    handleAnswerSelection(currentQuestion, answer)
-                  }
-                />
-                {answer.answer}
-              </li>
-              )}
-              </ul>
-              
-          </div>
-          : <div>loading...</div>
-          }
-            <button onClick={decrement}>Wstecz</button>
-            <button onClick={increment}>Dalej</button>
+          
 
-            {/* {questions && questions.map(question =>
-              <p>{question.question}</p>
-            )} */}
+          {questions && questions.length > 0 ?
+            <div>
+                <h5> {questions[currentQuestion].code}</h5> <h4>{questions[currentQuestion].question}</h4>
+                <ul>
+                  {questions[currentQuestion].answers && questions[currentQuestion].answers.map( (answer,index) =>
+                      <li key={index} >
+                        <input
+                          disabled={showScore}
+                          type="radio"
+                          name={`question${currentQuestion}`}
+                          value={answer.answer}
+                          checked={answers[currentQuestion] === answer.id}
+                          onChange={() =>
+                            handleAnswerSelection(currentQuestion, answer)
+                          }
+                        />
+                        {answer.answer}
+                      </li>
+                )}
+                </ul>
+                
+            </div>
+            : <div>loading...</div>
+            }
+              <button onClick={decrement}>Wstecz</button>
+              <button onClick={increment}>Dalej</button>
+
           
       </div>
     );
