@@ -13,3 +13,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App-link {
+  color: #61dafb;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+
+}
+
+li {
+  margin: 4px;
+  padding: 4px;
+}
+
+li > input {
+  margin-right: 10px;
+}

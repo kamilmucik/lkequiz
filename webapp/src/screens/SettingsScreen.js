@@ -13,6 +13,11 @@ const SettingsScreen = () => {
   const quizCategoryName = appCtx.quizCategoryName;
   const quizTimeLimit = appCtx.quizTimeLimit;
   const quizQuestionLimit = appCtx.quizQuestionLimit;
+  const showCorrectAnswerOnly = appCtx.showCorrectAnswerOnly;
+
+  const handleChange = () => { 
+    appCtx.setShowCorrectAnswerOnly(!showCorrectAnswerOnly)
+  };
 
   return (
     <div className="container">
@@ -26,7 +31,8 @@ const SettingsScreen = () => {
                 <tr><td>quizCategoryName</td><td>{quizCategoryName}</td></tr> 
                 <tr><td>quizTimeLimit</td><td>{quizTimeLimit}</td></tr> 
                 <tr><td>quizQuestionLimit</td><td>{quizQuestionLimit}</td></tr> 
-                <tr><td>isDebugMode</td><td>{isDebugMode ? 'true' : 'false'}</td></tr>     
+                <tr><td>isDebugMode</td><td>{isDebugMode ? 'true' : 'false'}</td></tr> 
+                <tr><td>Pokaz tylko dobre odpowiedzi</td><td> <input type="checkbox" checked={showCorrectAnswerOnly} onChange={handleChange}></input></td></tr>     
             </tbody>
           </table>
     </div>

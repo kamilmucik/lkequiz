@@ -9,6 +9,7 @@ const AppContext = React.createContext({
   quizTimeLimit: 0,
   quizQuestionLimit: 0,
   isDebugMode: 0,
+  showCorrectAnswerOnly: 0,
   setSettingsURLValue: (val) => {},
   setSettingsPortValue: (val) => {},
 
@@ -19,6 +20,7 @@ const AppContext = React.createContext({
   setQuizQuestionLimit: (val) => {},
 
   setIsDebugMode: (val) => {},
+  setShowCorrectAnswerOnly: (val) => {},
 });
 
 export default AppContext;

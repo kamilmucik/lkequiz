@@ -1,6 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
 import AppContext from '../store/AppContext';
-import classes from '../App.css';
 
 const QuizScreen = () => {
 
@@ -18,6 +17,7 @@ const QuizScreen = () => {
     const [answers, setAnswers] = useState([]);
     const [showScore, setShowScore] = useState(false);
     const [score, setScore] = useState(0);
+    const [scorePercentage, setScorePercentage] = useState(0);
 
     // const PAGE_SIZE = 5;
     const HOST = 'info.e-strix.pl';
@@ -68,19 +68,20 @@ const QuizScreen = () => {
           setCountDownTime(countDownTime - 1);
         }
         if (countDownTime === 0) {
-          setShowScore(true);
+          finish();
+
         }
-      }, 1000);
+      }, 60000); // 1 min
   
       return () => clearInterval(interval);
     }, [countDownTime]);
 
     function increment() {
       setCurrentQuestion(function (prevCount) {
-          if (prevCount < questions.length) {
+          if (prevCount < questions.length-1) {
               return (prevCount += 1); 
           } else {
-              return (prevCount = questions.length);
+              return (prevCount = questions.length-1);
           }
       });
   }
@@ -94,6 +95,11 @@ const QuizScreen = () => {
       }
     });
   }
+  function finish() {
+    setShowScore(true);
+    var count = (score/quizQuestionLimit)*100;
+    setScorePercentage(Math.round(count));
+  }
 
     return (
       <div className="container">
@@ -104,13 +110,10 @@ const QuizScreen = () => {
                 <tr><td>Czas</td><td>{countDownTime}({quizTimeLimit})min.</td></tr> 
                 <tr><td>Pytań</td><td> {currentQuestion + 1} z {questions.length}</td></tr>  
                 {showScore ? (
-                <tr><td>Wynik</td><td> {score} </td></tr>
-          ) : (<tr><td></td><td></td></tr>  )}
+                  <tr><td>Wynik</td><td> {score} {scorePercentage}% {scorePercentage >=80 ? (<label>Pozytywny</label>):(<label>Negatywny</label>) }</td></tr>
+                ) : (<tr></tr>  )}
             </tbody>
           </table>
-
-          
-
           {questions && questions.length > 0 ?
             <div>
                 <h5> {questions[currentQuestion].code}</h5> <h4>{questions[currentQuestion].question}</h4>
@@ -121,13 +124,15 @@ const QuizScreen = () => {
                           disabled={showScore}
                           type="radio"
                           name={`question${currentQuestion}`}
+                          id={`answer${answer.id}`}
                           value={answer.answer}
                           checked={answers[currentQuestion] === answer.id}
                           onChange={() =>
                             handleAnswerSelection(currentQuestion, answer)
                           }
                         />
-                        {answer.answer}
+                        
+                        <label for={`answer${answer.id}`}> {showScore && answer.correct === "1" ? (<>*</>):(<></>)} {answer.answer}</label>
                       </li>
                 )}
                 </ul>
@@ -137,8 +142,7 @@ const QuizScreen = () => {
             }
               <button onClick={decrement}>Wstecz</button>
               <button onClick={increment}>Dalej</button>
-
-          
+              <button onClick={finish}>Zakończ test</button>
       </div>
     );
 };

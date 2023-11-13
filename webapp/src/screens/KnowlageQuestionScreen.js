@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import AppContext from '../store/AppContext';
 import {
   BrowserRouter as Router,
   NavLink,
@@ -10,11 +11,15 @@ import Stack from 'react-bootstrap/Stack';
 
 
 const KnowlageQuestionScreen = () => {
+
+  const appCtx = useContext(AppContext);
+  const showCorrectAnswerOnly = appCtx.showCorrectAnswerOnly;
   const { categoryId } = useParams();
   const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [isLoading, setLoading] = useState(false);
+  
 
   const PAGE_SIZE = 5;
   const HOST = 'info.e-strix.pl';
@@ -81,9 +86,17 @@ const KnowlageQuestionScreen = () => {
                             <td>
                                 {question.question}
                                 <ul>
-                                {question.answers && question.answers.map( (answer,index) =>
+                                {showCorrectAnswerOnly == 1 && question.answers && question.answers.map( (answer,index) =>
+                                    answer.correct === "1" ?
+                                    (<li key={index}>{answer.answer}</li>)
+                                    :
+                                    (<></>)
+                                )
+                                }
+                                {showCorrectAnswerOnly == 0 && question.answers && question.answers.map( (answer,index) =>
                                     <li key={index}>{answer.answer}</li>
-                                )}
+                                )
+                                }
                                 </ul>
                             </td>
                         </tr>

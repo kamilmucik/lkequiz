@@ -13,6 +13,9 @@ function AppProvider({children}) {
   const [quizQuestionLimit, setContextQuizQuestionLimit] = useState(0);
 
   const [isDebugMode, setContextIsDebugMode] = useState(0);
+  const [showCorrectAnswerOnly, setContextShowCorrectAnswerOnly] = useState(0);
+  
+
 
   function setSettingsURLValue(val){
     setContextSettingsURLValue( val);
@@ -40,6 +43,9 @@ function AppProvider({children}) {
   function setIsDebugMode(val){
     setContextIsDebugMode(val);
   }
+  function setShowCorrectAnswerOnly(val){
+    setContextShowCorrectAnswerOnly(val);
+  }
 
   const value = {
     settingsURLValue: settingsURLValue,
@@ -52,6 +58,7 @@ function AppProvider({children}) {
     quizQuestionLimit: quizQuestionLimit,
 
     isDebugMode: isDebugMode,
+    showCorrectAnswerOnly: showCorrectAnswerOnly,
 
     setSettingsURLValue: setSettingsURLValue,
     setSettingsPortValue: setSettingsPortValue,
@@ -61,6 +68,7 @@ function AppProvider({children}) {
     setQuizTimeLimit: setQuizTimeLimit,
     setQuizQuestionLimit: setQuizQuestionLimit,
     setIsDebugMode: setIsDebugMode,
+    setShowCorrectAnswerOnly: setShowCorrectAnswerOnly,
   }
 
   return <AppContext.Provider value={value}>
