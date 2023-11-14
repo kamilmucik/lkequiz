@@ -38,12 +38,16 @@ func main() {
 	quest := services.QuestServer{
 		H: h,
 	}
+	quiz := services.QuizServer{
+		H: h,
+	}
 
 	grpcServer := grpc.NewServer()
 
 	pb.RegisterDepartmentServiceServer(grpcServer, &s)
 	pb.RegisterCategoryServiceServer(grpcServer, &cat)
 	pb.RegisterQuestionServiceServer(grpcServer, &quest)
+	pb.RegisterQuizServiceServer(grpcServer, &quiz)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalln("Failed to serve:", err)

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package quiz;
+
+option go_package = "./pkg/pb";
+
+service QuizService {
+  rpc FindPaggedQuiz(FindPaggedQuizRequest) returns (FindPaggedQuizResponse) {}
+}
+
+//FindPagged
+message FindQuizAnswerData {
+  int64 id = 1;
+  string answer = 2;
+  string correct = 3;
+  int64 department_id = 4;
+}
+
+message FindPaggedQuizData {
+  int64 id = 1;
+  string code = 2;
+  string question = 3;
+  int64 question_id = 4;
+  repeated FindQuizAnswerData answers = 5;
+}
+
+message FindPaggedQuizRequest { 
+  int64 categoryId = 1; 
+  int64 currentPage = 2; 
+  int64 pageSize = 3; 
+}
+
+message FindPaggedQuizResponse {
+  int64 status = 1;
+  string error = 2;
+  int64 totalPage = 3; 
+  repeated FindPaggedQuizData data = 4;
+}

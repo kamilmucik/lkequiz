@@ -6,6 +6,7 @@ import (
 	category "github.com/kamilmucik/api-gateway/pkg/category"
 	department "github.com/kamilmucik/api-gateway/pkg/department"
 	question "github.com/kamilmucik/api-gateway/pkg/question"
+	quiz "github.com/kamilmucik/api-gateway/pkg/quiz"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/kamilmucik/api-gateway/pkg/auth"
@@ -20,10 +21,6 @@ func main() {
 	}
 
 	r := gin.Default()
-
-
-
-
 	// CORS for https://foo.com and https://github.com origins, allowing:
 	// - PUT and PATCH methods
 	// - Origin header
@@ -59,6 +56,7 @@ func main() {
 	department.RegisterRoutes(r, &c, &authSvc)
 	category.RegisterRoutes(r, &c, &authSvc)
 	question.RegisterRoutes(r, &c, &authSvc)
+	quiz.RegisterRoutes(r, &c, &authSvc)
 
 	r.Run(c.Port)
 }

@@ -27,7 +27,7 @@
       tags: lsout
       register: myshell_output
     - name: Execute the script
-      command: timeout 20 sh /tmp/lkequiz/bk_auth_svc_build.sh {{version}}
+      command: timeout 240 sh /tmp/lkequiz/bk_auth_svc_build.sh {{version}}
       become: yes
       become_method: sudo
       become_user: root

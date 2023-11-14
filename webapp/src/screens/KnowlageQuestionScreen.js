@@ -84,7 +84,7 @@ const KnowlageQuestionScreen = () => {
                     {questions && questions.map(question =>
                         <tr key={question.id}>
                             <td>
-                                {question.question}
+                                {question.code} {question.question}
                                 <ul>
                                 {showCorrectAnswerOnly == 1 && question.answers && question.answers.map( (answer,index) =>
                                     answer.correct === "1" ?
