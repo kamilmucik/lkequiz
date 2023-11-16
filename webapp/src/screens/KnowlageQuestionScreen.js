@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import AppContext from '../store/AppContext';
-import {
-  BrowserRouter as Router,
-  NavLink,
-  Route,
-  Routes,
-  useParams,
-} from "react-router-dom";
+import {useParams,} from "react-router-dom";
 import Stack from 'react-bootstrap/Stack';
 
 
@@ -18,15 +12,12 @@ const KnowlageQuestionScreen = () => {
   const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [isLoading, setLoading] = useState(false);
   
-
-  const PAGE_SIZE = 5;
-  const HOST = 'info.e-strix.pl';
+  const PAGE_SIZE = appCtx.showPageAnswer;
 
     const fetchQuestions = async (page) => {
         try {
-            const response = await fetch(`http://${HOST}/api/question/${categoryId}/${page}/${PAGE_SIZE}/`);
+            const response = await fetch(`${appCtx.settingsURLValue}/api/question/${categoryId}/${page}/${PAGE_SIZE}/`);
             // console.log("response", response);
             const json = await response.json();
             // console.log("json", json);
@@ -73,13 +64,17 @@ const KnowlageQuestionScreen = () => {
 
     return <div className="container">
       <Stack direction="horizontal" gap={4}>
-        <div className="p-2 text-center"><h1 >Baza wiedzy: Pytania</h1></div>
+        <div className="p-2 text-center"></div>
         <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
         <div className="p-2">{currentPage} z {totalPage}</div>
         <div className="p-2"><button onClick={increment}>Dalej</button></div>
     </Stack>
       <table className="table table-striped table-bordered">
-
+        <thead>
+                    <tr>
+                        <th>Baza wiedzy: Pytania</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {questions && questions.map(question =>
                         <tr key={question.id}>
@@ -93,7 +88,7 @@ const KnowlageQuestionScreen = () => {
                                     (<></>)
                                 )
                                 }
-                                {showCorrectAnswerOnly == 0 && question.answers && question.answers.map( (answer,index) =>
+                                {!showCorrectAnswerOnly && question.answers && question.answers.map( (answer,index) =>
                                     <li key={index}>{answer.answer}</li>
                                 )
                                 }

@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Stack from 'react-bootstrap/Stack';
+import AppContext from '../store/AppContext';
 
 const KnowlageScreen = () => {
+
+  const appCtx = useContext(AppContext);
     const [departments, setDepartments] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
 
     const QUIZ_ID  = 1;
     const PAGE_SIZE = 15;
-    const HOST = 'info.e-strix.pl';
 
   const fetchDepartments = async (page) => {
         try {
-            const response = await fetch(`http://${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`,
+            const response = await fetch(`${appCtx.settingsURLValue}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`,
                 {
                     method: "GET"
                 }
@@ -65,7 +67,7 @@ const KnowlageScreen = () => {
     return (
         <div className="container">
             <Stack direction="horizontal" gap={4}>
-                <div className="p-2 text-center"><h1 >Baza wiedzy</h1></div>
+                <div className="p-2 text-center"></div>
                 <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
                 <div className="p-2">{currentPage} z {totalPage}</div>
                 <div className="p-2"><button onClick={increment}>Dalej</button></div>
@@ -73,7 +75,7 @@ const KnowlageScreen = () => {
             <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Tytuł</th>
+                        <th>Baza wiedzy</th>
                         <th></th>
                     </tr>
                 </thead>

@@ -14,11 +14,10 @@ const CategoriesScreen = () => {
   const [totalPage, setTotalPage] = useState(1);
 
   const PAGE_SIZE = 15;
-  const HOST = 'info.e-strix.pl';
 
   const fetchCategories = async (page) => {
       try {
-          const response = await fetch(`http://${HOST}/api/category/${departmentId}/${page}/${PAGE_SIZE}/`);
+          const response = await fetch(`${appCtx.settingsURLValue}/api/category/${departmentId}/${page}/${PAGE_SIZE}/`);
           // console.log("response", response);
           const json = await response.json();
           // console.log("json", json);
@@ -80,7 +79,7 @@ const CategoriesScreen = () => {
 
     return <div className="container">
     <Stack direction="horizontal" gap={4}>
-        <div className="p-2 text-center"><h1 >Kategorie</h1></div>
+        <div className="p-2 text-center"></div>
         <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
         <div className="p-2">{currentPage} z {totalPage}</div>
         <div className="p-2"><button onClick={increment}>Dalej</button></div>
@@ -89,7 +88,7 @@ const CategoriesScreen = () => {
                 <thead>
                     <tr>
                         <th>Kod</th>
-                        <th>Tytuł</th>
+                        <th>Kategorie</th>
                         <th>Czas (min)</th>
                         <th>Pytań</th>
                         <th></th>

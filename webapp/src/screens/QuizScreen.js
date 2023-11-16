@@ -19,12 +19,10 @@ const QuizScreen = () => {
     const [score, setScore] = useState(0);
     const [scorePercentage, setScorePercentage] = useState(0);
 
-    // const PAGE_SIZE = 5;
-    const HOST = 'info.e-strix.pl';
 
     const fetchQuestions = async (page) => {
         try {
-            const response = await fetch(`http://${HOST}/api/quiz/${quizCategoryId}/1/${quizQuestionLimit}/`);
+            const response = await fetch(`${appCtx.settingsURLValue}/api/quiz/${quizCategoryId}/1/${quizQuestionLimit}/`);
             // console.log("response", response);
             const json = await response.json();
             // console.log("json", json);
@@ -103,7 +101,6 @@ const QuizScreen = () => {
 
     return (
       <div className="container">
-          <h3 className="p-3 text-center">Quiz</h3>
           <table className="table table-striped table-bordered">
             <tbody>
                 <tr><td>Kategoria</td><td>{quizCategoryName}</td></tr>
