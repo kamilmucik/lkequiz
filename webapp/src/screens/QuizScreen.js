@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import AppContext from '../store/AppContext';
+import Stack from 'react-bootstrap/Stack';
 
 const QuizScreen = () => {
 
@@ -101,13 +102,13 @@ const QuizScreen = () => {
 
     return (
       <div className="container">
-          <table className="table table-striped table-bordered">
+          <table className="table table-sm">
             <tbody>
-                <tr><td>Kategoria</td><td>{quizCategoryName}</td></tr>
-                <tr><td>Czas</td><td>{countDownTime}({quizTimeLimit})min.</td></tr> 
-                <tr><td>Pytań</td><td> {currentQuestion + 1} z {questions.length}</td></tr>  
+                <tr><td class="col-md-2">Kategoria</td><td class="align-middle">{quizCategoryName}</td></tr>
+                <tr><td class="col-md-2">Czas</td><td class="align-middle">{countDownTime}({quizTimeLimit})min.</td></tr> 
+                <tr><td class="col-md-2">Pytań</td><td class="align-middle"> {currentQuestion + 1} z {questions.length}</td></tr>  
                 {showScore ? (
-                  <tr><td>Wynik</td><td> {score} {scorePercentage}% {scorePercentage >=80 ? (<label>Pozytywny</label>):(<label>Negatywny</label>) }</td></tr>
+                  <tr><td class="col-md-2">Wynik</td><td class="align-middle"> {score} {scorePercentage}% {scorePercentage >=80 ? (<label>Pozytywny</label>):(<label>Negatywny</label>) }</td></tr>
                 ) : (<tr></tr>  )}
             </tbody>
           </table>
@@ -137,9 +138,12 @@ const QuizScreen = () => {
             </div>
             : <div>loading...</div>
             }
-              <button onClick={decrement}>Wstecz</button>
-              <button onClick={increment}>Dalej</button>
-              <button onClick={finish}>Zakończ test</button>
+            <Stack direction="horizontal" gap={3}>
+            <button class="btn btn-primary" onClick={decrement}>Wstecz</button>
+              <button class="btn btn-primary" onClick={increment}>Dalej</button>
+              <button class="btn btn-secondary" onClick={finish}>Zakończ test</button>
+            </Stack>
+              
       </div>
     );
 };

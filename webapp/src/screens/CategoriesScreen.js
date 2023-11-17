@@ -80,11 +80,11 @@ const CategoriesScreen = () => {
     return <div className="container">
     <Stack direction="horizontal" gap={4}>
         <div className="p-2 text-center"></div>
-        <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
+        <div className="p-2 ms-auto"><button class="btn btn-primary" onClick={decrement}>Wstecz</button></div>
         <div className="p-2">{currentPage} z {totalPage}</div>
-        <div className="p-2"><button onClick={increment}>Dalej</button></div>
+        <div className="p-2"><button class="btn btn-primary" onClick={increment}>Dalej</button></div>
     </Stack>
-      <table className="table table-striped table-bordered">
+      <table className="table table-sm">
                 <thead>
                     <tr>
                         <th>Kod</th>
@@ -97,12 +97,12 @@ const CategoriesScreen = () => {
                 <tbody>
                     {categories && categories.map(category =>
                         <tr key={category.id}>
-                            <td>{category.code}</td>
-                            <td>{category.name}</td>
-                            <td>{category.time_limit}</td>
-                            <td>{category.question_limit} z {category.max_question_limit}</td>
-                            <td>
-                                <a 
+                            <td class="align-middle">{category.code}</td>
+                            <td class="align-middle">{category.name}</td>
+                            <td class="align-middle">{category.time_limit}</td>
+                            <td class="align-middle">{category.question_limit} z {category.max_question_limit}</td>
+                            <td class="col-md-1">
+                                <a class="btn btn-link"
                                     data-id={category.id}
                                     data-category-code={category.code}
                                     data-category-name={category.name}

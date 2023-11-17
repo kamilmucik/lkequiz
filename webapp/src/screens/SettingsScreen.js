@@ -25,16 +25,11 @@ const SettingsScreen = () => {
   return (
     <div className="container">
         <h3 className="p-3 text-center">Ustawienia</h3>
-          <table className="table table-striped table-bordered">
+          <table className="table table-sm">
             <tbody>
-                <tr><td>{packageJson.version}</td><td>version</td></tr>
-
-                <tr><td>{settingsURLValue}</td><td>settingsURLValue</td></tr> 
-                <tr><td>{settingsPortValue}</td><td>settingsPortValue</td></tr> 
-                <tr><td>{isDebugMode ? 'true' : 'false'}</td><td>isDebugMode</td></tr> 
-                <tr><td> <input type="checkbox" id="show-correct-only" checked={showCorrectAnswerOnly} onChange={handleChange}></input></td><td><labe for="show-correct-only">Pokaz tylko dobre odpowiedzi</labe></td></tr>  
-                <tr><td> <input type="number" min="4" max="20" step="1" value={appCtx.showPageAnswer} onChange={handleNumberChange} ></input></td><td>Limit rekordów na stronie {appCtx.showPageAnswer}</td></tr>     
-                
+                <tr><td class="col-md-3">Wersja</td><td class="align-middle col-md-7">{packageJson.version}</td></tr>
+                <tr><td class="col-md-3"><label for="show-correct-only">Pokaz tylko dobre odpowiedzi</label></td><td class="align-middle col-md-7"> <input type="checkbox" id="show-correct-only" checked={showCorrectAnswerOnly} onChange={handleChange}></input></td></tr>  
+                <tr><td class="col-md-3">Limit rekordów na stronie</td><td class="align-middle col-md-7"> <input type="number" min="4" max="20" step="1" value={appCtx.showPageAnswer} onChange={handleNumberChange} ></input></td></tr>
             </tbody>
           </table>
     </div>

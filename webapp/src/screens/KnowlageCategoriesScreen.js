@@ -68,11 +68,11 @@ const KnowlageCategoriesScreen = () => {
     return <div className="container">
     <Stack direction="horizontal" gap={4}>
         <div className="p-2 text-center"></div>
-        <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
+        <div className="p-2 ms-auto"><button class="btn btn-primary"  onClick={decrement}>Wstecz</button></div>
         <div className="p-2">{currentPage} z {totalPage}</div>
-        <div className="p-2"><button onClick={increment}>Dalej</button></div>
+        <div className="p-2"><button class="btn btn-primary" onClick={increment}>Dalej</button></div>
     </Stack>
-      <table className="table table-striped table-bordered">
+      <table className="table table-sm">
                 <thead>
                     <tr>
                         <th>Baza wiedzy: kategorie</th>
@@ -82,9 +82,9 @@ const KnowlageCategoriesScreen = () => {
                 <tbody>
                     {categories && categories.map(category =>
                         <tr key={category.id}>
-                            <td>{category.name}</td>
-                            <td>
-                                <NavLink to={`/knowlage/question/${category.id}`} >       
+                            <td class="align-middle col-md-9">{category.name}</td>
+                            <td class="col-md-1">
+                                <NavLink className={"btn btn-link"} to={`/knowlage/question/${category.id}`} >       
                                     <span>wybierz</span>                 
                                 </NavLink>
                             </td>

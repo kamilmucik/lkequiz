@@ -67,11 +67,11 @@ const HomeScreen = () => {
         <div className="container">
             <Stack direction="horizontal" gap={4}>
                 <div className="p-2 text-center"></div>
-                <div className="p-2 ms-auto"><button onClick={decrement}>Wstecz</button></div>
+                <div className="p-2 ms-auto"><button class="btn btn-primary" onClick={decrement}>Wstecz</button></div>
                 <div className="p-2">{currentPage} z {totalPage}</div>
-                <div className="p-2"><button onClick={increment}>Dalej</button></div>
+                <div className="p-2"><button class="btn btn-primary" onClick={increment}>Dalej</button></div>
             </Stack>
-            <table className="table table-striped table-bordered">
+            <table className="table table-sm">
                 <thead>
                     <tr>
                         <th>Quiz</th>
@@ -81,9 +81,10 @@ const HomeScreen = () => {
                 <tbody>
                     {departments && departments.map(department =>
                         <tr key={department.id}>
-                            <td>{department.name}</td>
-                            <td>
+                            <td class="align-middle">{department.name}</td>
+                            <td class="col-md-1">
                                 <NavLink
+                                    className={"btn btn-link"}
                                     to={`/category/${department.id}`}
                                     >       
                                     <span>wybierz</span>                 

@@ -21,16 +21,22 @@
 18. Generate OpenApi
 
 Webapp:
-- dodonie css style bootstrap
-- dodanie logowania
++ dodonie css style bootstrap, buttony
+-? dodanie logowania
 + okeślenie liczby paginacji
-- stylizacja tabel
-- testy ?
++ stylizacja tabel
+-? testy 
 + nginx przekiewrowanie do głównej w przypadku wystąpienia 404
 - poprawki sonar
 - dodanie SSL, domeny
 - spardzenie wg dobrych nawyków układu projektu
 - release i deploy wg mvn
+- ładowanie strony i indicator
+- tworzenie komponentów
+- releasenotes
+- przekazywanie nazwy wybranej kategorii do bazy wiedzy
+-? wysyłanie headera requestID
+-? logi (moze z nginx)
 
 Mobile:
 - Dodanie belki z Home,Quiz, Setting
@@ -44,6 +50,8 @@ Mobile:
 - Testy ?
 - Ikony i obrazki
 - Poprawki paginacji
+- ładowanie strony i indicator
+- tworzenie komponentów
 
 Backend:
 - endpoint quiz poprawić na prawidłową liczbę parametrów
@@ -55,6 +63,7 @@ Backend:
 - generowanie openApi
 - release i deploy wg mvn
 - poprawki sonar,
+- logi
 
 Tests:
 - unit
@@ -69,4 +78,6 @@ Ci/CD
 - Tests
 - Release
 - git flow
-- 
+- Sprawdzenie OWASP
+- smoke test
+- sample test
