@@ -2,12 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,TouchableOpacity,Switch } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppContext from "../store/AppContext";
+import PackageJson from '../../package';
 import GlobalStyle from "../utils/GlobalStyle";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const SettingsScreen = ({navigation, route}) => {
 
 
   const appCtx = useContext(AppContext);
+    const insets = useSafeAreaInsets();
 //   const appCtxSettingsURLValue = appCtx.settingsURLValue;
 //   const appCtxSettingsPortValue = appCtx.settingsPortValue;
 //   const appCtxSettingsInstanceValue = appCtx.settingsInstanceValue;
@@ -66,17 +69,37 @@ const SettingsScreen = ({navigation, route}) => {
 //   };
 
   return (
-    <SafeAreaView style={[GlobalStyle.AppContainer]}>
+    <SafeAreaView style={{
+      paddingTop: insets.top,
+      paddingBottom: insets.bottom,
+
+      flex: 1,
+    }}>
       <ScrollView style={[GlobalStyle.AppScrollView]}>
         <View style={{flex: 1}}>
           <Text>
             Coś tam działa
             {/* {debugInfo} */}
+            
           </Text>
+
+    <Text>v: {PackageJson.version} </Text>
         </View>
        </ScrollView>
     </SafeAreaView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    // marginTop:40,
+  },
+  versionText: {
+    color: 'gray',
+    fontSize: 10,
+    textAlign: 'right',
+    position: 'absolute',
+    bottom: 10,
+  },
+});
 export default SettingsScreen;

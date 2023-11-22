@@ -82,6 +82,11 @@ To learn more about React Native, take a look at the following resources:
 Zainstalowane paczki:
 ```bash
 npm install @react-navigation/native
+npm install @react-navigation/bottom-tabs
+npm install --save react-native-vector-icons //https://www.npmjs.com/package/react-native-vector-icons
+npm install react-native-paper
+npm install react-native-safe-area-context
+npm install @expo/vector-icons
 npm install @react-native-async-storage/async-storage
 ```
 

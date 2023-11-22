@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, FlatList, Pressable } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../store/AppContext";
-import GlobalStyle from "../utils/GlobalStyle";
-import { useSwipe } from '../hooks/UseSwipe'
+import AppContext from "../../store/AppContext";
+import GlobalStyle from "../../utils/GlobalStyle";
+import { useSwipe } from '../../hooks/UseSwipe';
 
-const QuestionsBaseScreen = ({ navigation, route }) => {
-  const { quizId } = route.params;
+const HomeScreen = ({ navigation }) => {
+
   const appCtx = useContext(AppContext);
   const [departments, setDepartments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,13 +14,14 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
 
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
   
-  const PAGE_SIZE = 5;
-  const IP = '162.19.227.81';
-  const PORT = '3001';
+  const QUIZ_ID = 1;
+  const PAGE_SIZE = 15;
+
+  const HOST = 'http://info.e-strix.pl';
 
   const fetchDepartments = async (page) => {
     try {
-        const response = await fetch(`http://${IP}:${PORT}/department/${quizId}/${page}/${PAGE_SIZE}/`);
+        const response = await fetch(`${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
         // console.log("response", response);
         const json = await response.json();
         // console.log("json", json);
@@ -30,7 +31,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
         return [];
     }
 }
-  
+
   async function loadProperties() {
     // try {
     //   appCtx.setIsDebugMode(0);
@@ -38,7 +39,6 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
     //   console.error(e)
     // }
   }
-
   function onSwipeLeft(){
     console.log('SWIPE_LEFT');
 
@@ -63,20 +63,12 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
     loadProperties();
     setCurrentPage(1)
   }, []);
-  // useEffect(() => {
-  //   loadProperties();
-  //   // Fetch initial page of data
-  //   fetchDepartments(currentPage).then(json => {
-  //       console.log("data",json);
-  //       setDepartments(json.data);
-  //   });
-  // }, []);
 
   const renderListItems = ({ item }) => {
     return (
       <Pressable
         onPress={() =>
-          navigation.navigate('Categories', {
+          navigation.navigate('Category', {
             departmentId: item.id,
             departmentName: item.name,
           })
@@ -96,9 +88,9 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
   };
 
   return (
-    
-    <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <Text style={{ fontSize: 8 }}>QuizId: {quizId} </Text>
+    <SafeAreaView style={[GlobalStyle.AppContainer, styles.container]}>
+      <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <Text style={{ fontSize: 8 }}>HOME: {QUIZ_ID} </Text>
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
         <FlatList
             data={departments}
@@ -106,6 +98,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
             keyExtractor={item => item.id.toString()}
             />
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -122,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionsBaseScreen;
+export default HomeScreen;

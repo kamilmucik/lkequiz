@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../store/AppContext";
-import GlobalStyle from "../utils/GlobalStyle";
-import { useSwipe } from '../hooks/UseSwipe'
+import AppContext from "../../store/AppContext";
+import GlobalStyle from "../../utils/GlobalStyle";
+import { useSwipe } from '../../hooks/UseSwipe'
 
 const QuestionsScreen = ({ navigation, route }) => {
   const { categoryId } = route.params;

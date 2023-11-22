@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, FlatList, Pressable } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../store/AppContext";
-import GlobalStyle from "../utils/GlobalStyle";
-import { useSwipe } from '../hooks/UseSwipe'
+import AppContext from "../../store/AppContext";
+import GlobalStyle from "../../utils/GlobalStyle";
+import { useSwipe } from '../../hooks/UseSwipe'
 
 const CategoriesScreen = ({ navigation, route }) => {
   const { departmentId } = route.params;
@@ -90,7 +90,7 @@ const CategoriesScreen = ({ navigation, route }) => {
 
   return (
       <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <Text style={{ fontSize: 8 }}>Dział: {departmentId} - {departmentName}</Text>
+        <Text style={{ fontSize: 8 }}>kn.Dział: {departmentId} - {departmentName}</Text>
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
           <FlatList
               data={categories}
