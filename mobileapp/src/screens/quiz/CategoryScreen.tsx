@@ -1,54 +1,44 @@
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, TouchableOpacity, FlatList, Pressable } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../../store/AppContext";
-import { useSwipe } from '../../hooks/UseSwipe';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CategoryScreen = ({ navigation, route }) => {
 
   const insets = useSafeAreaInsets();
-  // const { departmentId } = route.params;
-  // const { departmentName } = route.params;
+  const { departmentId } = route.params;
+  const { departmentName } = route.params;
   const appCtx = useContext(AppContext);
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const PAGE_SIZE = 8;
-  const departmentId = 1;
+  const PAGE_SIZE = 20;
+  // const departmentId = 1;
   const HOST = 'http://info.e-strix.pl';
 
   const fetchCategories = async (page) => {
-      try {
-          const response = await fetch(`${HOST}/api/category/${departmentId}/${page}/${PAGE_SIZE}/`);
-          // console.log("response", response);
-          const json = await response.json();
-          // console.log("json", json);
-          return json;
-      } catch (error) {
-          console.error(error);
-          return [];
-      }
+    if (loading) return;
+    setLoading(true);
+    try {
+        const response = await fetch(`${HOST}/api/category/${departmentId}/${page}/${PAGE_SIZE}/`);
+        // console.log("response", response);
+        const json = await response.json();
+        // console.log("json", json);
+        return json;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
   }
 
   const LoadMoreRandomData = () =>{
     currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
   }
-  const LoadLessRandomData = () =>{
-    currentPage > 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
-  }
-
-  async function loadProperties() {
-    // try {
-    //   appCtx.setIsDebugMode(0);
-    // } catch(e) {
-    //   console.error(e)
-    // }
-  }
 
   useEffect(() => {
-    setLoading(true);
+    
     // Fetch initial page of data
     fetchCategories(currentPage).then(json => {
         // console.log("data",json);
@@ -59,7 +49,7 @@ const CategoryScreen = ({ navigation, route }) => {
   }, [currentPage]);
 
   useEffect(() => {
-    loadProperties();
+    // loadProperties();
     setCurrentPage(1)
   }, []);
 
@@ -69,14 +59,19 @@ const CategoryScreen = ({ navigation, route }) => {
       <Pressable
         onPress={() =>
           navigation.navigate('Quiz', {
-            categoryId: item.id,
-            categoryName: item.name,
+            quizCategoryName: item.name,
+            quizCategoryId: item.id,
+            quizTimeLimit: item.time_limit,
+            quizQuestionLimit: item.question_limit
           })
         }
       >
-        <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10, marginTop:10 }} >
+        <Text style={{ fontSize: 16, paddingHorizontal: 12,  marginTop:10 }} >
           {item.name}
         </Text>
+          <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10}} >
+          {item.code} | {item.time_limit}(min) | {item.question_limit} z {item.max_question_limit}
+          </Text>
       </Pressable>
     );
   };
@@ -84,7 +79,7 @@ const CategoryScreen = ({ navigation, route }) => {
   const renderFooter = () => {
     return (
         <View>
-          { loading && <ActivityIndicator />}
+          { loading && <ActivityIndicator size='large' />}
         </View>
       );
     }
@@ -102,16 +97,13 @@ const CategoryScreen = ({ navigation, route }) => {
     );
   };
 
-
-
   return (
     <SafeAreaView style={{
-        paddingTop: insets.top,
         paddingBottom: insets.bottom,
-  
+        backgroundColor: 'white',
         flex: 1,
       }}>
-        <Text style={{ fontSize: 8 }}>Quiz Działa: {departmentId} </Text>
+        <Text style={{ fontSize: 8 }}>Quiz Działa: {departmentId} {departmentName} </Text>
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
           <FlatList
             contentContainerStyle={{flexGrow: 1}}

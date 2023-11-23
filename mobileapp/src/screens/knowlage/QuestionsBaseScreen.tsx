@@ -1,27 +1,29 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../../store/AppContext";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { useSwipe } from '../../hooks/UseSwipe';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const QuestionsBaseScreen = ({ navigation, route }) => {
+  const insets = useSafeAreaInsets();
   // const { quizId } = route.params;
   const appCtx = useContext(AppContext);
   const [departments, setDepartments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-
-  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
   
   const QUIZ_ID = 1;
-  const PAGE_SIZE = 5;
-  const IP = '162.19.227.81';
-  const PORT = '3001';
+  const PAGE_SIZE = 20;
+  
+  const HOST = 'http://info.e-strix.pl';
 
   const fetchDepartments = async (page) => {
+    if (loading) return;
+    setLoading(true);
     try {
-        const response = await fetch(`http://${IP}:${PORT}/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
+        const response = await fetch(`${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
         // console.log("response", response);
         const json = await response.json();
         // console.log("json", json);
@@ -40,23 +42,17 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
     // }
   }
 
-  function onSwipeLeft(){
-    console.log('SWIPE_LEFT');
-
-    currentPage > 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
-  }
-
-  function onSwipeRight(){
-      console.log('SWIPE_RIGHT')
-      currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
-  }
 
   useEffect(() => {
     // Fetch initial page of data
     fetchDepartments(currentPage).then(json => {
         // console.log("data",json);
         setTotalPage(json.totalPage);
-        setDepartments(json.data);
+        // setDepartments(json.data);
+        departments.length === 0  ? setDepartments(json.data) : setDepartments(prevData => [...prevData, ...json.data]);
+
+        
+        setLoading(false);
     });
   }, [currentPage]);
 
@@ -86,27 +82,64 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
         <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10, marginTop:10 }} >
           {item.name}
         </Text>
-        <View
-          style={{
-            borderWidth: StyleSheet.hairlineWidth,
-            borderColor: '#ccc',
-          }}
-        />
       </Pressable>
     );
   };
+  const LoadMoreRandomData = () =>{
+    if (totalPage > 1 && currentPage < totalPage ) {setCurrentPage(currentPage + 1) ;}
+  }
+  const ItemSeparatorView = () => {
+    return (
+      // Flat List Item Separator
+      <View
+        style={{
+          height: 0.5,
+          width: '100%',
+          backgroundColor: '#C8C8C8',
+        }}
+      />
+    );
+  };
+  const renderFooter = () => {
+    return (
+        <View>
+          { loading && <ActivityIndicator />}
+        </View>
+      );
+    }
 
+  const renderHeader = () => {
+    return (
+        <View>
+          { loading && <ActivityIndicator />}
+        </View>
+      );
+    }
   return (
-    <SafeAreaView style={[GlobalStyle.AppContainer, styles.container]}>
+    <SafeAreaView style={{
+      paddingTop: insets.top,
+      paddingBottom: insets.bottom,
+      backgroundColor: 'white',
+      flex: 1,
+    }}>
 
-      <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <Text style={{ fontSize: 8 }}>QuizId: {QUIZ_ID} </Text>
+      <ScrollView >
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
+        {loading ? <ActivityIndicator size='large'/> :
+        (
         <FlatList
             data={departments}
             renderItem={renderListItems}
             keyExtractor={item => item.id.toString()}
+            contentContainerStyle={{flexGrow: 1}}
+            ItemSeparatorComponent={ItemSeparatorView}
+            ListHeaderComponent={renderHeader}
+            onEndReached={LoadMoreRandomData}
+            onEndReachedThreshold={0.2}
+            onEndReached={LoadMoreRandomData}
+            ListFooterComponent={renderFooter}
             />
+        )}
       </ScrollView>
     </SafeAreaView>
   );

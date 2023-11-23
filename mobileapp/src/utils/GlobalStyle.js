@@ -11,6 +11,13 @@ export default StyleSheet.create({
     alignContent: 'center',
     margin: 10,
   },
+  AppGrayButton: {
+    borderColor: '#1f89ce',
+    backgroundColor: '#gray',
+    minWidth: 50,
+    alignContent: 'center',
+    margin: 10,
+  },
   AppButtonText: {
     color: '#fff',
     textAlign: 'center',

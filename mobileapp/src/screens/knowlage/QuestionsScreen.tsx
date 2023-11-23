@@ -1,28 +1,27 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView, SafeAreaView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../../store/AppContext";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { useSwipe } from '../../hooks/UseSwipe'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const QuestionsScreen = ({ navigation, route }) => {
+  const insets = useSafeAreaInsets();
   const { categoryId } = route.params;
   const { categoryName } = route.params;
   const appCtx = useContext(AppContext);
   const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [isLoading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-
-  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeLeft, onSwipeRight, 6)
-
-  const PAGE_SIZE = 5;
-  const IP = '162.19.227.81';
-  const PORT = '3001';
+  const PAGE_SIZE = 10;
+  const HOST = 'http://info.e-strix.pl';
 
   const fetchQuestions = async (page) => {
+    if (loading) return;
+    setLoading(true);
       try {
-          const response = await fetch(`http://${IP}:${PORT}/question/${categoryId}/${page}/${PAGE_SIZE}/`);
+          const response = await fetch(`${HOST}/api/question/${categoryId}/${page}/${PAGE_SIZE}/`);
           // console.log("response", response);
           const json = await response.json();
           // console.log("json", json);
@@ -31,6 +30,11 @@ const QuestionsScreen = ({ navigation, route }) => {
           console.error(error);
           return [];
       }
+  }
+
+  const LoadMoreRandomData = () =>{
+    if (currentPage < totalPage) {setCurrentPage(currentPage + 1) ;} 
+    // currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
   }
   
   async function loadProperties() {
@@ -41,23 +45,17 @@ const QuestionsScreen = ({ navigation, route }) => {
     // }
   }
 
-  function onSwipeLeft(){
-    console.log('SWIPE_LEFT');
-
-    currentPage > 1 ? setCurrentPage(currentPage - 1) : setCurrentPage(1);
-  }
-
-  function onSwipeRight(){
-      console.log('SWIPE_RIGHT')
-      currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
-  }
 
   useEffect(() => {
     // Fetch initial page of data
     fetchQuestions(currentPage).then(json => {
         // console.log("data",json);
         setTotalPage(json.totalPage);
-        setQuestions(json.data);
+        // setQuestions(json.data);
+        questions.length === 0  ? setQuestions(json.data) : setQuestions(prevData => [...prevData, ...json.data]);
+
+        
+        setLoading(false);
     });
   }, [currentPage]);
 
@@ -66,21 +64,10 @@ const QuestionsScreen = ({ navigation, route }) => {
     setCurrentPage(1)
   }, []);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   loadProperties();
-  //   // Fetch initial page of data
-  //   fetchQuestions(currentPage).then(json => {
-  //       // console.log("data",json);
-  //       setTotalPage(json.totalPage);
-  //       setQuestions(json.data);
-  //       setLoading(false);
-  //   });
-  // }, []);
 
   const renderListItems = ({ item }) => {
     return (
-      <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <View >
         <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4, marginTop:10  }} >
           {item.question}
         </Text>
@@ -90,7 +77,7 @@ const QuestionsScreen = ({ navigation, route }) => {
             keyExtractor={itemAnswer => itemAnswer.id.toString()}
             />
         
-      </ScrollView>
+      </View>
     );
   };
   const renderAnswerListItems = ({ item }) => {
@@ -103,26 +90,54 @@ const QuestionsScreen = ({ navigation, route }) => {
           {item.answer}
           </Text>
         )}
-        
-
       </View>
     );
   };
 
+  const ItemSeparatorView = () => {
+    return (
+      // Flat List Item Separator
+      <View
+        style={{
+          height: 0.5,
+          width: '100%',
+          backgroundColor: '#C8C8C8',
+        }}
+      />
+    );
+  };
+  const renderFooter = () => {
+    return (
+        <View>
+          { loading && <ActivityIndicator />}
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
   return (
-    <ScrollView style={{ flex: 1, paddingTop: 10 }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <SafeAreaView style={{
+      paddingBottom: insets.bottom,
+      backgroundColor: 'white',
+      flex: 1,
+    }}>
         <Text style={{ fontSize: 8 }}>Kategoria: {categoryId} - {categoryName}</Text>
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
-        {isLoading ? <ActivityIndicator /> :
+        {loading ? <ActivityIndicator size='large'/> :
         (
           <FlatList
             data={questions}
             renderItem={renderListItems}
             keyExtractor={item => item.id.toString()}
+            contentContainerStyle={{flexGrow: 1}}
+            ItemSeparatorComponent={ItemSeparatorView}
+            onEndReachedThreshold={0.2}
+            onEndReached={LoadMoreRandomData}
+            ListFooterComponent={renderFooter}
             />
         )}
         
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

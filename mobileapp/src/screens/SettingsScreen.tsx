@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,TouchableOpacity,Switch } from 'react-native';
+import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,Switch } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppContext from "../store/AppContext";
 import PackageJson from '../../package';
@@ -21,69 +21,55 @@ const SettingsScreen = ({navigation, route}) => {
 //   const [loading, setLoading] = useState(false);
 //   const [sourceUrl, setSourceUrl] = useState(appCtxSettingsURLValue);
 //   const [sourcePort, setSourcePort] = useState(appCtxSettingsPortValue);
-//   const [sourceCollectorNo, setSourceCollectorNo] = useState(appCtxSettingsInstanceValue);
 //   const [sourceOperatorName, setSourceOperatorName] = useState(appCtxSettingsOperatorValue);
 //   const [debugInfo, setDebugInfo] = useState('');
-//   const [switchValue, setSwitchValue] = useState(appCtxSettingsIsMobile ==='true');
-//   const [isDebugModeSwitchValue, setIsDebugModeSwitchValue] = useState(appCtxSettingsIsDebugMode ==='true');
 
-  async function saveData(key, value) {
-    const str = await AsyncStorage.setItem(key,value);
+  const [showPageAnswer, setShowPageAnswer] = useState(4);
+  const [showCorrectAnswerOnly, setShowCorrectAnswerOnly] = useState(false);
 
-    return str;
-  }
-  const saveProperties = () => {
-    // try {
-    //   saveData('@storage_sourceUrl', sourceUrl);
-    //   saveData('@storage_sourcePort', sourcePort);
-    //   saveData('@storage_sourceCollectorNo', sourceCollectorNo);
-    //   saveData('@storage_sourceOperatorName', sourceOperatorName);
-    //   saveData('@storage_isMobile', switchValue?'true':'false');
-    //   saveData('@storage_isDebugMode', isDebugModeSwitchValue?'true':'false');
-    // } catch(e) {
-    //   console.error(e)
-    // }
-  }
 
-  const saveSettings = typ => {
-    // setLoading(true);
-
-    // appCtx.setSettingsURLValue(sourceUrl);
-    // appCtx.setSettingsPortValue(sourcePort);
-    // appCtx.setSettingsInstanceValue(sourceCollectorNo);
-    // appCtx.setSettingsOperatorValue(sourceOperatorName);
-    // appCtx.setIsMobile(switchValue?'true':'false');
-    // appCtx.setIsDebugMode(isDebugModeSwitchValue?'true':'false');
-
-    saveProperties();
-
-    // appCtx.setToastInfoValue('Zapisałem zmiany', 'info');
-    // setLoading(false);
-  }
-
-//   const toggleSwitch = (value) => {
-//     setSwitchValue(value);
-//   };
-//   const isDebugModeSwitch = (value) => {
-//     setIsDebugModeSwitchValue(value);
-//   };
+  const showCorrectAnswerOnlySwitch = (value) => {
+    setShowCorrectAnswerOnly(value);
+  };
+  const handleNumberChange = event => {
+    const result = event.target.value.replace(/\D/g, '');
+    setShowPageAnswer(result);
+  };
 
   return (
     <SafeAreaView style={{
       paddingTop: insets.top,
       paddingBottom: insets.bottom,
-
+      backgroundColor: 'white',
       flex: 1,
     }}>
       <ScrollView style={[GlobalStyle.AppScrollView]}>
         <View style={{flex: 1}}>
-          <Text>
-            Coś tam działa
-            {/* {debugInfo} */}
-            
-          </Text>
 
-    <Text>v: {PackageJson.version} </Text>
+  
+        <View style={[{flexDirection: 'row'}]}>
+            <Text >Wersja: </Text>
+            <Text>{PackageJson.version} </Text>
+          </View>
+
+          <View style={[{flexDirection: 'row'}]}>
+            <Text style={{marginTop: 14}}>Pokaz tylko dobre odpowiedzi: </Text>
+            <Switch
+              style={{marginTop: 10}}
+              onValueChange={showCorrectAnswerOnlySwitch}
+              value={showCorrectAnswerOnly}
+            />
+          </View>
+          <View style={[{flexDirection: 'row'}]}>
+            <Text style={{marginTop: 14}}>Limit rekordów na stronie: </Text>
+            <TextInput
+                placeholder='Limit rekordów na stronie'
+                keyboardType='numeric'
+                value={showPageAnswer}
+                onChangeText={(text) => setShowPageAnswer(text)}
+                maxLength={2}
+              />
+          </View>
         </View>
        </ScrollView>
     </SafeAreaView>

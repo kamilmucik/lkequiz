@@ -19,11 +19,15 @@ const HomeStackNavigator = () => {
                         options={({ navigation, route }) => ({
                           headerShown: true,
                           title: 'Quiz:' + route.params.departmentName,
+                          headerShadowVisible: false, // applied here
+                          headerBackTitleVisible: false,
                         })}/>
       <HomeStack.Screen name="Quiz" component={QuizScreen}
                         options={({ navigation, route }) => ({
-                          headerShown: true,
+                          headerShown: false,
                           title: '' + route.params.departmentName,
+                          headerShadowVisible: false, // applied here
+                          headerBackTitleVisible: false,
                         })}/>
     </HomeStack.Navigator>
   );

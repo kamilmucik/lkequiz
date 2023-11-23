@@ -19,11 +19,15 @@ const KnowlageBaseStackNavigator = () => {
                         options={({ navigation, route }) => ({
                           headerShown: true,
                           title: '' + route.params.departmentName,
+                          headerShadowVisible: false, // applied here
+                          headerBackTitleVisible: false,
                         })}/>
       <KnowlageBaseStack.Screen name="Questions" component={QuestionsScreen}
                         options={({ navigation, route }) => ({
-                          headerShown: false,
+                          headerShown: true,
                           title: '' + route.params.categoryName,
+                          headerShadowVisible: false, // applied here
+                          headerBackTitleVisible: false,
                         })}/>
     </KnowlageBaseStack.Navigator>
   );

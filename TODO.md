@@ -39,7 +39,7 @@ Webapp:
 -? logi (moze z nginx)
 
 Mobile:
-- Dodanie belki z Home,Quiz, Setting
++ Dodanie belki z Home,Quiz, Setting
 - Dodanie Quiz 
 - Dodanie bazy wiedzy
 - Dodanie ustawien
