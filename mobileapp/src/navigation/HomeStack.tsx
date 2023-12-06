@@ -9,7 +9,8 @@ const HomeStack = createNativeStackNavigator();
 
 const HomeStackNavigator = () => {
   return (
-    <HomeStack.Navigator >
+    <HomeStack.Navigator screenOptions={{unmountOnBlur: true }} 
+>
     <HomeStack.Screen name="Home" component={HomeScreen}
                       options={({ navigation, route }) => ({
                         headerShown: false,
@@ -17,7 +18,7 @@ const HomeStackNavigator = () => {
                       })}/>
       <HomeStack.Screen name="Category" component={CategoryScreen}
                         options={({ navigation, route }) => ({
-                          headerShown: true,
+                          headerShown: false,
                           title: 'Quiz:' + route.params.departmentName,
                           headerShadowVisible: false, // applied here
                           headerBackTitleVisible: false,

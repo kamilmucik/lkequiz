@@ -13,12 +13,14 @@ const CategoriesScreen = ({ navigation, route }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isListEnd, setListEnd] = useState(false);
 
   const PAGE_SIZE = 20;
   const HOST = 'http://info.e-strix.pl';
 
   const fetchCategories = async (page) => {
     if (loading) return;
+    if (isListEnd) return;
     setLoading(true);
       try {
           const response = await fetch(`${HOST}/api/category/${departmentId}/${page}/${PAGE_SIZE}/`);
@@ -34,11 +36,6 @@ const CategoriesScreen = ({ navigation, route }) => {
 
 
   async function loadProperties() {
-    // try {
-    //   appCtx.setIsDebugMode(0);
-    // } catch(e) {
-    //   console.error(e)
-    // }
   }
 
 
@@ -47,10 +44,11 @@ const CategoriesScreen = ({ navigation, route }) => {
     fetchCategories(currentPage).then(json => {
         // console.log("data",json);
         setTotalPage(json.totalPage);
-        // setCategories(json.data);
-        categories.length === 0  ? setCategories(json.data) : setCategories(prevData => [...prevData, ...json.data]);
-
         
+        categories.length === 0  ? setCategories(json.data) : setCategories(prevData => [...prevData, json.data]);
+        if (currentPage === totalPage) {
+          setListEnd(true)
+        } 
         setLoading(false);
     });
   }, [currentPage]);
@@ -63,6 +61,7 @@ const CategoriesScreen = ({ navigation, route }) => {
   const renderListItems = ({ item }) => {
     return (
       <Pressable
+      style={[GlobalStyle.AppFlatListStyleItem]}
         onPress={() =>
           navigation.navigate('Questions', {
             categoryId: item.id,
@@ -70,23 +69,23 @@ const CategoriesScreen = ({ navigation, route }) => {
           })
         }
       >
-        <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10, marginTop:10 }} >
+        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, paddingHorizontal: 12, verticalAlign:'middle', flex: 1 }]} >
           {item.name}
         </Text>
       </Pressable>
     );
   };
   const LoadMoreRandomData = () =>{
-    if (currentPage < totalPage && totalPage > 1) {setCurrentPage(currentPage + 1) ;}
+    if (currentPage < totalPage && totalPage > 1) { setCurrentPage(currentPage + 1) ;}
   }
   const ItemSeparatorView = () => {
     return (
       // Flat List Item Separator
       <View
         style={{
-          height: 0.5,
+          height: 2,
           width: '100%',
-          backgroundColor: '#C8C8C8',
+          // backgroundColor: '#C8C8C8',
         }}
       />
     );
@@ -99,41 +98,47 @@ const CategoriesScreen = ({ navigation, route }) => {
       );
     }
   return (
-    <SafeAreaView style={{
+    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
       paddingBottom: insets.bottom,
-      backgroundColor: 'white',
-      flex: 1,
-    }}>
-        <Text style={{ fontSize: 8 }}>kn.Dział: {departmentId} - {departmentName}</Text>
+      alignItems: 'center'
+    }]}>
+        {/* <Text style={{ fontSize: 8 }}>kn.Dział: {departmentId} - {departmentName}</Text> */}
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
-        {loading ? <ActivityIndicator size='large'/> :
-        (
+        {categories && categories.length > 0 ?
           <FlatList
               data={categories}
+              style={styles.flatList}
               renderItem={renderListItems}
-              keyExtractor={item => item.id.toString()}
-              contentContainerStyle={{flexGrow: 1}}
+              keyExtractor={ (item, index) => `${item.id}-${index}`}
+              contentContainerStyle={[styles.flatListItem,{}]}
               ItemSeparatorComponent={ItemSeparatorView}
               onEndReachedThreshold={0.2}
               onEndReached={LoadMoreRandomData}
               ListFooterComponent={renderFooter}
               />
-        )}
+              :
+        <ActivityIndicator size='large' />
+            }
       </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop:40,
+    // marginTop:40,
   },
-  versionText: {
-    color: 'gray',
-    fontSize: 10,
-    textAlign: 'right',
-    position: 'absolute',
-    bottom: 10,
+  flatList: {
+    width: '100%',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
+
+  flatListItem: {
+    // width: '100%',
+    // backgroundColor:'red'
+    margin: 4,
+    
+  }
 });
 
 export default CategoriesScreen;

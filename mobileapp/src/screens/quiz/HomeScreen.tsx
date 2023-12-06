@@ -1,8 +1,19 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable, Dimensions, Image } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../../store/AppContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import airplane from '../../assets/img/airplane.png';
+import airplane2 from '../../assets/img/airplane2.png';
+import glider from '../../assets/img/glider.png';
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+const { width } = Dimensions.get("window");
+
+const tileImages = {
+  1: airplane,
+  5: glider,
+  6: airplane2,
+}
 
 const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -11,6 +22,13 @@ const HomeScreen = ({ navigation }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  const calcTileDimensions = (deviceWidth, tpr) => {
+    const margin = (deviceWidth / (tpr * 10));
+    const size = ((deviceWidth - margin * (tpr * 2)) / tpr)-5;
+    return { size, margin };
+  };
+  const tileDimensions = calcTileDimensions(width, 2) 
   
   const QUIZ_ID = 1;
   const PAGE_SIZE = 20;
@@ -22,9 +40,7 @@ const HomeScreen = ({ navigation }) => {
     setLoading(true);
     try {
         const response = await fetch(`${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
-        console.log("response", response);
         const json = await response.json();
-        console.log("json", json);
         return json;
     } catch (error) {
         console.error(error);
@@ -33,22 +49,20 @@ const HomeScreen = ({ navigation }) => {
 }
 
   async function loadProperties() {
-    // try {
-    //   appCtx.setIsDebugMode(0);
-    // } catch(e) {
-    //   console.error(e)
-    // }
+    const value = await AsyncStorage.getItem('@storage_lkequiz3');
+    let parsed = JSON.parse(value);
+    if(value !== null) {
+      appCtx.setSettingsOnlyCorrectValue(parsed.correct);
+      appCtx.setSettingsShowPageSize(parsed.pageSize);
+    }
   }
 
   useEffect(() => {
     // Fetch initial page of data
     fetchDepartments(currentPage).then(json => {
-        console.log("data",json);
         setTotalPage(json.totalPage);
-        // setDepartments(json.data);
-        departments.length === 0  ? setDepartments(json.data) : setDepartments(prevData => [...prevData, ...json.data]);
-
-        
+        setDepartments(json.data);
+        // departments.length === 0  ? setDepartments(json.data) : setDepartments(prevData => [...prevData, ...json.data]);
         setLoading(false);
     });
   }, [currentPage]);
@@ -58,7 +72,7 @@ const HomeScreen = ({ navigation }) => {
     setCurrentPage(1)
   }, []);
 
-  const renderListItems = ({ item }) => {
+  const renderTileItems = ({item}) => {    
     return (
       <Pressable
         onPress={() =>
@@ -68,76 +82,69 @@ const HomeScreen = ({ navigation }) => {
           })
         }
       >
-        <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10, marginTop:10 }} >
-          {item.name}
-        </Text>
+      <View style={[styles.item, {width: tileDimensions.size, height: tileDimensions.size, marginHorizontal: 8.}]}>
+        <Image source={tileImages[item.id]} style={[{ width: 64, height: 64 }, styles.tileImg]} />
+        <Text style={[GlobalStyle.AppTextMainColor]}>{item.name}</Text>
+      </View>
+
       </Pressable>
     );
-  };
-
+    
+  }
 
   const LoadMoreRandomData = () =>{
     if (totalPage > 1 && currentPage < totalPage ) {setCurrentPage(currentPage + 1) ;}
   }
-  const ItemSeparatorView = () => {
-    return (
-      // Flat List Item Separator
-      <View
-        style={{
-          height: 0.5,
-          width: '100%',
-          backgroundColor: '#C8C8C8',
-        }}
-      />
-    );
-  };
+
   const renderFooter = () => {
     return (
         <View>
-          { loading && <ActivityIndicator />}
+          { loading && <ActivityIndicator size='large'/>}
         </View>
       );
     }
 
   return (
-    <SafeAreaView style={{
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom,
-      backgroundColor: 'white',
-      flex: 1,
-    }}>
-      <ScrollView >
-      <Text style={{ fontSize: 10 }}>Paginacja-: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
-      {loading ? <ActivityIndicator size='large'/> :
-        (
-        <FlatList
-            data={departments}
-            renderItem={renderListItems}
-            ItemSeparatorComponent={ItemSeparatorView}
-            keyExtractor={item => item.id.toString()}
-            contentContainerStyle={{flexGrow: 1}}
-            ItemSeparatorComponent={ItemSeparatorView}
-            onEndReachedThreshold={0.2}
-            onEndReached={LoadMoreRandomData}
-            ListFooterComponent={renderFooter}
-            />
-        )}
-    </ScrollView>
+    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        alignItems: 'center',
+      }]}>
+      {/* <Text style={{ fontSize: 10 }}>Paginacja-: {tileDimensions.size} {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text> */}
+      
+      <FlatList
+          data={departments}
+          renderItem={renderTileItems}
+          keyExtractor={item => item.id.toString()}
+          horizontal={false}
+          numColumns={2} 
+          style={[styles.tileList]}
+          contentContainerStyle={[styles.tileListContent,GlobalStyle.AppScreenViewBackgroundColor]}
+          onEndReachedThreshold={0.2}
+          onEndReached={LoadMoreRandomData}
+          ListFooterComponent={renderFooter}
+          />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop:40,
+  tileList: {
   },
-  versionText: {
-    color: 'gray',
-    fontSize: 10,
-    textAlign: 'right',
-    position: 'absolute',
-    bottom: 10,
+  tileListContent: {
+    marginTop: 30, 
   },
+  item: {
+    backgroundColor: '#ffffff',
+     alignItems: 'center',
+     justifyContent: 'center',
+     marginBottom: 20,
+     borderRadius: 4,
+  },
+  tileImg: {
+    borderColor: '#1f89ce',
+    // borderWidth: 1
+  }
 });
 
 export default HomeScreen;

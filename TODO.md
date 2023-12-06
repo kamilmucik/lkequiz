@@ -35,23 +35,28 @@ Webapp:
 - tworzenie komponentów
 - releasenotes
 - przekazywanie nazwy wybranej kategorii do bazy wiedzy
+- obrazki/ikony
 -? wysyłanie headera requestID
 -? logi (moze z nginx)
 
 Mobile:
 + Dodanie belki z Home,Quiz, Setting
-- Dodanie Quiz 
-- Dodanie bazy wiedzy
-- Dodanie ustawien
++ Dodanie Quiz 
++ Dodanie bazy wiedzy
++ Dodanie ustawien
 - Poprawki SOLID 
 - Poprawki Sonar
++ Poprawki CSS
 - Deploy dla Android
 - Deploy dla iOS
 - Testy ?
-- Ikony i obrazki
++ Ikony i obrazki
 - Poprawki paginacji
-- ładowanie strony i indicator
++ ładowanie strony i indicator
 - tworzenie komponentów
+- obrazek, która odpowiedź jest poprawna po zakończeniu testu
+- pobieranie danych z pliku konfiguracyjnego
+- 
 
 Backend:
 - endpoint quiz poprawić na prawidłową liczbę parametrów
@@ -64,6 +69,7 @@ Backend:
 - release i deploy wg mvn
 - poprawki sonar,
 - logi
+- błąd połączenia z bazą danych po kilkunastu połączeniach
 
 Tests:
 - unit

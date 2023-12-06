@@ -5,6 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import HomeStackScreen from './HomeStack';
 import SettingsScreen from '../screens/SettingsScreen';
 import KnowlageBaseStack from './KnowlageBaseStackScreen';
+import GlobalStyle from "../utils/GlobalStyle";
 
 
 const Tab = createBottomTabNavigator();
@@ -12,14 +13,16 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator 
-      initialRouteName="Home" 
-      activeColor="#e91e63"
+      initialRouteName="HomeStack" 
+      activeColor="#18376e"
+      sceneContainerStyle={GlobalStyle.AppContainer}
       screenOptions={{ 
-        activeTintColor: '#e91e63',
-        headerShown: false 
+        activeTintColor: '#18376e',
+        headerShown: false,
+        unmountOnBlur: true
         }}>
         <Tab.Screen 
-          name="Home" 
+          name="HomeStack" 
           component={HomeStackScreen} 
           options={{
             tabBarLabel: 'Home',

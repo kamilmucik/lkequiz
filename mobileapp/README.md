@@ -88,6 +88,7 @@ npm install react-native-paper
 npm install react-native-safe-area-context
 npm install @expo/vector-icons
 npm install @react-native-async-storage/async-storage
+npm install react-hook-form
 ```
 
 przydasie

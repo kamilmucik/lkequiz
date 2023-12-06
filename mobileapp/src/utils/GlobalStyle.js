@@ -2,62 +2,63 @@ import {StyleSheet} from "react-native";
 
 export default StyleSheet.create({
   AppContainer: {
-    flex: 1
-  },
-  AppButton: {
-    borderColor: '#1f89ce',
-    backgroundColor: '#2399e5',
-    minWidth: 50,
-    alignContent: 'center',
-    margin: 10,
-  },
-  AppGrayButton: {
-    borderColor: '#1f89ce',
-    backgroundColor: '#gray',
-    minWidth: 50,
-    alignContent: 'center',
-    margin: 10,
-  },
-  AppButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-
-    fontSize: 20,
-    lineHeight: 46,
-  },
-  AppScrollView: {
     flex: 1,
-    marginHorizontal: 8,
   },
-  AppInputSection: {
-    flexDirection: 'row',
+  AppScreenViewBackgroundColor: {
+    backgroundColor: '#e6ecf6',
+  },
+  AppTextMainColor: {
+    color: '#18376e',
+    fontSize: 14,
+  },
+  AppTextSecoundColor: {
+    color: '#b8bed3'
+  },
+  AppFlatListStyle: {
+    // backgroundColor: '#ffffff',
+    // borderRadius: 4,
+    // width: '96%'
+    
+  },
+
+  AppFlatListStyleItem: {
+    backgroundColor: '#ffffff',
+    borderRadius: 4,
+    minHeight: 50,
+    verticalAlign: 'middle',
+    textAlignVertical: 'center',
+    // width: '96%'
+  },
+
+  AppButton: {
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderBottomWidth: 0.5,
-    borderColor: '#000',
-    height: 40,
-    margin: 10,
+    width:'100%',
+    height: 48,
+    borderRadius: 4,
+    alignContent: 'center',
+    // padding:4,
+    // margin: 10,
   },
-  AppSection: {
+  AppPrimaryButtonText: {
+    color: '#ffffff'
+  },
+  AppPrimaryButton: {
+    borderColor: '#1f89ce',
+    backgroundColor: '#2399e5',
+  },
+  AppSecoundaryButton: {
+    width:'100%',
+    borderColor: '#1f89ce',
+    // backgroundColor: '#2399e5',
+  },
+  AppSecoundaryButtonText: {
 
-    margin: 10,
-  },
-  AppInput: {
-    color: 'black',
-    flex: 5,
-    fontSize: 14,
-    textAlign: 'center',
-    borderColor: 'black',
-  },
-  AppSelectButton: {
-    backgroundColor: '#dfe4e6',
-    borderBottomColor: '#1f89ce',
-    borderBottomWidth: 1,
-    borderTopColor: '#1f89ce',
-    borderTopWidth: 1,
-  },
-  AppSelectButtonText: {
+  }
 
-  },
+
+
+
+  
 })

@@ -14,7 +14,7 @@ const QuestionsScreen = ({ navigation, route }) => {
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 5;
   const HOST = 'http://info.e-strix.pl';
 
   const fetchQuestions = async (page) => {
@@ -27,14 +27,13 @@ const QuestionsScreen = ({ navigation, route }) => {
           // console.log("json", json);
           return json;
       } catch (error) {
-          console.error(error);
+          // console.error(error);
           return [];
       }
   }
 
   const LoadMoreRandomData = () =>{
-    if (currentPage < totalPage) {setCurrentPage(currentPage + 1) ;} 
-    // currentPage < totalPage ? setCurrentPage(currentPage + 1) : setCurrentPage(totalPage);
+    if (currentPage < totalPage) {setCurrentPage(currentPage + 1) ;}
   }
   
   async function loadProperties() {
@@ -49,7 +48,7 @@ const QuestionsScreen = ({ navigation, route }) => {
   useEffect(() => {
     // Fetch initial page of data
     fetchQuestions(currentPage).then(json => {
-        // console.log("data",json);
+        // console.log("data",json.totalPage);
         setTotalPage(json.totalPage);
         // setQuestions(json.data);
         questions.length === 0  ? setQuestions(json.data) : setQuestions(prevData => [...prevData, ...json.data]);
@@ -67,8 +66,8 @@ const QuestionsScreen = ({ navigation, route }) => {
 
   const renderListItems = ({ item }) => {
     return (
-      <View >
-        <Text style={{ fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4, marginTop:10  }} >
+      <View style={[GlobalStyle.AppFlatListStyleItem]}>
+        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, paddingHorizontal: 12,  marginTop:10 }]} >
           {item.question}
         </Text>
           <FlatList
@@ -99,9 +98,9 @@ const QuestionsScreen = ({ navigation, route }) => {
       // Flat List Item Separator
       <View
         style={{
-          height: 0.5,
+          height: 2,
           width: '100%',
-          backgroundColor: '#C8C8C8',
+          // backgroundColor: '#C8C8C8',
         }}
       />
     );
@@ -116,42 +115,46 @@ const QuestionsScreen = ({ navigation, route }) => {
     }
 
   return (
-    <SafeAreaView style={{
+    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
       paddingBottom: insets.bottom,
-      backgroundColor: 'white',
-      flex: 1,
-    }}>
-        <Text style={{ fontSize: 8 }}>Kategoria: {categoryId} - {categoryName}</Text>
+      alignItems: 'center'
+    }]}>
+        {/* <Text style={{ fontSize: 8 }}>Kategoria: {categoryId} - {categoryName}</Text> */}
         <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
-        {loading ? <ActivityIndicator size='large'/> :
-        (
-          <FlatList
-            data={questions}
-            renderItem={renderListItems}
-            keyExtractor={item => item.id.toString()}
-            contentContainerStyle={{flexGrow: 1}}
-            ItemSeparatorComponent={ItemSeparatorView}
-            onEndReachedThreshold={0.2}
-            onEndReached={LoadMoreRandomData}
-            ListFooterComponent={renderFooter}
-            />
-        )}
+        
+        <FlatList
+          data={questions}
+          renderItem={renderListItems}
+          style={styles.flatList}
+          contentContainerStyle={[styles.flatListItem,{}]}
+          keyExtractor={ (item, index) => `${item.id}-${index}`}
+          contentContainerStyle={{flexGrow: 1}}
+          ItemSeparatorComponent={ItemSeparatorView}
+          onEndReachedThreshold={0.2}
+          onEndReached={LoadMoreRandomData}
+          ListFooterComponent={renderFooter}
+          />
+        
         
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop:40,
+  
+  flatList: {
+    width: '100%',
+    padding: 5
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
-  versionText: {
-    color: 'gray',
-    fontSize: 10,
-    textAlign: 'right',
-    position: 'absolute',
-    bottom: 10,
-  },
+
+  flatListItem: {
+    // width: '100%',
+    // backgroundColor:'red'
+    margin: 4,
+    
+  }
 });
 
 export default QuestionsScreen;
