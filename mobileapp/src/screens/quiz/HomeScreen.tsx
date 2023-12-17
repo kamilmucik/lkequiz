@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable, Dimensions, Image } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable, Dimensions, Image, PermissionsAndroid, Platform } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../../store/AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,6 +8,33 @@ import glider from '../../assets/img/glider.png';
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const { width } = Dimensions.get("window");
+import PushNotification, {Importance} from 'react-native-push-notification';
+
+
+const requestNotificationPermission = async () => {
+//https://stackoverflow.com/questions/75169559/reactnative-and-permissionsandroid-0-71-vs-0-70-post-notification-vs-post-notif
+  // if (Platform.OS == 'android' && Platform.Version >= 33)
+
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      {
+        title: "App Notification Permission",
+        message:"App needs access to your camera ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK"
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("Notification permission given");
+    } else {
+      console.log("Notification permission denied");
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+};
 
 const tileImages = {
   1: airplane,
@@ -22,6 +49,22 @@ const HomeScreen = ({ navigation }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  const createChannel = () => {
+    requestNotificationPermission();
+    // Notifications.createChannel
+    PushNotification.createChannel(
+      {
+        channelId: "test-channel",
+        channelName: "Test Channel",
+        channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+        playSound: false, // (optional) default: true
+        soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      }
+    )
+  }
 
   const calcTileDimensions = (deviceWidth, tpr) => {
     const margin = (deviceWidth / (tpr * 10));
@@ -48,6 +91,8 @@ const HomeScreen = ({ navigation }) => {
     }
 }
 
+// const {isLoading, serverError, apiData} = UseFetch(`${HOST}/api/department/${QUIZ_ID}/${currentPage}/${PAGE_SIZE}/`);
+
   async function loadProperties() {
     const value = await AsyncStorage.getItem('@storage_lkequiz3');
     let parsed = JSON.parse(value);
@@ -69,7 +114,8 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadProperties();
-    setCurrentPage(1)
+    createChannel();
+    setCurrentPage(1);
   }, []);
 
   const renderTileItems = ({item}) => {    

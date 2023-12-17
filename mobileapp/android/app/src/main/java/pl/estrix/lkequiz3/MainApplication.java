@@ -1,4 +1,4 @@
-package com.mobileapp;
+package pl.estrix.lkequiz3;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

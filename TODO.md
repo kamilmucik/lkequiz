@@ -20,6 +20,13 @@
 17. Sprawdzanie OWASP
 18. Generate OpenApi
 
+LandingPage:
+- WordPress
+- szablon: poszukać tego starego
+- połączenie z facebookiem
+- nginx(ssl/ http2/3, domena) + php8 + mysql
+- 
+
 Webapp:
 + dodonie css style bootstrap, buttony
 -? dodanie logowania
@@ -47,16 +54,18 @@ Mobile:
 - Poprawki SOLID 
 - Poprawki Sonar
 + Poprawki CSS
-- Deploy dla Android
++ Deploy dla Android
 - Deploy dla iOS
 - Testy ?
 + Ikony i obrazki
-- Poprawki paginacji
+- Poprawki paginacji in memo
 + ładowanie strony i indicator
 - tworzenie komponentów
 - obrazek, która odpowiedź jest poprawna po zakończeniu testu
-- pobieranie danych z pliku konfiguracyjnego
-- 
++ pobieranie danych z pliku konfiguracyjnego
++ notyfikacje lokalne i firebase
+- 3 szybkie pytania + backend + przejście z powiadomienia do strony z pytaniami
+- opcja pokaz tylko dobre odpowiedzi: rq do backendu 
 
 Backend:
 - endpoint quiz poprawić na prawidłową liczbę parametrów
@@ -70,6 +79,7 @@ Backend:
 - poprawki sonar,
 - logi
 - błąd połączenia z bazą danych po kilkunastu połączeniach
+- dodanie bazy dla droniarzy
 
 Tests:
 - unit

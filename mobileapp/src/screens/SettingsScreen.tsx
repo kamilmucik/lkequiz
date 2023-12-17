@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,Switch, TouchableOpacity, Alert ,Button} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppContext from "../store/AppContext";
@@ -8,6 +8,28 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {useForm, Controller} from 'react-hook-form';
 import { BASE_URL, API_KEY } from '../config.tsx';
+import PushNotification, {Importance} from 'react-native-push-notification';
+
+const requestNotificationPermission = async () => {
+  const result = await request(PERMISSIONS.POST_NOTIFICATIONS);
+  return result;
+};
+
+const checkNotificationPermission = async () => {
+  const result = await check(PERMISSIONS.POST_NOTIFICATIONS);
+  return result;
+};
+
+
+const requestPermission = async () => {
+  const checkPermission = await checkNotificationPermission();
+  if (checkPermission !== RESULTS.GRANTED) {
+   const request = await requestNotificationPermission();
+     if(request !== RESULTS.GRANTED){
+          // permission not granted
+      }
+  }
+};
 
 const SettingsScreen = ({navigation, route}) => {
   const {control, handleSubmit, formState: { errors } } = useForm();
@@ -15,6 +37,40 @@ const SettingsScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
 
   const [showCorrectAnswerOnly, setShowCorrectAnswerOnly] = useState(appCtx.settingsShowCorrectAnswerOnly);
+
+  
+  
+
+  useEffect(() => {
+    requestPermission();
+    // createChannel();
+  }, []);
+
+  const createChannel = () => {
+    // Notifications.createChannel
+    // PushNotification.createChannel(
+    //   {
+    //     channelId: "test-channel",
+    //     channelName: "Test Channel",
+    //     // channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+    //     // playSound: false, // (optional) default: true
+    //     // soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+    //     // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+    //     // vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+    //   }
+    // )
+  }
+
+  const handleNotification = () => {
+    requestPermission();
+    PushNotification.localNotification(
+      {
+        channelId: "test-channel",
+        title: "You clecked it",
+        message: "Zagramy w 3 szybkie?"
+      }
+    )
+  }
 
   async function saveData(key, value) {
     await AsyncStorage.setItem(key,value);
@@ -52,7 +108,7 @@ const SettingsScreen = ({navigation, route}) => {
 
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: '25%'}}>
-                <Text style={{ fontSize: 14}}>Wersja</Text>
+                <Text style={{ fontSize: 14}}>API</Text>
             </View>
             <View style={{ width: '75%'}}>
                 <Text style={{ fontSize: 14, fontWeight: 'bold' , textAlign: 'right'}}>{BASE_URL}</Text>
@@ -123,6 +179,16 @@ const SettingsScreen = ({navigation, route}) => {
           handleSubmit((formValue) => saveForm(formValue))
         }>
           <Text style={[GlobalStyle.AppPrimaryButtonText]}>Zapisz</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.container}>
+        <TouchableOpacity 
+        style={[GlobalStyle.AppButton, GlobalStyle.AppPrimaryButton, {marginTop: 24}]}
+        onPress={
+          () => handleNotification()
+        }>
+          <Text style={[GlobalStyle.AppPrimaryButtonText]}>Notyfikacje</Text>
         </TouchableOpacity>
       </View>
 
