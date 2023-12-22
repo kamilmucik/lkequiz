@@ -1,76 +1,50 @@
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, FlatList, Pressable } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../../store/AppContext";
+import React, {  useEffect, useState, useReducer } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
+import {INITIAL_STATE, postReducer} from '../../hooks/postReducer'
+import {ACTION_TYPE} from '../../hooks/postActionTypes';
 
 const CategoryScreen = ({ navigation, route }) => {
-
   const insets = useSafeAreaInsets();
   const { departmentId } = route.params;
-  const { departmentName } = route.params;
-  const appCtx = useContext(AppContext);
-  const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  
-  const [loading, setLoading] = useState(false);
-  const [isListEnd, setListEnd] = useState(false);
-
-  const PAGE_SIZE = 20;
-  const HOST = 'http://info.e-strix.pl';
+  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
 
   const fetchCategories = async (page) => {
-    if (loading) return;
-    if (isListEnd) return;
-    setLoading(true);
-    try {
-        const response = await fetch(`${HOST}/api/category/${departmentId}/${page}/${PAGE_SIZE}/`);
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
+    if (state.loading || state.moreLoading || state.isListEnd) return;
+    dispach({type: ACTION_TYPE.FETCH_START, currentPage: page});
+    fetch(`${BASE_API_URL}/category/${departmentId}/${page}/${PAGE_SIZE}/`)
+      .then( (response) => {
+        return response.json();
+      })
+      .then( (data) => {
+        dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
+      })
+      .catch( (error) => {
+        dispach({type: ACTION_TYPE.FETCH_ERROR});
+      });
   }
 
   const reloadData = () => {
-    fetchCategories(1).then(json => {
-      setTotalPage(json.totalPage);
-       categories.length === 0  ? setCategories(json.data) : setCategories([categories, ...json.data]);
-       setLoading(false);
-  });
+    fetchCategories(1);
   }
 
   const LoadMoreRandomData = () =>{
-    if (currentPage < totalPage && !isListEnd && !loading) {
+    if (currentPage < state.totalPage && !state.isListEnd && !state.loading) {
       setCurrentPage(currentPage + 1)
-    }  else {
-      setCurrentPage(totalPage);
     } 
   }
 
   useEffect(() => {
-     
-    // Fetch initial page of data
-    fetchCategories(currentPage).then(json => {
-        // console.log("data",json);
-        setTotalPage(json.totalPage);
-         categories.length === 0  ? setCategories(json.data) : setCategories([...categories, ...json.data]);
-
-        if (currentPage === totalPage) {
-          setListEnd(true)
-        } 
-         
-         setLoading(false);
-    });
+    fetchCategories(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
-    // loadProperties();
+    // Fetch initial page of data
     setCurrentPage(1)
   }, []);
-
 
   const renderListItems = ({ item }) => {
     return (
@@ -85,11 +59,11 @@ const CategoryScreen = ({ navigation, route }) => {
           })
         }
       >
-        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, paddingHorizontal: 12,  marginTop:4, verticalAlign:'middle', flex: 1 }]} >
+        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12,  marginTop:10, verticalAlign:'middle', flex: 1 }]} >
           {item.name}
         </Text>
-          <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4}} >
-          {item.code} | {item.time_limit}(min) | {item.question_limit} z {item.max_question_limit}
+          <Text style={{ fontSize: 12, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4}} >
+            {item.code} | {item.time_limit}(min) | {item.question_limit} z {item.max_question_limit} pytań
           </Text>
       </Pressable>
     );
@@ -98,8 +72,8 @@ const CategoryScreen = ({ navigation, route }) => {
   const renderHeader = () => {
     return (
       <View>
-        <Text style={{ fontSize: 8 }}>Quiz Działa: {departmentId} {departmentName} </Text>
-        <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
+        {/* <Text style={{ fontSize: 8 }}>Quiz Działa: {departmentId} {departmentName} </Text> */}
+        {/* <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} [{PAGE_SIZE}]</Text> */}
       </View>
     );
   }
@@ -119,8 +93,8 @@ const CategoryScreen = ({ navigation, route }) => {
   const renderFooter = () => {
     return (
         <View>
-          { loading && <ActivityIndicator size='large' />}
-          {/* { isListEnd && <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10}}>Nie ma więcej danych do pobrania</Text>} */}
+          { state.moreLoading && <ActivityIndicator size='large' />}
+          { state.isListEnd && <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10}}>Nie ma więcej danych do pobrania</Text>}
         </View>
       );
     }
@@ -130,9 +104,8 @@ const CategoryScreen = ({ navigation, route }) => {
       // Flat List Item Separator
       <View
         style={{
-          height: 2,
+          height: 4,
           width: '100%',
-          // backgroundColor: '#C8C8C8',
         }}
       />
     );
@@ -144,19 +117,25 @@ const CategoryScreen = ({ navigation, route }) => {
       paddingBottom: insets.bottom,
       alignItems: 'center',
     }]}>
-        
-    <FlatList
-        data={categories}
-        style={styles.flatList}
-        renderItem={renderListItems}
-        contentContainerStyle={[styles.flatListItem,{}]}
-        keyExtractor={ (item, index) => `${item.id}-${index}`}
-        ItemSeparatorComponent={ItemSeparatorView}
-        onEndReachedThreshold={0.2}
-        onEndReached={LoadMoreRandomData}
-        ListFooterComponent={renderFooter}
-        ListEmptyComponent={renderEmpty}
-      />
+      {state.loading ? 
+        <View>
+          <ActivityIndicator size='large' />
+        </View>
+        :
+        <FlatList
+            data={state.data}
+            style={styles.flatList}
+            renderItem={renderListItems}
+            contentContainerStyle={[styles.flatListItem,{}]}
+            keyExtractor={ (item, index) => `${item.id}-${index}`}
+            ItemSeparatorComponent={ItemSeparatorView}
+            onEndReachedThreshold={0.2}
+            onEndReached={LoadMoreRandomData}
+            ListFooterComponent={renderFooter}
+            ListHeaderComponent={renderHeader}
+            ListEmptyComponent={renderEmpty}
+          />
+      }
       </SafeAreaView>
   );
 };
@@ -167,15 +146,10 @@ const styles = StyleSheet.create({
   },
   flatList: {
     width: '100%',
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
 
   flatListItem: {
-    // width: '100%',
-    // backgroundColor:'red'
     margin: 4,
-    
   }
 });
 

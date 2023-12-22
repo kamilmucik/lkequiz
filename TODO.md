@@ -79,7 +79,9 @@ Backend:
 - poprawki sonar,
 - logi
 - błąd połączenia z bazą danych po kilkunastu połączeniach
-- dodanie bazy dla droniarzy
+-? dodanie bazy dla droniarzy
+- wprowadzenie API_KEY
+- wprowadzenie paraametru lastPage
 
 Tests:
 - unit

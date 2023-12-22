@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ActivityIndicator,SafeAreaView, ScrollView,Touc
 import AppContext from "../../store/AppContext";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import GlobalStyle from "../../utils/GlobalStyle";
+import { BASE_API_URL, QUIZ_ID } from '../../config.tsx';
 
 const QuizScreen = ({navigation, route}) => {
 

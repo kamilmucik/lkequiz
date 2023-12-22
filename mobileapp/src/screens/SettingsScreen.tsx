@@ -7,7 +7,7 @@ import CustomComponent from '../components/CustomComponent';
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {useForm, Controller} from 'react-hook-form';
-import { BASE_URL, API_KEY } from '../config.tsx';
+import { BASE_API_URL, API_KEY } from '../config.tsx';
 import PushNotification, {Importance} from 'react-native-push-notification';
 
 const requestNotificationPermission = async () => {
@@ -111,7 +111,7 @@ const SettingsScreen = ({navigation, route}) => {
                 <Text style={{ fontSize: 14}}>API</Text>
             </View>
             <View style={{ width: '75%'}}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold' , textAlign: 'right'}}>{BASE_URL}</Text>
+                <Text style={{ fontSize: 14, fontWeight: 'bold' , textAlign: 'right'}}>{BASE_API_URL}</Text>
             </View>
           </View>
 

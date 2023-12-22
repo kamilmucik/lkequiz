@@ -1,66 +1,48 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../../store/AppContext";
+import { View, Text, StyleSheet, SafeAreaView, Image, ActivityIndicator, FlatList, Pressable } from "react-native";
+import React, { useContext, useEffect, useState, useReducer } from "react";
+import airplane from '../../assets/img/airplane.png';
+import airplane2 from '../../assets/img/airplane2.png';
+import glider from '../../assets/img/glider.png';
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BASE_API_URL, QUIZ_ID, PAGE_SIZE } from '../../config.tsx';
+import {INITIAL_STATE, postReducer} from '../../hooks/postReducer';
+import {ACTION_TYPE} from '../../hooks/postActionTypes';
+
+const tileImages = {
+  1: airplane,
+  5: glider,
+  6: airplane2,
+}
 
 const QuestionsBaseScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
-  // const { quizId } = route.params;
-  const appCtx = useContext(AppContext);
-  const [departments, setDepartments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [isListEnd, setListEnd] = useState(false);
-
-  
-  const QUIZ_ID = 1;
-  const PAGE_SIZE = 4;
-  
-  const HOST = 'http://info.e-strix.pl';
+  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
 
   const fetchDepartments = async (page) => {
-    if (loading) return;
-    if (isListEnd) return;
-    setLoading(true);
-    try {
-        const response = await fetch(`${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
-        // console.log("response", response);
-        const json = await response.json();
-        // console.log("json", json);
-        return json;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
+    if (state.loading || state.moreLoading || state.isListEnd) return;
+    dispach({type: ACTION_TYPE.FETCH_START, currentPage: page});
+    fetch(`${BASE_API_URL}/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`)
+      .then( (response) => {
+        return response.json();
+      })
+      .then( (data) => {
+        dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
+      })
+      .catch( (error) => {
+        dispach({type: ACTION_TYPE.FETCH_ERROR});
+      });
 }
   
-  async function loadProperties() {
-    // try {
-    //   appCtx.setIsDebugMode(0);
-    // } catch(e) {
-    //   console.error(e)
-    // }
-  }
-
-
   useEffect(() => {
+    if (state.loading) return;
     // Fetch initial page of data
-    fetchDepartments(currentPage).then(json => {
-        setTotalPage(json.totalPage);
-        departments.length == 0  ? setDepartments(json.data) : setDepartments(prevData => [...prevData, ...json.data]);
-
-        if (currentPage === totalPage) {
-          setListEnd(true)
-        } 
-        
-        setLoading(false);
-    });
+    dispach({type: "FETCH_START"});
+    fetchDepartments(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
-    loadProperties();
     setCurrentPage(1)
   }, []);
 
@@ -75,23 +57,25 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
           })
         }
       >
-        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, paddingHorizontal: 12, verticalAlign:'middle', flex: 1}]} >
-          {item.name}
-        </Text>
+        <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row' }]}>
+          <Image source={tileImages[item.id]} style={[{ width: 48, height: 48, marginLeft:8 , marginTop:8  }]} />
+          <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12, verticalAlign:'middle', flex: 1}]} >
+            {item.name}
+          </Text>
+        </View>
+        
       </Pressable>
     );
   };
   const LoadMoreRandomData = () =>{
-    if (totalPage > 1 && currentPage < totalPage ) {setCurrentPage(currentPage + 1) ;}
+    if (state.totalPage > 1 && currentPage < state.totalPage ) {setCurrentPage(currentPage + 1) ;}
   }
   const ItemSeparatorView = () => {
     return (
-      // Flat List Item Separator
       <View
         style={{
-          height: 2,
+          height: 4,
           width: '100%',
-          // backgroundColor: 'blue',
         }}
       />
     );
@@ -99,7 +83,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
   const renderFooter = () => {
     return (
         <View>
-          { loading && <ActivityIndicator />}
+          { state.loading && <ActivityIndicator />}
         </View>
       );
     }
@@ -109,10 +93,13 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
       paddingBottom: insets.bottom,
       alignItems: 'center'
     }]}>
-        <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
-        {departments && departments.length > 0 ?
+        {state.loading ? 
+        <View>
+          <ActivityIndicator size='large' />
+        </View>
+        :
         <FlatList
-            data={departments}
+            data={state.data}
             style={styles.flatList}
             renderItem={renderListItems}
             keyExtractor={ (item, index) => `${item.id}-${index}`}
@@ -122,9 +109,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
             onEndReachedThreshold={0.2}
             ListFooterComponent={renderFooter}
             />
-            :
-      <ActivityIndicator size='large' />
-          }
+        }
     </SafeAreaView>
   );
 };
@@ -135,17 +120,10 @@ const styles = StyleSheet.create({
   },
   flatList: {
     width: '100%',
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
 
   flatListItem: {
-
-    
-    // width: '100%',
-    // backgroundColor:'red'
     margin: 4,
-    
   }
 });
 

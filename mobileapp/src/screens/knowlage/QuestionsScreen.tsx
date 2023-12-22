@@ -1,81 +1,59 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, ScrollView, SafeAreaView } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../../store/AppContext";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
+import React, { useReducer, useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
+import {INITIAL_STATE, postReducer} from '../../hooks/postReducer'
+import {ACTION_TYPE} from '../../hooks/postActionTypes';
 
-const QuestionsScreen = ({ navigation, route }) => {
+const QuestionsScreen = ({ route }) => {
   const insets = useSafeAreaInsets();
   const { categoryId } = route.params;
-  const { categoryName } = route.params;
-  const appCtx = useContext(AppContext);
-  const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-
-  const PAGE_SIZE = 5;
-  const HOST = 'http://info.e-strix.pl';
+  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
 
   const fetchQuestions = async (page) => {
-    if (loading) return;
-    setLoading(true);
-      try {
-          const response = await fetch(`${HOST}/api/question/${categoryId}/${page}/${PAGE_SIZE}/`);
-          // console.log("response", response);
-          const json = await response.json();
-          // console.log("json", json);
-          return json;
-      } catch (error) {
-          // console.error(error);
-          return [];
-      }
+    if (state.loading || state.moreLoading || state.isListEnd) return;
+    dispach({type: ACTION_TYPE.FETCH_START, currentPage: currentPage});
+    fetch(`${BASE_API_URL}/question/${categoryId}/${page}/${PAGE_SIZE}/`)
+      .then( (response) => {
+        return response.json();
+      })
+      .then( (data) => {
+        dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
+      })
+      .catch( (error) => {
+        dispach({type: ACTION_TYPE.FETCH_ERROR});
+      });
   }
 
   const LoadMoreRandomData = () =>{
-    if (currentPage < totalPage) {setCurrentPage(currentPage + 1) ;}
+    if (currentPage < state.totalPage) {setCurrentPage(currentPage + 1) ;}
   }
   
-  async function loadProperties() {
-    // try {
-    //   appCtx.setIsDebugMode(0);
-    // } catch(e) {
-    //   console.error(e)
-    // }
-  }
-
-
   useEffect(() => {
-    // Fetch initial page of data
-    fetchQuestions(currentPage).then(json => {
-        // console.log("data",json.totalPage);
-        setTotalPage(json.totalPage);
-        // setQuestions(json.data);
-        questions.length === 0  ? setQuestions(json.data) : setQuestions(prevData => [...prevData, ...json.data]);
-
-        
-        setLoading(false);
-    });
+    fetchQuestions(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
-    loadProperties();
     setCurrentPage(1)
   }, []);
-
 
   const renderListItems = ({ item }) => {
     return (
       <View style={[GlobalStyle.AppFlatListStyleItem]}>
-        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, paddingHorizontal: 12,  marginTop:10 }]} >
-          {item.question}
+      <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 8, paddingHorizontal: 12,  marginTop:10 }]} >
+      {item.code}
+      </Text>
+        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18}]} >
+         {item.question}
         </Text>
           <FlatList
             data={item.answers}
             renderItem={renderAnswerListItems}
             keyExtractor={itemAnswer => itemAnswer.id.toString()}
             />
-        
+
       </View>
     );
   };
@@ -83,7 +61,7 @@ const QuestionsScreen = ({ navigation, route }) => {
     return (
       <View>
         {item.correct == 1 ? (
-          <Text style={{fontWeight: 'bold',fontSize: 12, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4 }}>{item.answer} </Text>
+          <Text style={{fontWeight: 'bold',fontSize: 16, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4 }}>{item.answer} </Text>
         ): (
           <Text style={{ fontSize: 10, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4 }} >
           {item.answer}
@@ -95,12 +73,10 @@ const QuestionsScreen = ({ navigation, route }) => {
 
   const ItemSeparatorView = () => {
     return (
-      // Flat List Item Separator
       <View
         style={{
-          height: 2,
+          height: 4,
           width: '100%',
-          // backgroundColor: '#C8C8C8',
         }}
       />
     );
@@ -108,7 +84,7 @@ const QuestionsScreen = ({ navigation, route }) => {
   const renderFooter = () => {
     return (
         <View>
-          { loading && <ActivityIndicator />}
+          { state.moreLoading && <ActivityIndicator />}
           <ActivityIndicator />
         </View>
       );
@@ -120,22 +96,25 @@ const QuestionsScreen = ({ navigation, route }) => {
       alignItems: 'center'
     }]}>
         {/* <Text style={{ fontSize: 8 }}>Kategoria: {categoryId} - {categoryName}</Text> */}
-        <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text>
-        
-        <FlatList
-          data={questions}
-          renderItem={renderListItems}
-          style={styles.flatList}
-          contentContainerStyle={[styles.flatListItem,{}]}
-          keyExtractor={ (item, index) => `${item.id}-${index}`}
-          contentContainerStyle={{flexGrow: 1}}
-          ItemSeparatorComponent={ItemSeparatorView}
-          onEndReachedThreshold={0.2}
-          onEndReached={LoadMoreRandomData}
-          ListFooterComponent={renderFooter}
-          />
-        
-        
+        {/* <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {state.totalPage} ({state.isListEnd? 't':'f'}) [{PAGE_SIZE}]</Text> */}
+        {state.loading ? 
+            <View>
+              <ActivityIndicator size='large' />
+            </View>
+          :
+            <FlatList
+              data={state.data}
+              renderItem={renderListItems}
+              style={styles.flatList}
+              contentContainerStyle={[styles.flatListItem,{}]}
+              keyExtractor={ (item, index) => `${item.id}-${index}`}
+              contentContainerStyle={{flexGrow: 1}}
+              ItemSeparatorComponent={ItemSeparatorView}
+              onEndReachedThreshold={0.2}
+              onEndReached={LoadMoreRandomData}
+              ListFooterComponent={renderFooter}
+              />
+        }
     </SafeAreaView>
   );
 };
@@ -145,13 +124,9 @@ const styles = StyleSheet.create({
   flatList: {
     width: '100%',
     padding: 5
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
 
   flatListItem: {
-    // width: '100%',
-    // backgroundColor:'red'
     margin: 4,
     
   }

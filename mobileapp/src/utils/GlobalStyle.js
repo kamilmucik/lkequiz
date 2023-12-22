@@ -9,7 +9,8 @@ export default StyleSheet.create({
   },
   AppTextMainColor: {
     color: '#18376e',
-    fontSize: 14,
+    fontSize: 18,
+    // textAlign:'center'
   },
   AppTextSecoundColor: {
     color: '#b8bed3'
@@ -24,7 +25,7 @@ export default StyleSheet.create({
   AppFlatListStyleItem: {
     backgroundColor: '#ffffff',
     borderRadius: 4,
-    minHeight: 50,
+    minHeight: 64,
     verticalAlign: 'middle',
     textAlignVertical: 'center',
     // width: '96%'

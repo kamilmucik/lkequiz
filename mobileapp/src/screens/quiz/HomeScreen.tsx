@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, FlatList, Pressable, Dimensions, Image, PermissionsAndroid, Platform } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useReducer } from "react";
 import AppContext from "../../store/AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import airplane from '../../assets/img/airplane.png';
@@ -9,6 +9,9 @@ import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const { width } = Dimensions.get("window");
 import PushNotification, {Importance} from 'react-native-push-notification';
+import { BASE_API_URL, QUIZ_ID, PAGE_SIZE } from '../../config.tsx';
+import {INITIAL_STATE, postReducer} from '../../hooks/postReducer';
+import {ACTION_TYPE} from '../../hooks/postActionTypes';
 
 
 const requestNotificationPermission = async () => {
@@ -45,10 +48,8 @@ const tileImages = {
 const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const appCtx = useContext(AppContext);
-  const [departments, setDepartments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
 
   const createChannel = () => {
     requestNotificationPermission();
@@ -73,23 +74,26 @@ const HomeScreen = ({ navigation }) => {
   };
   const tileDimensions = calcTileDimensions(width, 2) 
   
-  const QUIZ_ID = 1;
-  const PAGE_SIZE = 20;
-
-  const HOST = 'http://info.e-strix.pl';
-
   const fetchDepartments = async (page) => {
-    if (loading) return;
-    setLoading(true);
-    try {
-        const response = await fetch(`${HOST}/api/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
+    if (state.loading || state.moreLoading || state.isListEnd) return;
+    dispach({type: ACTION_TYPE.FETCH_START, currentPage: page});
+    fetch(`${BASE_API_URL}/department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`)
+      .then( (response) => {
+        return response.json();
+      })
+      .then( (data) => { 
+        if (page <= data.totalPage){
+          dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
+        }
+      })
+      .catch( (error) => {
+        dispach({type: ACTION_TYPE.FETCH_ERROR});
+      });
 }
+
+useEffect(() => {
+  fetchDepartments(currentPage);
+}, [currentPage]);
 
 // const {isLoading, serverError, apiData} = UseFetch(`${HOST}/api/department/${QUIZ_ID}/${currentPage}/${PAGE_SIZE}/`);
 
@@ -101,16 +105,6 @@ const HomeScreen = ({ navigation }) => {
       appCtx.setSettingsShowPageSize(parsed.pageSize);
     }
   }
-
-  useEffect(() => {
-    // Fetch initial page of data
-    fetchDepartments(currentPage).then(json => {
-        setTotalPage(json.totalPage);
-        setDepartments(json.data);
-        // departments.length === 0  ? setDepartments(json.data) : setDepartments(prevData => [...prevData, ...json.data]);
-        setLoading(false);
-    });
-  }, [currentPage]);
 
   useEffect(() => {
     loadProperties();
@@ -129,23 +123,23 @@ const HomeScreen = ({ navigation }) => {
         }
       >
       <View style={[styles.item, {width: tileDimensions.size, height: tileDimensions.size, marginHorizontal: 8.}]}>
-        <Image source={tileImages[item.id]} style={[{ width: 64, height: 64 }, styles.tileImg]} />
+        <Image source={tileImages[item.id]} style={[{ width: '60%', height: '60%' }, styles.tileImg]} />
         <Text style={[GlobalStyle.AppTextMainColor]}>{item.name}</Text>
       </View>
-
       </Pressable>
     );
-    
   }
 
-  const LoadMoreRandomData = () =>{
-    if (totalPage > 1 && currentPage < totalPage ) {setCurrentPage(currentPage + 1) ;}
+  const LoadMoreRandomData = () =>{ 
+    if (state.totalPage > 1 && currentPage < state.totalPage && !state.isListEnd && !state.moreLoading){
+      setCurrentPage(currentPage + 1);
+    } 
   }
 
   const renderFooter = () => {
     return (
         <View>
-          { loading && <ActivityIndicator size='large'/>}
+          { state.moreLoading && <ActivityIndicator size='large'/>}
         </View>
       );
     }
@@ -156,10 +150,14 @@ const HomeScreen = ({ navigation }) => {
         paddingBottom: insets.bottom,
         alignItems: 'center',
       }]}>
-      {/* <Text style={{ fontSize: 10 }}>Paginacja-: {tileDimensions.size} {currentPage} / {totalPage}  [{PAGE_SIZE}]</Text> */}
-      
-      <FlatList
-          data={departments}
+      {/* <Text style={{ fontSize: 10 }}>Paginacja: {tileDimensions.size} {currentPage} / {state.totalPage} "{state.isListEnd?'true':'false'}" [{PAGE_SIZE}]</Text> */}
+      {state.loading ? 
+        <View>
+          <ActivityIndicator size='large' />
+        </View>
+        :
+        <FlatList
+          data={state.data}
           renderItem={renderTileItems}
           keyExtractor={item => item.id.toString()}
           horizontal={false}
@@ -170,6 +168,8 @@ const HomeScreen = ({ navigation }) => {
           onEndReached={LoadMoreRandomData}
           ListFooterComponent={renderFooter}
           />
+      }
+      
     </SafeAreaView>
   );
 };
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
   },
   tileImg: {
     borderColor: '#1f89ce',
-    // borderWidth: 1
   }
 });
 
