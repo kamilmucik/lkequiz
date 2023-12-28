@@ -4,6 +4,8 @@ import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
+import ListEmpty from '../../components/ListEmpty';
+import CategoryListItem from '../../components/CategoryListItem';
 import ListFooter from '../../components/ListFooter';
 import ItemSeparator from '../../components/ItemSeparator';
 
@@ -16,10 +18,6 @@ const CategoryScreen = ({ navigation, route }) => {
 
   const fetchCategories = async (page) => {
     setQuery(`category/${departmentId}/${page}/${PAGE_SIZE}/`);
-  }
-
-  const reloadData = () => {
-    fetchCategories(1);
   }
 
   const LoadMoreRandomData = () =>{
@@ -36,28 +34,18 @@ const CategoryScreen = ({ navigation, route }) => {
     setCurrentPage(1)
   }, []);
 
-  const renderListItems = ({ item }) => {
-    return (
-      <Pressable
-        style={[GlobalStyle.AppFlatListStyleItem]}
-        onPress={() =>
-          navigation.navigate('Quiz', {
-            quizCategoryName: item.name,
-            quizCategoryId: item.id,
-            quizTimeLimit: item.time_limit,
-            quizQuestionLimit: item.question_limit
-          })
-        }
-      >
-        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12,  marginTop:10, verticalAlign:'middle', flex: 1 }]} >
-          {item.name}
-        </Text>
-          <Text style={{ fontSize: 12, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4}} >
-            {item.code} | {item.time_limit}(min) | {item.question_limit} z {item.max_question_limit} pytań
-          </Text>
-      </Pressable>
-    );
+  const onPressItemHandler = (item) => {
+    navigation.navigate('Quiz', {
+      quizCategoryName: item.name,
+      quizCategoryId: item.id,
+      quizTimeLimit: item.time_limit,
+      quizQuestionLimit: item.question_limit
+    })
   };
+
+  const reloadHandler = () => {
+    fetchCategories(1);
+  }
 
   const renderHeader = () => {
     return (
@@ -67,39 +55,6 @@ const CategoryScreen = ({ navigation, route }) => {
       </View>
     );
   }
-  const renderEmpty = () => {
-    return (
-      <View>
-        <Pressable onPress={() =>reloadData() }>
-          <Text style={{ fontSize: 16, paddingHorizontal: 12,  marginTop:10 }} >
-            Odświez
-          </Text>
-        </Pressable>
-        <Text>Brak danych </Text>
-      </View>
-    );
-  }
-
-  const renderFooter = () => {
-    return (
-        <View>
-          { moreLoading && <ActivityIndicator size='large' />}
-          { isListEnd && <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10}}>Nie ma więcej danych do pobrania</Text>}
-        </View>
-      );
-    }
-
-  const ItemSeparatorView = () => {
-    return (
-      // Flat List Item Separator
-      <View
-        style={{
-          height: 4,
-          width: '100%',
-        }}
-      />
-    );
-  };
 
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
@@ -115,19 +70,15 @@ const CategoryScreen = ({ navigation, route }) => {
         <FlatList
             data={data}
             style={styles.flatList}
-            renderItem={renderListItems}
+            renderItem={ ({item}) => <CategoryListItem item={item} details={true} onPress={ onPressItemHandler } /> }
             contentContainerStyle={[styles.flatListItem,{}]}
             keyExtractor={ (item, index) => `${item.id}-${index}`}
-            ItemSeparatorComponent={ () => {
-              return (<ItemSeparator />)
-            }}
+            ItemSeparatorComponent={ () => <ItemSeparator />}
             onEndReachedThreshold={0.2}
             onEndReached={LoadMoreRandomData}
-            ListFooterComponent={ () =>{
-              return (<ListFooter loading={moreLoading} />)
-            }}
+            ListFooterComponent={ () =><ListFooter loading={moreLoading} />}
             ListHeaderComponent={renderHeader}
-            ListEmptyComponent={renderEmpty}
+            ListEmptyComponent={ () =><ListEmpty onPress={ reloadHandler }  />}
           />
       }
       </SafeAreaView>

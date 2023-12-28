@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
 import ListFooter from '../../components/ListFooter';
 import ItemSeparator from '../../components/ItemSeparator';
+import CategoryListItem from '../../components/CategoryListItem';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
 
 const CategoriesScreen = ({ navigation, route }) => {
@@ -26,26 +27,33 @@ const CategoriesScreen = ({ navigation, route }) => {
     setCurrentPage(1)
   }, []);
 
-  const renderListItems = ({ item }) => {
-    return (
-      <Pressable
-      style={[GlobalStyle.AppFlatListStyleItem]}
-        onPress={() =>
-          navigation.navigate('Questions', {
-            categoryId: item.id,
-            categoryName: item.name,
-          })
-        }
-      >
-        <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12,  marginTop:10, verticalAlign:'middle', flex: 1 }]} >
-          {item.name}
-        </Text>
-        <Text style={{ fontSize: 12, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4}} >
-            {item.code} | {item.max_question_limit} pytań
-          </Text>
-      </Pressable>
-    );
+  const onPressItemHandler = (item) => {
+    navigation.navigate('Questions', {
+      categoryId: item.id,
+      categoryName: item.name,
+    })
   };
+
+  // const renderListItems = ({ item }) => {
+  //   return (
+  //     <Pressable
+  //     style={[GlobalStyle.AppFlatListStyleItem]}
+  //       onPress={() =>
+  //         navigation.navigate('Questions', {
+  //           categoryId: item.id,
+  //           categoryName: item.name,
+  //         })
+  //       }
+  //     >
+  //       <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12,  marginTop:10, verticalAlign:'middle', flex: 1 }]} >
+  //         {item.name}
+  //       </Text>
+  //       <Text style={{ fontSize: 12, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 4, marginBottom:4}} >
+  //           {item.code} | {item.max_question_limit} pytań
+  //         </Text>
+  //     </Pressable>
+  //   );
+  // };
   const LoadMoreRandomData = () =>{
     if (currentPage < totalPage) {
       setCurrentPage(currentPage + 1);
@@ -67,17 +75,14 @@ const CategoriesScreen = ({ navigation, route }) => {
           <FlatList
               data={data}
               style={styles.flatList}
-              renderItem={renderListItems}
+              // renderItem={renderListItems}
+              renderItem={ ({item}) => <CategoryListItem item={item} onPress={ onPressItemHandler } /> }
               keyExtractor={ (item, index) => `${item.id}-${index}`}
               contentContainerStyle={[styles.flatListItem,{}]}
-              ItemSeparatorComponent={ () => {
-                return (<ItemSeparator />)
-              }}
+              ItemSeparatorComponent={ () => <ItemSeparator />}
               onEndReachedThreshold={0.2}
               onEndReached={LoadMoreRandomData}
-              ListFooterComponent={ () =>{
-                return (<ListFooter loading={moreLoading} />)
-              }}
+              ListFooterComponent={ () => <ListFooter loading={moreLoading} />}
               />
         } 
       </SafeAreaView>

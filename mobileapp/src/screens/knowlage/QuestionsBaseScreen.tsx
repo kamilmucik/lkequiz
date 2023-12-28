@@ -26,21 +26,13 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
     setCurrentPage(1)
   }, []);
 
-  const renderListItems = ({ item }) => {
-    return (
-      <Pressable
-       style={[GlobalStyle.AppFlatListStyleItem]}
-        onPress={() =>
-          navigation.navigate('Categories', {
-            departmentId: item.id,
-            departmentName: item.name,
-          })
-        }
-      >
-        <KnowlageMenuListElement item={item} /> 
-      </Pressable>
-    );
+  const onPressItemHandler = (id, name) => {
+    navigation.navigate('Categories', {
+      departmentId: id,
+      departmentName: name,
+    })
   };
+
   const LoadMoreRandomData = () =>{
     if (currentPage < totalPage ) {
       setCurrentPage(currentPage + 1);
@@ -61,17 +53,13 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
         <FlatList
             data={data}
             style={styles.flatList}
-            renderItem={renderListItems}
+            renderItem={ ({item}) => <KnowlageMenuListElement id={item.id} name={item.name} onPress={ onPressItemHandler } /> }
             keyExtractor={ (item, index) => `${item.id}-${index}`}
             contentContainerStyle={[styles.flatListItem,{}]}
-            ItemSeparatorComponent={ () => {
-              return (<ItemSeparator />)
-            }}
+            ItemSeparatorComponent={ () => <ItemSeparator />}
             onEndReached={LoadMoreRandomData}
             onEndReachedThreshold={0.2}
-            ListFooterComponent={ () =>{
-               return (<ListFooter loading={moreLoading} />)
-            }}
+            ListFooterComponent={ () =><ListFooter loading={moreLoading} />}
             />
         }
     </SafeAreaView>

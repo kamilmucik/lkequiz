@@ -15,30 +15,22 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchDepartments = async (page) => {
     setQuery(`department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
-}
+  }
 
-useEffect(() => {
-  fetchDepartments(currentPage);
-}, [currentPage]);
+  useEffect(() => {
+    fetchDepartments(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, []);
 
-  const renderTileItems = ({item}) => {    
-    return (
-      <Pressable
-        onPress={() =>
-          navigation.navigate('Category', {
-            departmentId: item.id,
-            departmentName: item.name,
-          })
-        }
-      >
-        <HomeMenuTile item={item} />
-      </Pressable>
-    );
-  }
+  const onPressItemHandler = (id, name) => {
+    navigation.navigate('Category', {
+      departmentId: id,
+      departmentName: name,
+    })
+  };
 
   const LoadMoreRandomData = () =>{ 
     if (currentPage < totalPage){
@@ -52,7 +44,6 @@ useEffect(() => {
         paddingBottom: insets.bottom,
         alignItems: 'center',
       }]}>
-      {/* <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {state.totalPage} "{state.isListEnd?'true':'false'}" [{PAGE_SIZE}]</Text> */}
       {loading ? 
         <View>
           <ActivityIndicator size='large' />
@@ -60,7 +51,7 @@ useEffect(() => {
         :
         <FlatList
           data={data}
-          renderItem={renderTileItems}
+          renderItem={ ({item}) => <HomeMenuTile id={item.id} name={item.name} onPress={ onPressItemHandler } /> }
           keyExtractor={item => item.id.toString()}
           horizontal={false}
           numColumns={2} 
@@ -71,7 +62,7 @@ useEffect(() => {
           ListFooterComponent={ () =>{
             <HomeMenuTile loading={moreLoading} />
           }}
-          />
+        />
       }
     </SafeAreaView>
   );

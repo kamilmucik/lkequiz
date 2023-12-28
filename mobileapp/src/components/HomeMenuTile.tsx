@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image,Dimensions, Platform } from 'react-native';
+import { StyleSheet, Text, View, Image,Dimensions, Platform, Pressable } from 'react-native';
 import GlobalStyle from "../utils/GlobalStyle";
 import airplane from '../assets/img/airplane.png';
 import airplane2 from '../assets/img/airplane2.png';
@@ -12,22 +12,34 @@ const tileImages = {
     6: airplane2,
   }
 
-const HomeMenuTile = ({item}) => {
+interface HomeMenuTileProps {
+    id: number;
+    name: string;
+    onPress: () => void;
+}
+
+const HomeMenuTile = ({id, name, onPress} : HomeMenuTileProps) => {
 
     const calcTileDimensions = (deviceWidth, tpr) => {
         const margin = (deviceWidth / (tpr * 10));
         const size = ((deviceWidth - margin * (tpr * 2)) / tpr)-5;
         return { size, margin };
-      };
-      const tileDimensions = calcTileDimensions(width, 2) 
+    };
+    const tileDimensions = calcTileDimensions(width, 2) 
+
+    const handleClick = () => {
+        onPress(id,name);
+    };
 
     return (
-        <View style={[styles.item, {width: tileDimensions.size, height: tileDimensions.size, marginHorizontal: 8.}]}>
-            <Image source={tileImages[item.id]} style={[{ width: '60%', height: '60%' }, styles.tileImg]} />
-            <Text style={[GlobalStyle.AppTextMainColor]}>{item.name}</Text>
-        </View>
+        <Pressable onPress={handleClick}>
+            <View style={[styles.item, {width: tileDimensions.size, height: tileDimensions.size, marginHorizontal: 8.}]}>
+                <Image source={tileImages[id]} style={[{ width: '60%', height: '60%' }, styles.tileImg]} />
+                <Text style={[GlobalStyle.AppTextMainColor]}>{name}</Text>
+            </View>
+        </Pressable>
     )
-}
+};
 
 const styles = StyleSheet.create({
     item: {
@@ -42,4 +54,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default HomeMenuTile
+export default HomeMenuTile;

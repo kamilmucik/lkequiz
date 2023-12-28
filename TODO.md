@@ -60,12 +60,13 @@ Mobile:
 + Ikony i obrazki
 + Poprawki paginacji in memo/cache
 + ładowanie strony i indicator
-- tworzenie komponentów
++ tworzenie komponentów
 - obrazek, która odpowiedź jest poprawna po zakończeniu testu + link do powrotu do kategorii
 + pobieranie danych z pliku konfiguracyjnego
 + notyfikacje lokalne i firebase
 - 3 szybkie pytania + backend + przejście z powiadomienia do strony z pytaniami
 - opcja pokaz tylko dobre odpowiedzi: rq do backendu 
+- wysyłanie rq z kluczem apikey
 
 Backend:
 - endpoint quiz poprawić na prawidłową liczbę parametrów
