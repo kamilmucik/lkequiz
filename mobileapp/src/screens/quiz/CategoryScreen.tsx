@@ -1,30 +1,21 @@
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, FlatList, Pressable } from "react-native";
-import React, {  useEffect, useState, useReducer } from "react";
+import React, {  useEffect, useState, useReducer, useMemo } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
-import {INITIAL_STATE, postReducer} from '../../hooks/postReducer'
-import {ACTION_TYPE} from '../../hooks/postActionTypes';
+import {useCustomFetch} from '../../hooks/useCustomFetch'
+import ListFooter from '../../components/ListFooter';
+import ItemSeparator from '../../components/ItemSeparator';
 
 const CategoryScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
-  const { departmentId } = route.params;
+  const {departmentId} = route.params;
   const [currentPage, setCurrentPage] = useState(1);
-  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
+  const [query, setQuery] = useState('');
+  const { loading, moreLoading, totalPage, isListEnd, data } = useCustomFetch(query);
 
   const fetchCategories = async (page) => {
-    if (state.loading || state.moreLoading || state.isListEnd) return;
-    dispach({type: ACTION_TYPE.FETCH_START, currentPage: page});
-    fetch(`${BASE_API_URL}/category/${departmentId}/${page}/${PAGE_SIZE}/`)
-      .then( (response) => {
-        return response.json();
-      })
-      .then( (data) => {
-        dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
-      })
-      .catch( (error) => {
-        dispach({type: ACTION_TYPE.FETCH_ERROR});
-      });
+    setQuery(`category/${departmentId}/${page}/${PAGE_SIZE}/`);
   }
 
   const reloadData = () => {
@@ -32,7 +23,7 @@ const CategoryScreen = ({ navigation, route }) => {
   }
 
   const LoadMoreRandomData = () =>{
-    if (currentPage < state.totalPage && !state.isListEnd && !state.loading) {
+    if (currentPage < totalPage) {
       setCurrentPage(currentPage + 1)
     } 
   }
@@ -42,7 +33,6 @@ const CategoryScreen = ({ navigation, route }) => {
   }, [currentPage]);
 
   useEffect(() => {
-    // Fetch initial page of data
     setCurrentPage(1)
   }, []);
 
@@ -93,8 +83,8 @@ const CategoryScreen = ({ navigation, route }) => {
   const renderFooter = () => {
     return (
         <View>
-          { state.moreLoading && <ActivityIndicator size='large' />}
-          { state.isListEnd && <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10}}>Nie ma więcej danych do pobrania</Text>}
+          { moreLoading && <ActivityIndicator size='large' />}
+          { isListEnd && <Text style={{ fontSize: 8, paddingHorizontal: 12, paddingVertical: 4, paddingBottom: 10, marginBottom:10}}>Nie ma więcej danych do pobrania</Text>}
         </View>
       );
     }
@@ -117,21 +107,25 @@ const CategoryScreen = ({ navigation, route }) => {
       paddingBottom: insets.bottom,
       alignItems: 'center',
     }]}>
-      {state.loading ? 
+      { loading ? 
         <View>
           <ActivityIndicator size='large' />
         </View>
-        :
+        : 
         <FlatList
-            data={state.data}
+            data={data}
             style={styles.flatList}
             renderItem={renderListItems}
             contentContainerStyle={[styles.flatListItem,{}]}
             keyExtractor={ (item, index) => `${item.id}-${index}`}
-            ItemSeparatorComponent={ItemSeparatorView}
+            ItemSeparatorComponent={ () => {
+              return (<ItemSeparator />)
+            }}
             onEndReachedThreshold={0.2}
             onEndReached={LoadMoreRandomData}
-            ListFooterComponent={renderFooter}
+            ListFooterComponent={ () =>{
+              return (<ListFooter loading={moreLoading} />)
+            }}
             ListHeaderComponent={renderHeader}
             ListEmptyComponent={renderEmpty}
           />

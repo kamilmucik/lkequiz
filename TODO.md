@@ -58,10 +58,10 @@ Mobile:
 - Deploy dla iOS
 - Testy ?
 + Ikony i obrazki
-- Poprawki paginacji in memo
++ Poprawki paginacji in memo/cache
 + ładowanie strony i indicator
 - tworzenie komponentów
-- obrazek, która odpowiedź jest poprawna po zakończeniu testu
+- obrazek, która odpowiedź jest poprawna po zakończeniu testu + link do powrotu do kategorii
 + pobieranie danych z pliku konfiguracyjnego
 + notyfikacje lokalne i firebase
 - 3 szybkie pytania + backend + przejście z powiadomienia do strony z pytaniami
@@ -82,6 +82,7 @@ Backend:
 -? dodanie bazy dla droniarzy
 - wprowadzenie API_KEY
 - wprowadzenie paraametru lastPage
+- zwraca listę albo obiekt. trzeba zwrobić eby zwracał listę opiektów
 
 Tests:
 - unit

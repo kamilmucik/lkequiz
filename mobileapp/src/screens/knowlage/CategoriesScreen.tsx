@@ -1,30 +1,21 @@
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, FlatList, Pressable } from "react-native";
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
-import {INITIAL_STATE, postReducer} from '../../hooks/postReducer'
-import {ACTION_TYPE} from '../../hooks/postActionTypes';
+import ListFooter from '../../components/ListFooter';
+import ItemSeparator from '../../components/ItemSeparator';
+import {useCustomFetch} from '../../hooks/useCustomFetch'
 
 const CategoriesScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const { departmentId } = route.params;
   const [currentPage, setCurrentPage] = useState(1);
-  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
+  const [query, setQuery] = useState('');
+  const { loading, moreLoading, totalPage, data } = useCustomFetch(query);
 
   const fetchCategories = async (page) => {
-    if (state.loading || state.moreLoading || state.isListEnd) return;
-    dispach({type: ACTION_TYPE.FETCH_START, currentPage: page});
-    fetch(`${BASE_API_URL}/category/${departmentId}/${page}/${PAGE_SIZE}/`)
-      .then( (response) => {
-        return response.json();
-      })
-      .then( (data) => {
-        dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage, currentPage: page});
-      })
-      .catch( (error) => {
-        dispach({type: ACTION_TYPE.FETCH_ERROR});
-      });
+    setQuery(`category/${departmentId}/${page}/${PAGE_SIZE}/`);
   }
 
   useEffect(() => {
@@ -56,25 +47,11 @@ const CategoriesScreen = ({ navigation, route }) => {
     );
   };
   const LoadMoreRandomData = () =>{
-    if (currentPage < state.totalPage && state.totalPage > 1) { setCurrentPage(currentPage + 1) ;}
-  }
-  const ItemSeparatorView = () => {
-    return (
-      <View
-        style={{
-          height: 4,
-          width: '100%',
-        }}
-      />
-    );
-  };
-  const renderFooter = () => {
-    return (
-        <View>
-          { state.moreLoading && <ActivityIndicator />}
-        </View>
-      );
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
     }
+  }
+  
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
       paddingBottom: insets.bottom,
@@ -82,21 +59,25 @@ const CategoriesScreen = ({ navigation, route }) => {
     }]}>
         {/* <Text style={{ fontSize: 8 }}>kn.Dział: {departmentId} - {departmentName}</Text> */}
         {/* <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {state.totalPage}  [{PAGE_SIZE}]</Text> */}
-        {state.loading ? 
+        {loading ? 
         <View>
           <ActivityIndicator size='large' />
         </View>
         :
           <FlatList
-              data={state.data}
+              data={data}
               style={styles.flatList}
               renderItem={renderListItems}
               keyExtractor={ (item, index) => `${item.id}-${index}`}
               contentContainerStyle={[styles.flatListItem,{}]}
-              ItemSeparatorComponent={ItemSeparatorView}
+              ItemSeparatorComponent={ () => {
+                return (<ItemSeparator />)
+              }}
               onEndReachedThreshold={0.2}
               onEndReached={LoadMoreRandomData}
-              ListFooterComponent={renderFooter}
+              ListFooterComponent={ () =>{
+                return (<ListFooter loading={moreLoading} />)
+              }}
               />
         } 
       </SafeAreaView>
@@ -110,7 +91,6 @@ const styles = StyleSheet.create({
 
   flatListItem: {
     margin: 4,
-    
   }
 });
 

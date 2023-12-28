@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,Switch, TouchableOpacity, Alert ,Button} from 'react-native';
+import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,Switch, TouchableOpacity, Alert ,Button, PermissionsAndroid} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppContext from "../store/AppContext";
 import PackageJson from '../../package';
@@ -10,26 +10,6 @@ import {useForm, Controller} from 'react-hook-form';
 import { BASE_API_URL, API_KEY } from '../config.tsx';
 import PushNotification, {Importance} from 'react-native-push-notification';
 
-const requestNotificationPermission = async () => {
-  const result = await request(PERMISSIONS.POST_NOTIFICATIONS);
-  return result;
-};
-
-const checkNotificationPermission = async () => {
-  const result = await check(PERMISSIONS.POST_NOTIFICATIONS);
-  return result;
-};
-
-
-const requestPermission = async () => {
-  const checkPermission = await checkNotificationPermission();
-  if (checkPermission !== RESULTS.GRANTED) {
-   const request = await requestNotificationPermission();
-     if(request !== RESULTS.GRANTED){
-          // permission not granted
-      }
-  }
-};
 
 const SettingsScreen = ({navigation, route}) => {
   const {control, handleSubmit, formState: { errors } } = useForm();
@@ -38,35 +18,14 @@ const SettingsScreen = ({navigation, route}) => {
 
   const [showCorrectAnswerOnly, setShowCorrectAnswerOnly] = useState(appCtx.settingsShowCorrectAnswerOnly);
 
-  
-  
-
   useEffect(() => {
-    requestPermission();
-    // createChannel();
   }, []);
 
-  const createChannel = () => {
-    // Notifications.createChannel
-    // PushNotification.createChannel(
-    //   {
-    //     channelId: "test-channel",
-    //     channelName: "Test Channel",
-    //     // channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-    //     // playSound: false, // (optional) default: true
-    //     // soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-    //     // importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-    //     // vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-    //   }
-    // )
-  }
-
   const handleNotification = () => {
-    requestPermission();
     PushNotification.localNotification(
       {
         channelId: "test-channel",
-        title: "You clecked it",
+        title: "You clicked it",
         message: "Zagramy w 3 szybkie?"
       }
     )

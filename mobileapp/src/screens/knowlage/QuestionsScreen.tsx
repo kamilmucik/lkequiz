@@ -1,38 +1,31 @@
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
-import React, { useReducer, useEffect, useState } from "react";
+import React, { useReducer, useEffect, useState, useRef } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
-import {INITIAL_STATE, postReducer} from '../../hooks/postReducer'
-import {ACTION_TYPE} from '../../hooks/postActionTypes';
+import ListFooter from '../../components/ListFooter';
+import ItemSeparator from '../../components/ItemSeparator';
+import {useCustomFetch} from '../../hooks/useCustomFetch'
 
 const QuestionsScreen = ({ route }) => {
   const insets = useSafeAreaInsets();
   const { categoryId } = route.params;
   const [currentPage, setCurrentPage] = useState(1);
-  const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
+  const [query, setQuery] = useState('');
 
-  const fetchQuestions = async (page) => {
-    if (state.loading || state.moreLoading || state.isListEnd) return;
-    dispach({type: ACTION_TYPE.FETCH_START, currentPage: currentPage});
-    fetch(`${BASE_API_URL}/question/${categoryId}/${page}/${PAGE_SIZE}/`)
-      .then( (response) => {
-        return response.json();
-      })
-      .then( (data) => {
-        dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
-      })
-      .catch( (error) => {
-        dispach({type: ACTION_TYPE.FETCH_ERROR});
-      });
+  const { loading, moreLoading, totalPage, isListEnd, status, data, error } = useCustomFetch(query);
+  const fetchData = async (page) => {
+    setQuery(`question/${categoryId}/${page}/${PAGE_SIZE}/`);
   }
 
   const LoadMoreRandomData = () =>{
-    if (currentPage < state.totalPage) {setCurrentPage(currentPage + 1) ;}
+    if (currentPage < totalPage ) {
+      setCurrentPage(currentPage + 1) ;
+    }
   }
   
   useEffect(() => {
-    fetchQuestions(currentPage);
+    fetchData(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
@@ -71,48 +64,33 @@ const QuestionsScreen = ({ route }) => {
     );
   };
 
-  const ItemSeparatorView = () => {
-    return (
-      <View
-        style={{
-          height: 4,
-          width: '100%',
-        }}
-      />
-    );
-  };
-  const renderFooter = () => {
-    return (
-        <View>
-          { state.moreLoading && <ActivityIndicator />}
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
       paddingBottom: insets.bottom,
       alignItems: 'center'
     }]}>
         {/* <Text style={{ fontSize: 8 }}>Kategoria: {categoryId} - {categoryName}</Text> */}
-        {/* <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {state.totalPage} ({state.isListEnd? 't':'f'}) [{PAGE_SIZE}]</Text> */}
-        {state.loading ? 
+        {/* <Text style={{ fontSize: 10 }}>Paginacja: {currentPage} / {totalPage} ({moreLoading? 't':'f'}) [{PAGE_SIZE}]</Text> */}
+        {loading ? 
             <View>
               <ActivityIndicator size='large' />
             </View>
           :
             <FlatList
-              data={state.data}
+              data={data}
               renderItem={renderListItems}
               style={styles.flatList}
               contentContainerStyle={[styles.flatListItem,{}]}
               keyExtractor={ (item, index) => `${item.id}-${index}`}
               contentContainerStyle={{flexGrow: 1}}
-              ItemSeparatorComponent={ItemSeparatorView}
+              ItemSeparatorComponent={ () => {
+                return (<ItemSeparator />)
+              }}
               onEndReachedThreshold={0.2}
               onEndReached={LoadMoreRandomData}
-              ListFooterComponent={renderFooter}
+              ListFooterComponent={ () =>{
+                return (<ListFooter loading={moreLoading} />)
+              }}
               />
         }
     </SafeAreaView>

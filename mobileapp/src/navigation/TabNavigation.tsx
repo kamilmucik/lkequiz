@@ -11,6 +11,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+
   return (
     <Tab.Navigator 
       initialRouteName="HomeStack" 

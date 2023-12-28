@@ -20,14 +20,14 @@ const HomeStackNavigator = () => {
                         options={({ navigation, route }) => ({
                           headerShown: false,
                           title: 'Quiz:' + route.params.departmentName,
-                          headerShadowVisible: false, // applied here
+                          headerShadowVisible: false, 
                           headerBackTitleVisible: false,
                         })}/>
       <HomeStack.Screen name="Quiz" component={QuizScreen}
                         options={({ navigation, route }) => ({
                           headerShown: false,
                           title: '' + route.params.departmentName,
-                          headerShadowVisible: false, // applied here
+                          headerShadowVisible: false,
                           headerBackTitleVisible: false,
                         })}/>
     </HomeStack.Navigator>
