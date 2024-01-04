@@ -10,6 +10,10 @@ import GlobalStyle from "../utils/GlobalStyle";
 
 const Tab = createBottomTabNavigator();
 
+const screenOptions = (iconName, color) => {
+  return <MaterialCommunityIcons name={iconName} color={color} size={24} />
+ };
+
 const TabNavigator = () => {
 
   return (
@@ -27,9 +31,7 @@ const TabNavigator = () => {
           component={HomeStackScreen} 
           options={{
             tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
+            tabBarIcon: ({color}) => screenOptions('home', color),
           }} 
           />
         <Tab.Screen 
@@ -37,9 +39,7 @@ const TabNavigator = () => {
           component={KnowlageBaseStack} 
           options={{
             tabBarLabel: 'Baza wiedzy',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="book" color={color} size={size} />
-            )
+            tabBarIcon: ({color}) => screenOptions('book', color),
           }} 
           />
         <Tab.Screen 
@@ -47,9 +47,7 @@ const TabNavigator = () => {
           component={SettingsScreen} 
           options={{
             tabBarLabel: 'Ustawienia',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="cog" color={color} size={size} />
-            ),
+            tabBarIcon: ({color}) => screenOptions('cog', color),
           }}/>
       </Tab.Navigator>
   );

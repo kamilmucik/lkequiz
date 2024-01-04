@@ -3,13 +3,13 @@ import React from 'react';
 const AppContext = React.createContext({
   settingsURLValue: '',
   settingsPortValue: '80',
-  settingsShowPageSize: '4',
+  settingsFastQuizDepartment: {},
   settingsShowCorrectAnswerOnly: false,
   isDebugMode: 0,
   setSettingsURLValue: (val) => {},
   setSettingsPortValue: (val) => {},
   setIsDebugMode: (val) => {},
-  setSettingsShowPageSize: (val) => {},
+  setSettingsFastQuizDepartment: (val) => {},
   setSettingsOnlyCorrectValue: (val) => {},
 });
 

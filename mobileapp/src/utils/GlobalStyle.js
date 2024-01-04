@@ -10,15 +10,11 @@ export default StyleSheet.create({
   AppTextMainColor: {
     color: '#18376e',
     fontSize: 18,
-    // textAlign:'center'
   },
   AppTextSecoundColor: {
     color: '#b8bed3'
   },
   AppFlatListStyle: {
-    // backgroundColor: '#ffffff',
-    // borderRadius: 4,
-    // width: '96%'
     
   },
 
@@ -28,7 +24,6 @@ export default StyleSheet.create({
     minHeight: 64,
     verticalAlign: 'middle',
     textAlignVertical: 'center',
-    // width: '96%'
   },
 
   AppButton: {
@@ -39,8 +34,6 @@ export default StyleSheet.create({
     height: 48,
     borderRadius: 4,
     alignContent: 'center',
-    // padding:4,
-    // margin: 10,
   },
   AppPrimaryButtonText: {
     color: '#ffffff'
@@ -52,13 +45,17 @@ export default StyleSheet.create({
   AppSecoundaryButton: {
     width:'100%',
     borderColor: '#1f89ce',
-    // backgroundColor: '#2399e5',
   },
   AppSecoundaryButtonText: {
 
-  }
+  },
 
+  AppSelectButton: {
+    backgroundColor: '#ffffff'
+  },
+  AppSelectButtonText: {
 
+  },
 
 
   

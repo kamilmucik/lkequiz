@@ -18,8 +18,8 @@ const HomeStackNavigator = () => {
                       })}/>
       <HomeStack.Screen name="Category" component={CategoryScreen}
                         options={({ navigation, route }) => ({
-                          headerShown: false,
-                          title: 'Quiz:' + route.params.departmentName,
+                          headerShown: true,
+                          title: route.params.departmentName,
                           headerShadowVisible: false, 
                           headerBackTitleVisible: false,
                         })}/>

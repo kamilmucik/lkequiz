@@ -1,49 +1,36 @@
-import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet,Text, View, TextInput,SafeAreaView, ScrollView,Switch, TouchableOpacity, Alert ,Button, PermissionsAndroid} from 'react-native';
+import React, { useEffect, useContext } from "react";
+import { StyleSheet,Text, View,SafeAreaView,Switch, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppContext from "../store/AppContext";
 import PackageJson from '../../package';
-import CustomComponent from '../components/CustomComponent';
 import GlobalStyle from "../utils/GlobalStyle";
+import SelectDropdown from 'react-native-select-dropdown'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {useForm, Controller} from 'react-hook-form';
-import { BASE_API_URL, API_KEY } from '../config.tsx';
-import PushNotification, {Importance} from 'react-native-push-notification';
+import { BASE_API_URL } from '../config.tsx';
 
+import { MainDepartments } from '../store/MainDepartments';
 
 const SettingsScreen = ({navigation, route}) => {
-  const {control, handleSubmit, formState: { errors } } = useForm();
+  const {control, handleSubmit } = useForm();
   const appCtx = useContext(AppContext);
   const insets = useSafeAreaInsets();
 
-  const [showCorrectAnswerOnly, setShowCorrectAnswerOnly] = useState(appCtx.settingsShowCorrectAnswerOnly);
-
   useEffect(() => {
   }, []);
-
-  const handleNotification = () => {
-    PushNotification.localNotification(
-      {
-        channelId: "test-channel",
-        title: "You clicked it",
-        message: "Zagramy w 3 szybkie?"
-      }
-    )
-  }
 
   async function saveData(key, value) {
     await AsyncStorage.setItem(key,value);
   }
 
   const saveForm = (formValue) => {
-    Alert.alert("saveForm.Form Value", JSON.stringify(formValue))
+    console.log(formValue);
     appCtx.setSettingsOnlyCorrectValue(formValue.correct);
-    appCtx.setSettingsShowPageSize(formValue.pageSize);
+    appCtx.setSettingsFastQuizDepartment(formValue.fastQuizDepartment);
     try {
       saveData('@storage_lkequiz3',  JSON.stringify(formValue));
     } catch(e) {
-      Alert.alert("saveForm.Form Value", e);
-      // console.error(e)
+      console.error(e)
     }
   };
 
@@ -55,6 +42,8 @@ const SettingsScreen = ({navigation, route}) => {
       width: '100%',
     }]}>
         <View style={{flex: 1,width: '100%', padding: 5}}>
+
+
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: '25%'}}>
                 <Text style={{ fontSize: 14}}>Wersja</Text>
@@ -78,58 +67,79 @@ const SettingsScreen = ({navigation, route}) => {
           <Controller
             control={control}
             name="correct"
-            defaultValue={showCorrectAnswerOnly}
+            defaultValue={appCtx.settingsShowCorrectAnswerOnly}
             render={({field: {onChange,value} }) => (
-              <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row', marginTop: 10 }]}>
-                <View style={{ width: '75%'}}>
+              <View style={{ marginTop: 10}}>
+                <View >
+                    <Text>Baza wiedzy</Text>
+                </View>
+                <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row', alignContent: 'center', alignItems: "center"}]}>
+                  <View style={{ width: '75%'}}>
                     <Text style={{ fontSize: 14,flex: 1, verticalAlign: 'middle', paddingLeft: 10}}>Pokaz tylko dobre odpowiedzi</Text>
-                </View>
-                <View style={{ width: '25%'}}>
-                <Switch
-                  style={{marginTop: 10}}
-                  onValueChange={(item) => onChange(item)}
-                  value={value}
-                />
-                </View>
+                 </View>
+                 <View style={{ width: '25%'}}>
+                  <Switch
+                    style={{marginRight: 10}}
+                    onValueChange={(item) => onChange(item)}
+                    value={value}
+                  />
+                  </View>
+                  
               </View>
+            </View>
+              
             )}
           />
-          
+
           <Controller
             control={control}
-            name="pageSize"
-            defaultValue={appCtx.settingsShowPageSize}
+            name="fastQuizDepartment"
+            defaultValue={appCtx.settingsFastQuizDepartment}
             render={({field: {onChange,value} }) => (
-              <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row', marginVertical: 10}]}>
-                <View style={{ width: '75%',}}>
-                    <Text style={{ fontSize: 14, flex: 1, verticalAlign: 'middle', paddingLeft: 10}}>Limit rekordów na stronie</Text>
+              <View style={{ marginTop: 10}}>
+                <View >
+                    <Text>Główna dział pytań (3 szybkie)</Text>
                 </View>
-                <View style={{ width: '25%',}}>
-                <TextInput
-                  placeholder='Limit rekordów na stronie'
-                  keyboardType='numeric'
-                  style={{ alignContent: 'center', textAlign:'center', backgroundColor: 'white'}}
-                  value={value}
-                  onChangeText={(text) => onChange(text)}
-                  maxLength={2}
-                />
-                </View>
+                <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row', alignContent: 'center', alignItems: "center"}]}>
+                  <View style={{ width: '100%', alignContent: 'center', alignItems: "center"}}>
+                    <SelectDropdown
+                      defaultValue={value}
+                      buttonStyle={[GlobalStyle.AppSelectButton,{width:'100%'}]}
+                      buttonTextStyle={[GlobalStyle.AppSelectButtonText]}
+                      data={MainDepartments}
+                      onSelect={(selectedItem, index) => {
+                        console.log(selectedItem, index)
+                        onChange(selectedItem);
+
+                        appCtx.setSettingsFastQuizDepartment(selectedItem);
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem.code
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item
+                      }}
+                      renderCustomizedButtonChild={(selectedItem, index) => {
+                        return (
+                          <View >
+                            <Text > {selectedItem ? selectedItem.text : 'Wybierz'}</Text>
+                          </View>
+                        );
+                      }}
+                      renderCustomizedRowChild={(item, index) => {
+                        return (
+                          <View >
+                            <Text >{item.text}</Text>
+                          </View>
+                        );
+                      }}
+                    />
+                  </View>
               </View>
+            </View>
+              
             )}
-            rules={{
-              required: {
-                value: true,
-                message: 'Pole jest wymagane'
-              },
-              validate: {
-                minLength: (v) => v.length >= 1,
-                matchPattern: (v) => /^[0-9]+$/.test(v),
-              },
-            }}
           />
-          {errors['pageSize']?.message ?
-          <Text style={styles.errorText}>{errors['pageSize']?.message}</Text>
-          : null}
 
       <View style={styles.container}>
         <TouchableOpacity 
@@ -138,16 +148,6 @@ const SettingsScreen = ({navigation, route}) => {
           handleSubmit((formValue) => saveForm(formValue))
         }>
           <Text style={[GlobalStyle.AppPrimaryButtonText]}>Zapisz</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.container}>
-        <TouchableOpacity 
-        style={[GlobalStyle.AppButton, GlobalStyle.AppPrimaryButton, {marginTop: 24}]}
-        onPress={
-          () => handleNotification()
-        }>
-          <Text style={[GlobalStyle.AppPrimaryButtonText]}>Notyfikacje</Text>
         </TouchableOpacity>
       </View>
 

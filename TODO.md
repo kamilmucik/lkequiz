@@ -21,11 +21,12 @@
 18. Generate OpenApi
 
 LandingPage:
-- WordPress
-- szablon: poszukać tego starego
+- WordPress - najnowszy z moliwie najnowszym php i acceleratorem CGI
++ szablon: poszukać tego starego
 - połączenie z facebookiem
 - nginx(ssl/ http2/3, domena) + php8 + mysql
-- 
+- strona z policy dla google play/iOS
+- strona z release notes / plugin wordpress
 
 Webapp:
 + dodonie css style bootstrap, buttony
@@ -61,12 +62,14 @@ Mobile:
 + Poprawki paginacji in memo/cache
 + ładowanie strony i indicator
 + tworzenie komponentów
-- obrazek, która odpowiedź jest poprawna po zakończeniu testu + link do powrotu do kategorii
++ obrazek, która odpowiedź jest poprawna po zakończeniu testu + link do powrotu do kategorii
 + pobieranie danych z pliku konfiguracyjnego
 + notyfikacje lokalne i firebase
 - 3 szybkie pytania + backend + przejście z powiadomienia do strony z pytaniami
++ dekompozycja strony quiz
 - opcja pokaz tylko dobre odpowiedzi: rq do backendu 
 - wysyłanie rq z kluczem apikey
+- wersja aplikacji wysyłana w nagłówkach RQ
 
 Backend:
 - endpoint quiz poprawić na prawidłową liczbę parametrów

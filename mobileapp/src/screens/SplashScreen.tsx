@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useReducer } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Image, StyleSheet,PermissionsAndroid } from 'react-native';
 import AppContext from "../store/AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -54,7 +54,7 @@ const SplashScreen = () => {
     let parsed = JSON.parse(value);
     if(value !== null) {
       appCtx.setSettingsOnlyCorrectValue(parsed.correct);
-      appCtx.setSettingsShowPageSize(parsed.pageSize);
+      appCtx.setSettingsFastQuizDepartment(parsed.fastQuizDepartment);
     }
   }
 

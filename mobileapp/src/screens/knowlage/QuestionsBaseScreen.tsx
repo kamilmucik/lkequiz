@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, FlatList, Pressable } from "react-native";
-import React, { useContext, useEffect, useState, useReducer, useMemo } from "react";
+import { View, StyleSheet, SafeAreaView, ActivityIndicator, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BASE_API_URL, QUIZ_ID, PAGE_SIZE } from '../../config.tsx';
+import { QUIZ_ID, PAGE_SIZE } from '../../config.tsx';
 import KnowlageMenuListElement from '../../components/KnowlageMenuListElement';
 import ListFooter from '../../components/ListFooter';
 import ItemSeparator from '../../components/ItemSeparator';
@@ -12,7 +12,7 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const {loading, moreLoading, totalPage, data} = useCustomFetch(query);
+  const {loading, moreLoading, totalPage, data} = useCustomFetch(query, true);
 
   const fetchDepartments = async (page) => {
     setQuery(`department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
@@ -56,10 +56,10 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
             renderItem={ ({item}) => <KnowlageMenuListElement id={item.id} name={item.name} onPress={ onPressItemHandler } /> }
             keyExtractor={ (item, index) => `${item.id}-${index}`}
             contentContainerStyle={[styles.flatListItem,{}]}
-            ItemSeparatorComponent={ () => <ItemSeparator />}
+            ItemSeparatorComponent={<ItemSeparator />}
             onEndReached={LoadMoreRandomData}
             onEndReachedThreshold={0.2}
-            ListFooterComponent={ () =><ListFooter loading={moreLoading} />}
+            ListFooterComponent={<ListFooter loading={moreLoading} />}
             />
         }
     </SafeAreaView>

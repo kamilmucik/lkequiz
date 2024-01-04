@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
-import React, { useReducer, useEffect, useState, useRef } from "react";
+import { View, StyleSheet, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
+import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
+import { PAGE_SIZE } from '../../config.tsx';
 import ListFooter from '../../components/ListFooter';
 import ItemSeparator from '../../components/ItemSeparator';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
@@ -13,7 +13,7 @@ const QuestionsScreen = ({ route }) => {
   const { categoryId } = route.params;
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { loading, moreLoading, totalPage, data } = useCustomFetch(query);
+  const { loading, moreLoading, totalPage, data } = useCustomFetch(query, true);
 
   const fetchData = async (page) => {
     setQuery(`question/${categoryId}/${page}/${PAGE_SIZE}/`);
@@ -49,11 +49,10 @@ const QuestionsScreen = ({ route }) => {
               style={styles.flatList}
               contentContainerStyle={[styles.flatListItem,{}]}
               keyExtractor={ (item, index) => `${item.id}-${index}`}
-              contentContainerStyle={{flexGrow: 1}}
-              ItemSeparatorComponent={ () => <ItemSeparator />}
+              ItemSeparatorComponent={<ItemSeparator />}
               onEndReachedThreshold={0.2}
               onEndReached={LoadMoreRandomData}
-              ListFooterComponent={ () => <ListFooter loading={moreLoading} />}
+              ListFooterComponent={<ListFooter loading={moreLoading} />}
               />
         }
     </SafeAreaView>

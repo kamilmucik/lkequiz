@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 
-const ListFooter = ({loading}) => {
+interface ListFooterProps {
+    loading: boolean;
+}
+
+const ListFooter = ({loading}: ListFooterProps) => {
 
     return (
         <View >

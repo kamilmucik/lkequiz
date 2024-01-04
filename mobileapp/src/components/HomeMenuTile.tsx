@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image,Dimensions, Platform, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image,Dimensions, Pressable } from 'react-native';
 import GlobalStyle from "../utils/GlobalStyle";
 import airplane from '../assets/img/airplane.png';
 import airplane2 from '../assets/img/airplane2.png';

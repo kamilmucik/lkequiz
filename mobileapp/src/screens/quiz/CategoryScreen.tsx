@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, FlatList, Pressable } from "react-native";
-import React, {  useEffect, useState, useReducer, useMemo } from "react";
+import { View, StyleSheet, SafeAreaView, ActivityIndicator, FlatList } from "react-native";
+import React, {  useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BASE_API_URL, PAGE_SIZE } from '../../config.tsx';
+import { PAGE_SIZE } from '../../config.tsx';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
 import ListEmpty from '../../components/ListEmpty';
 import CategoryListItem from '../../components/CategoryListItem';
@@ -14,7 +14,7 @@ const CategoryScreen = ({ navigation, route }) => {
   const {departmentId} = route.params;
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { loading, moreLoading, totalPage, isListEnd, data } = useCustomFetch(query);
+  const { loading, moreLoading, totalPage, data } = useCustomFetch(query, true);
 
   const fetchCategories = async (page) => {
     setQuery(`category/${departmentId}/${page}/${PAGE_SIZE}/`);
@@ -58,7 +58,6 @@ const CategoryScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
-      paddingTop: insets.top,
       paddingBottom: insets.bottom,
       alignItems: 'center',
     }]}>
@@ -73,12 +72,12 @@ const CategoryScreen = ({ navigation, route }) => {
             renderItem={ ({item}) => <CategoryListItem item={item} details={true} onPress={ onPressItemHandler } /> }
             contentContainerStyle={[styles.flatListItem,{}]}
             keyExtractor={ (item, index) => `${item.id}-${index}`}
-            ItemSeparatorComponent={ () => <ItemSeparator />}
+            ItemSeparatorComponent={<ItemSeparator />}
             onEndReachedThreshold={0.2}
             onEndReached={LoadMoreRandomData}
-            ListFooterComponent={ () =><ListFooter loading={moreLoading} />}
+            ListFooterComponent={<ListFooter loading={moreLoading} />}
             ListHeaderComponent={renderHeader}
-            ListEmptyComponent={ () =><ListEmpty onPress={ reloadHandler }  />}
+            ListEmptyComponent={<ListEmpty onPress={ reloadHandler }  />}
           />
       }
       </SafeAreaView>

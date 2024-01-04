@@ -1,5 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import GlobalStyle from "../utils/GlobalStyle";
+import { View, Text, Pressable } from "react-native";
 
 interface ListEmptyProps {
     onPress: () => void;
@@ -22,9 +21,5 @@ const ListEmpty = ({onPress} : ListEmptyProps) => {
       </View>
     )
 };
-
-const styles = StyleSheet.create({
-    
-  });
 
 export default ListEmpty;

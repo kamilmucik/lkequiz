@@ -1,62 +1,42 @@
-import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, Text, View, ActivityIndicator,SafeAreaView, ScrollView,TouchableOpacity,FlatList } from 'react-native';
-import AppContext from "../../store/AppContext";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ActivityIndicator,SafeAreaView, ScrollView,FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import GlobalStyle from "../../utils/GlobalStyle";
-import { BASE_API_URL, QUIZ_ID } from '../../config.tsx';
+import {useCustomFetch} from '../../hooks/useCustomFetch';
+import CustomButton from '../../components/CustomButton';
+import RowView from '../../components/RowView';
+import ItemSeparator from '../../components/ItemSeparator';
+import CustomRadioButton from '../../components/CustomRadioButton';
 
 const QuizScreen = ({navigation, route}) => {
+  const insets = useSafeAreaInsets(); 
 
-    const appCtx = useContext(AppContext);
-    const insets = useSafeAreaInsets(); 
+  const { quizCategoryName } = route.params;
+  const { quizCategoryId } = route.params;
+  const { quizTimeLimit } = route.params;
+  const { quizQuestionLimit } = route.params;
 
-    const { quizCategoryName } = route.params;
-    const { quizCategoryId } = route.params;
-    const { quizTimeLimit } = route.params;
-    const { quizQuestionLimit } = route.params;
+  const [countDownTime, setCountDownTime] = useState(quizTimeLimit);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [showScore, setShowScore] = useState(false);
+  const [score, setScore] = useState(0);
+  const [scorePercentage, setScorePercentage] = useState(0);
 
-    const [questions, setQuestions] = useState([]);
-    const [countDownTime, setCountDownTime] = useState(quizTimeLimit);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [loading, setLoading] = useState(false);
-    const [answers, setAnswers] = useState([]);
-    const [showScore, setShowScore] = useState(false);
-    const [score, setScore] = useState(0);
-    const [scorePercentage, setScorePercentage] = useState(0);
+  const [query, setQuery] = useState('');
+  const {data} = useCustomFetch(query,false);
 
-
-    const HOST = 'http://info.e-strix.pl';
-
-    const fetchQuestions = async (page) => {
-      try {
-          const response = await fetch(`${HOST}/api/quiz/${quizCategoryId}/1/${quizQuestionLimit}/`);
-          // console.log("response", response);
-          const json = await response.json();
-          // console.log("json", json);
-          return json;
-      } catch (error) {
-          console.error(error);
-          // return [];
-      } finally {
-          
-      }
+  const fetchQuestions = async (page) => {
+      setQuery(`quiz/${quizCategoryId}/1/${quizQuestionLimit}/`);
   }
 
   useEffect(() => {
-      setLoading(true);
-    // Fetch initial page of data
-      fetchQuestions(currentPage).then(json => {
-          setQuestions(json.data);
-          // console.log("data",questions);
-          setLoading(false);
-      });
+    fetchQuestions(currentPage);
   }, [currentPage]);
 
   async function loadProperties() {
-    console.log('loadProperties')
     setScore(0);
-
   }
 
   useEffect(() => {
@@ -78,13 +58,11 @@ const QuizScreen = ({navigation, route}) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      
       if (countDownTime > 0) {
         setCountDownTime(countDownTime - 1);
       }
       if (countDownTime === 0) {
         finish();
-
       }
     }, 60000); // 1 min
 
@@ -92,27 +70,16 @@ const QuizScreen = ({navigation, route}) => {
   }, [countDownTime]);
 
   function increment() {
-    setCurrentQuestion(function (prevCount) {
-        if (prevCount < questions.length-1) {
-            return (prevCount += 1); 
-        } else {
-            return (prevCount = questions.length-1);
-        }
-    });
+    currentQuestion < data.length-1 ? setCurrentQuestion(currentQuestion+1) : setCurrentQuestion(data.length-1);
   }
 
   function decrement() {
-    setCurrentQuestion(function (prevCount) {
-      if (prevCount > 0) {
-        return (prevCount -= 1); 
-      } else {
-        return (prevCount = 0);
-      }
-    });
+    currentQuestion > 0 ? setCurrentQuestion(currentQuestion-1) : setCurrentQuestion(0);
   }
+
   function finish() {
     setShowScore(true);
-    var count = (score/quizQuestionLimit)*100;
+    let count = (score/quizQuestionLimit)*100;
     setScorePercentage(Math.round(count));
   }
 
@@ -122,36 +89,21 @@ const QuizScreen = ({navigation, route}) => {
             <CustomRadioButton 
                 label={item.answer}
                 correct={item.correct === "1"}
+                showScore={showScore}
                 selected={answers[currentQuestion] == item.id} 
                 onSelect={() => handleAnswerSelection(currentQuestion, item)} 
             /> 
         </View>
-        
     );
   };
 
-  const CustomRadioButton = ({ label,correct, selected, onSelect }) => ( 
-    <TouchableOpacity 
-      disabled={showScore}
-        style={[styles.radioButton, 
-        { backgroundColor: selected ? '#2db2ff' : '#FFF' }
-      ]} 
-        onPress={onSelect} 
-    > 
-        <Text style={[styles.radioButtonText, 
-        { color: selected ? 'white' : 'grey' }]}> 
-           {correct && showScore? "[poprawna]":""} {label} 
-        </Text> 
-    </TouchableOpacity> 
-); 
-
-  const renderHeader = ({ item }) => ( 
+  const renderHeader = () => ( 
     <View>
       <View style={{ flexDirection: 'row'}}>
-            <Text style={{ fontSize: 10, marginLeft: 10}}>{questions[currentQuestion].code}</Text>
+            <Text style={{ fontSize: 10, marginLeft: 10}}>{data[currentQuestion].code}</Text>
       </View>
       <View style={{ flexDirection: 'row', marginBottom: 6 }}>
-          <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, marginLeft: 10}]}>{questions[currentQuestion].question}</Text>
+          <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, marginLeft: 10}]}>{data[currentQuestion].question}</Text>
       </View>
       <View
         style={{
@@ -161,22 +113,8 @@ const QuizScreen = ({navigation, route}) => {
         }}
       />
     </View>
-  
 ); 
-
-  const ItemSeparatorView = () => {
-    return (
-      // Flat List Item Separator
-      <View
-        style={{
-          height: 2,
-          width: '100%',
-          backgroundColor: '#e6ecf6',
-        }}
-      />
-    );
-  };
-  
+ 
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
       paddingTop: insets.top,
@@ -184,90 +122,48 @@ const QuizScreen = ({navigation, route}) => {
       alignItems: 'center', padding: 10
     }]}>
       <ScrollView>
+        
+        <RowView leftText="Kategoria" rightText={quizCategoryName}/>
+        <RowView leftText="Czas" rightText={countDownTime+'(' + quizTimeLimit + ')min'}  />
+        <RowView leftText="Pytań" rightText={(currentQuestion + 1) + ' z ' + data.length} />
 
-        <View style={{ flexDirection: 'row' }}>
-            <View style={{ width: '25%'}}>
-                <Text style={{ fontSize: 14}}>Kategoria</Text>
-            </View>
-            <View style={{ width: '75%'}}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold' , textAlign: 'left'}}>{quizCategoryName}</Text>
-            </View>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-            <View style={{ width: '25%'}}>
-                <Text style={{ fontSize: 14}}>Czas</Text>
-            </View>
-            <View style={{ width: '75%'}}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold' , textAlign: 'left'}}>{countDownTime}({quizTimeLimit})min.</Text>
-            </View>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-            <View style={{ width: '25%'}}>
-                <Text style={{ fontSize: 14}}>Pytań</Text>
-            </View>
-            <View style={{ width: '75%'}}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold' , textAlign: 'left'}}>{currentQuestion + 1} z {questions.length}</Text>
-            </View>
-        </View>
         {showScore ? (
-          <View style={{ flexDirection: 'row',padding:5 }}>
-            <View style={{ width: '25%'}}>
-                  <Text style={{ fontSize: 16}}>Wynik</Text>
-              </View>
-              <View style={{ width: '75%'}}>
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' , textAlign: 'left'}}>{score} {scorePercentage}% {scorePercentage >=80 ? (<Text>Pozytywny</Text>):(<Text>Negatywny</Text>) }</Text>
-              </View>
+          <View>
+            <RowView leftText="Wynik" rightText={score + ' ' + scorePercentage + '%' + (scorePercentage >=80 ? 'Pozytywny':'Negatywny')} />
+            <View style={{ flexDirection: 'row' }}>
+              <CustomButton text='Powrót' onPress={() => navigation.goBack(null)} style={{ width: '100%' }} />
+            </View>
           </View>
-          ) : null}
-        {questions && questions.length > 0 ?
+        ) : null}
+        
+        {data && data.length > 0 ?
         <View >
-            <View style={[styles.questionContent,{ flexDirection: 'row' }]}>
-            {/* <View style={{ width: '100%', padding:5}}> */}
-            <FlatList
-                data={questions[currentQuestion].answers}
-                renderItem={renderListItems}
-                nestedScrollEnabled={true}
-                scrollEnabled={false}
-                ItemSeparatorComponent={ItemSeparatorView}
-                keyExtractor={ (item, index) => `${item.id}-${index}`}
-                ListHeaderComponent={renderHeader}
-                />
-            {/* </View> */}
-            </View>
+          <View style={[styles.questionContent,{ flexDirection: 'row' }]}>
+          <FlatList
+              style={styles.flatList}
+              data={data[currentQuestion].answers}
+              renderItem={renderListItems}
+              nestedScrollEnabled={true}
+              scrollEnabled={false}
+              ItemSeparatorComponent={<ItemSeparator />}
+              keyExtractor={ (item, index) => `${item.id}-${index}`}
+              ListHeaderComponent={renderHeader}
+              />
+          </View>
 
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ width: '50%', paddingRight: 4}}>
-                <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => decrement()}
-                    style={[GlobalStyle.AppButton,GlobalStyle.AppPrimaryButton, {marginTop: 24}]}>
-                    <Text style={[GlobalStyle.AppPrimaryButtonText]}>Wstecz</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ width: '50%', paddingLeft: 4}}>
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => increment()}
-                    style={[GlobalStyle.AppButton,GlobalStyle.AppPrimaryButton, {marginTop: 24}]}>
-                    <Text style={[GlobalStyle.AppPrimaryButtonText]}>Dalej</Text>
-                  </TouchableOpacity>
-                </View>
-            </View>
-              
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ width: '100%' }}>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={() => finish()}
-                  style={[GlobalStyle.AppButton, GlobalStyle.AppSecoundaryButton, {marginTop: 24}]}>
-                  <Text style={[GlobalStyle.AppSecoundaryButtonText]}>Zakończ test</Text>
-                </TouchableOpacity>
-              </View>
+          <View style={{ flexDirection: 'row' }}>
+            <CustomButton text='Wstecz' onPress={() => decrement()} style={{ width: '50%', paddingRight: 4 }} primary={true} />
+            <CustomButton text='Dalej'  onPress={() => increment()} style={{ width: '50%', paddingRight: 4 }} primary={true} />
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <CustomButton text='Zakończ test' onPress={() => finish()} style={{ width: '100%' }} />
           </View>
         </View>
         :
-        <ActivityIndicator size='large' />
-            }
+         <View>
+            <ActivityIndicator size='large' />
+          </View>
+        }
         </ScrollView>
     </SafeAreaView>
   );
@@ -275,32 +171,16 @@ const QuizScreen = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop:40,
   },
   questionContent: {
     marginTop:20,
-    backgroundColor: '#ffffff',
-    borderRadius: 4,
     paddingTop: 8, 
     paddingBottom: 2,
-    
-    // justifyContent: 'center'
   },
 
-  radioButton: { 
-    paddingVertical: 12, 
-    paddingHorizontal: 16, 
-    // borderRadius: 8, 
-    marginVertical: 2, 
-    // borderWidth: 1, 
-    // borderColor: '#007BFF', 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
-    width: '100%', 
-  }, 
-  radioButtonText: { 
-      fontSize: 12, 
-  }, 
+
+  flatList: {
+    backgroundColor: '#e6ecf6',
+  },
 });
 export default QuizScreen;

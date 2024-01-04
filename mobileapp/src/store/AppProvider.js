@@ -8,7 +8,7 @@ function AppProvider({children}) {
   const [isDebugMode, setContextIsDebugMode] = useState(0);
 
 
-  const [settingsShowPageSize, setContextSettingsShowPageSize] = useState('4');
+  const [settingsFastQuizDepartment, setContextSettingsFastQuizDepartment] = useState({});
   const [settingsShowCorrectAnswerOnly, setContextSettingsOnlyCorrectValue] = useState(false);
 
   function setSettingsURLValue(val){
@@ -17,8 +17,8 @@ function AppProvider({children}) {
   function setSettingsPortValue(val){
     setContextSettingsPortValue( val);
   }
-  function setSettingsShowPageSize(val){
-    setContextSettingsShowPageSize( val);
+  function setSettingsFastQuizDepartment(val){
+    setContextSettingsFastQuizDepartment( val);
   }
   function setSettingsOnlyCorrectValue(val){
     setContextSettingsOnlyCorrectValue( val);
@@ -30,13 +30,13 @@ function AppProvider({children}) {
   const value = {
     settingsURLValue: settingsURLValue,
     settingsPortValue: settingsPortValue,
-    settingsShowPageSize: settingsShowPageSize,
+    settingsFastQuizDepartment: settingsFastQuizDepartment,
     settingsShowCorrectAnswerOnly: settingsShowCorrectAnswerOnly,
     isDebugMode: isDebugMode,
 
     setSettingsURLValue: setSettingsURLValue,
     setSettingsPortValue: setSettingsPortValue,
-    setSettingsShowPageSize: setSettingsShowPageSize,
+    setSettingsFastQuizDepartment: setSettingsFastQuizDepartment,
     setSettingsOnlyCorrectValue: setSettingsOnlyCorrectValue,
     setIsDebugMode: setIsDebugMode,
   }
