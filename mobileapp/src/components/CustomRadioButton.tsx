@@ -18,6 +18,7 @@ const CustomRadioButton = (props : CustomRadioButtonProps) => {
     return (
         <View style={[styles.answerRow, props.correct && props.showScore ? styles.correctAnswer : styles.badAnswer]} >
             <TouchableOpacity 
+                testID={'customRadioButtonTestID'}
                 disabled={props.showScore}
                 style={[styles.radioButton,{ backgroundColor: props.selected ? '#2db2ff' : '#FFF' }]} 
                 onPress={handleClick} 

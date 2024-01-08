@@ -43,7 +43,6 @@ const CategoriesScreen = ({ navigation, route }) => {
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
       paddingBottom: insets.bottom,
-      paddingTop: insets.top,
       alignItems: 'center'
     }]}>
         {loading ? 

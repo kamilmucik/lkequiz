@@ -11,8 +11,8 @@ const ListEmpty = ({onPress} : ListEmptyProps) => {
     };
 
     return (
-        <View>
-        <Pressable onPress={handleClick}>
+      <View>
+        <Pressable testID={'listEmptyTestID'} onPress={handleClick}>
           <Text style={{ fontSize: 16, paddingHorizontal: 12,  marginTop:10 }} >
             Odświez
           </Text>

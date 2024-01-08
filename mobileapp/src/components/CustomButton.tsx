@@ -17,6 +17,7 @@ const CustomButton = (props : CustomButtonProps) => {
     return (
         <View style={props.style}>
             <TouchableOpacity
+                testID={'customButtonTestID'}
                 activeOpacity={0.9}
                 onPress={handleClick}
                 style={[styles.button,  props.primary ? styles.primaryButton : styles.secoundaryButton, {marginTop: 24}]}>

@@ -46,7 +46,6 @@ const QuizScreen = ({navigation, route}) => {
     setShowScore(false);
   }, []);
 
-
   const handleAnswerSelection = (questionIndex, selectedAnswer) => {
     const updatedAnswers = [...answers];
     updatedAnswers[questionIndex] = selectedAnswer.id;
@@ -105,15 +104,9 @@ const QuizScreen = ({navigation, route}) => {
       <View style={{ flexDirection: 'row', marginBottom: 6 }}>
           <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 16, marginLeft: 10}]}>{data[currentQuestion].question}</Text>
       </View>
-      <View
-        style={{
-          height: 6,
-          width: '100%',
-          backgroundColor: '#e6ecf6',
-        }}
-      />
+      <View style={{height: 6,width: '100%', backgroundColor: '#e6ecf6'}}/>
     </View>
-); 
+    ); 
  
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
@@ -122,11 +115,9 @@ const QuizScreen = ({navigation, route}) => {
       alignItems: 'center', padding: 10
     }]}>
       <ScrollView>
-        
         <RowView leftText="Kategoria" rightText={quizCategoryName}/>
         <RowView leftText="Czas" rightText={countDownTime+'(' + quizTimeLimit + ')min'}  />
         <RowView leftText="Pytań" rightText={(currentQuestion + 1) + ' z ' + data.length} />
-
         {showScore ? (
           <View>
             <RowView leftText="Wynik" rightText={score + ' ' + scorePercentage + '%' + (scorePercentage >=80 ? 'Pozytywny':'Negatywny')} />

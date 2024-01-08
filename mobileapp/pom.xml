@@ -25,13 +25,15 @@
     <sonar.projectName>${project.artifactId}</sonar.projectName>
     <sonar.projectKey>${project.artifactId}</sonar.projectKey>
     <sonar.buildbreaker.skip>true</sonar.buildbreaker.skip>
+
+    <sonar.javascript.lcov.reportPaths>/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     <!-- <sonar.javascript.file.suffixes>.js,.jsx,</sonar.javascript.file.suffixes>
     <sonar.lang.patterns.ts>.tsx</sonar.javascript.file.suffixes> -->
-    <sonar.exclusions />
-    <sonar.dependencyCheck.htmlReportPath>./target/dependency-check-report.html</sonar.dependencyCheck.htmlReportPath>
-    <sonar.dependencyCheck.jsonReportPath>./target/dependency-check-report.json</sonar.dependencyCheck.jsonReportPath>
-    <jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
-    <jacoco.reportPath>${project.build.directory}/jacoco.exec</jacoco.reportPath>
+    <!-- <sonar.exclusions /> -->
+    <!-- <sonar.dependencyCheck.htmlReportPath>./target/dependency-check-report.html</sonar.dependencyCheck.htmlReportPath>
+    <sonar.dependencyCheck.jsonReportPath>./target/dependency-check-report.json</sonar.dependencyCheck.jsonReportPath> -->
+    <!-- <jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
+    <jacoco.reportPath>${project.build.directory}/jacoco.exec</jacoco.reportPath> -->
   </properties>
 
   <build>
@@ -91,6 +93,26 @@
               <environmentVariables>
                 <VERSION>${version}</VERSION>
                 <SCRIPT_DIR>${project.basedir}</SCRIPT_DIR>
+              </environmentVariables>
+            </configuration> 
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>Tests artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bash</executable>
+              <commandlineArgs>./libs/test.sh</commandlineArgs>
+              <environmentVariables>
               </environmentVariables>
             </configuration>
           </execution>

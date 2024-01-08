@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const {loading, moreLoading, totalPage, data} = useCustomFetch(query, true);
+  const {loading, moreLoading, data} = useCustomFetch(query, true);
 
   const fetchDepartments = async (page) => {
     setQuery(`department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
@@ -31,12 +31,6 @@ const HomeScreen = ({ navigation }) => {
       departmentName: name,
     })
   };
-
-  const LoadMoreRandomData = () =>{ 
-    if (currentPage < totalPage){
-      setCurrentPage(currentPage + 1);
-    } 
-  }
 
   return (
     <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
@@ -58,7 +52,6 @@ const HomeScreen = ({ navigation }) => {
           style={[styles.tileList]}
           contentContainerStyle={[styles.tileListContent,GlobalStyle.AppScreenViewBackgroundColor]}
           onEndReachedThreshold={0.2}
-          onEndReached={LoadMoreRandomData}
           ListFooterComponent={<ListFooter loading={moreLoading} />}
         />
       }

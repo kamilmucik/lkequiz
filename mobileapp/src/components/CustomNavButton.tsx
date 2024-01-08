@@ -12,7 +12,7 @@ const CustomNavButton = (props : CustomNavButtonProps) => {
     
     return (
         <View>
-        <Icon name={name} color={color} size={size} />
+            <Icon name={props.name} color={props.color} size={props.size} />
         </View>
     )
 }

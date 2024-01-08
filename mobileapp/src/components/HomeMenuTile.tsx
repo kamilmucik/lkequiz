@@ -4,7 +4,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import airplane from '../assets/img/airplane.png';
 import airplane2 from '../assets/img/airplane2.png';
 import glider from '../assets/img/glider.png';
-const { width } = Dimensions.get("window");
+
 
 const tileImages = {
     1: airplane,
@@ -19,6 +19,7 @@ interface HomeMenuTileProps {
 }
 
 const HomeMenuTile = ({id, name, onPress} : HomeMenuTileProps) => {
+    const { width } = Dimensions.get("window");
 
     const calcTileDimensions = (deviceWidth, tpr) => {
         const margin = (deviceWidth / (tpr * 10));
@@ -32,7 +33,7 @@ const HomeMenuTile = ({id, name, onPress} : HomeMenuTileProps) => {
     };
 
     return (
-        <Pressable onPress={handleClick}>
+        <Pressable testID={'homeMenuTileTestID'} onPress={handleClick}>
             <View style={[styles.item, {width: tileDimensions.size, height: tileDimensions.size, marginHorizontal: 8.}]}>
                 <Image source={tileImages[id]} style={[{ width: '60%', height: '60%' }, styles.tileImg]} />
                 <Text style={[GlobalStyle.AppTextMainColor]}>{name}</Text>

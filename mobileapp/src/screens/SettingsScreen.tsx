@@ -11,7 +11,7 @@ import { BASE_API_URL } from '../config.tsx';
 
 import { MainDepartments } from '../store/MainDepartments';
 
-const SettingsScreen = ({navigation, route}) => {
+const SettingsScreen = () => {
   const {control, handleSubmit } = useForm();
   const appCtx = useContext(AppContext);
   const insets = useSafeAreaInsets();
@@ -98,7 +98,7 @@ const SettingsScreen = ({navigation, route}) => {
             render={({field: {onChange,value} }) => (
               <View style={{ marginTop: 10}}>
                 <View >
-                    <Text>Główna dział pytań (3 szybkie)</Text>
+                    <Text>Główny dział pytań (3 szybkie)</Text>
                 </View>
                 <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row', alignContent: 'center', alignItems: "center"}]}>
                   <View style={{ width: '100%', alignContent: 'center', alignItems: "center"}}>

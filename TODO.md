@@ -68,8 +68,14 @@ Mobile:
 - 3 szybkie pytania + backend + przejście z powiadomienia do strony z pytaniami
 + dekompozycja strony quiz
 - opcja pokaz tylko dobre odpowiedzi: rq do backendu 
-- wysyłanie rq z kluczem apikey
-- wersja aplikacji wysyłana w nagłówkach RQ
++ wysyłanie rq z kluczem apikey
++ wersja aplikacji wysyłana w nagłówkach RQ
+= co więcej
+- model MVVM
+- bardziej solid
+- zastąpienie fetcha poprzez axios albo query
+- dodanie bazy SQLite zamiast odpytywania API i aktualizacja bazy
+- internationalize
 
 Backend:
 - endpoint quiz poprawić na prawidłową liczbę parametrów
@@ -85,6 +91,8 @@ Backend:
 - błąd połączenia z bazą danych po kilkunastu połączeniach
 -? dodanie bazy dla droniarzy
 - wprowadzenie API_KEY
+- wprowadzenie versja
+- wprowadzenie wersji w path 
 - wprowadzenie paraametru lastPage
 - zwraca listę albo obiekt. trzeba zwrobić eby zwracał listę opiektów
 

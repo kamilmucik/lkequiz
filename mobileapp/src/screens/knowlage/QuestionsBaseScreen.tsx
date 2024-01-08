@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     width: '100%',
+    marginTop: 30, 
   },
 
   flatListItem: {
