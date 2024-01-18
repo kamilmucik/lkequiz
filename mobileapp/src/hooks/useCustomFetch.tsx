@@ -6,7 +6,7 @@ import PackageJson from '../../package.json';
 
 //https://jasonwatmore.com/post/2021/09/17/react-fetch-set-authorization-header-for-api-requests-if-user-logged-in
 //https://reactnative.dev/docs/network
-export const useCustomFetch = (query, cached) => {
+export const useCustomFetch = (query, cached = true, stataticData = []) => {
   const cache = useRef([]);
   const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
 
@@ -20,12 +20,12 @@ export const useCustomFetch = (query, cached) => {
 
       console.log("cache: " + (cached?"t":"f") + " : " + query);
 
-      if (cache.current[query] && cached ) {
+      // if (cache.current[query] && cached ) {
         
-          console.log("cache: " + (cached?"t":"f") + " : " + query);
-          const data = cache.current[query];
-          dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
-      } else {
+      //     console.log("cache: " + (cached?"t":"f") + " : " + query);
+      //     const data = cache.current[query];
+      //     dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
+      // } else {
         fetch(`${BASE_API_URL}/${query}`, {
             method: 'GET',
             headers: {
@@ -37,14 +37,17 @@ export const useCustomFetch = (query, cached) => {
             return response.json();
           })
           .then( (data) => {
-            dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
+            
+
+            dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: [...data.data, ...stataticData], totalPage: data.totalPage});
+            // dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
             cache.current[query] = data; // set response in cache;
           })
           .catch( (error) => {
-            console.log("error: ", error);
+            // console.log("error: ", error);
             dispach({type: ACTION_TYPE.FETCH_ERROR, error: error});
           });
-      }
+      // }
     }
 
 		fetchData();

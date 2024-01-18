@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ const CategoriesScreen = ({ navigation, route }) => {
   const { departmentId } = route.params;
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { loading, moreLoading, totalPage, data } = useCustomFetch(query, true);
+  const {moreLoading, totalPage, data } = useCustomFetch(query);
 
   const fetchCategories = async (page) => {
     setQuery(`category/${departmentId}/${page}/${PAGE_SIZE}/`);
@@ -45,23 +45,17 @@ const CategoriesScreen = ({ navigation, route }) => {
       paddingBottom: insets.bottom,
       alignItems: 'center'
     }]}>
-        {loading ? 
-        <View>
-          <ActivityIndicator size='large' />
-        </View>
-        :
-          <FlatList
-              data={data}
-              style={styles.flatList}
-              renderItem={ ({item}) => <CategoryListItem item={item} onPress={ onPressItemHandler } /> }
-              keyExtractor={ (item, index) => `${item.id}-${index}`}
-              contentContainerStyle={[styles.flatListItem,{}]}
-              ItemSeparatorComponent={<ItemSeparator />}
-              onEndReachedThreshold={0.2}
-              onEndReached={LoadMoreRandomData}
-              ListFooterComponent={<ListFooter loading={moreLoading} />}
-              />
-        } 
+      <FlatList
+          data={data}
+          style={styles.flatList}
+          renderItem={ ({item}) => <CategoryListItem item={item} onPress={ onPressItemHandler } /> }
+          keyExtractor={ (item, index) => `${item.id}-${index}`}
+          contentContainerStyle={[styles.flatListItem,{}]}
+          ItemSeparatorComponent={<ItemSeparator />}
+          onEndReachedThreshold={0.2}
+          onEndReached={LoadMoreRandomData}
+          ListFooterComponent={<ListFooter loading={moreLoading} />}
+          />
       </SafeAreaView>
   );
 };

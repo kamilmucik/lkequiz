@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, ActivityIndicator, FlatList } from "react-native";
+import { View, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import React, {  useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,7 +14,7 @@ const CategoryScreen = ({ navigation, route }) => {
   const {departmentId} = route.params;
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { loading, moreLoading, totalPage, data } = useCustomFetch(query, true);
+  const { moreLoading, totalPage, data } = useCustomFetch(query);
 
   const fetchCategories = async (page) => {
     setQuery(`category/${departmentId}/${page}/${PAGE_SIZE}/`);
@@ -61,25 +61,19 @@ const CategoryScreen = ({ navigation, route }) => {
       paddingBottom: insets.bottom,
       alignItems: 'center',
     }]}>
-      { loading ? 
-        <View>
-          <ActivityIndicator size='large' />
-        </View>
-        : 
-        <FlatList
-            data={data}
-            style={styles.flatList}
-            renderItem={ ({item}) => <CategoryListItem item={item} details={true} onPress={ onPressItemHandler } /> }
-            contentContainerStyle={[styles.flatListItem,{}]}
-            keyExtractor={ (item, index) => `${item.id}-${index}`}
-            ItemSeparatorComponent={<ItemSeparator />}
-            onEndReachedThreshold={0.2}
-            onEndReached={LoadMoreRandomData}
-            ListFooterComponent={<ListFooter loading={moreLoading} />}
-            ListHeaderComponent={renderHeader}
-            ListEmptyComponent={<ListEmpty onPress={ reloadHandler }  />}
-          />
-      }
+      <FlatList
+          data={data}
+          style={styles.flatList}
+          renderItem={ ({item}) => <CategoryListItem item={item} details={true} onPress={ onPressItemHandler } /> }
+          contentContainerStyle={[styles.flatListItem,{}]}
+          keyExtractor={ (item, index) => `${item.id}-${index}`}
+          ItemSeparatorComponent={<ItemSeparator />}
+          onEndReachedThreshold={0.2}
+          onEndReached={LoadMoreRandomData}
+          ListFooterComponent={<ListFooter loading={moreLoading} />}
+          ListHeaderComponent={renderHeader}
+          ListEmptyComponent={<ListEmpty onPress={ reloadHandler }  />}
+        />
       </SafeAreaView>
   );
 };

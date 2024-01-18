@@ -95,3 +95,7 @@ przydasie
 ```bash
 https://www.makeuseof.com/dynamically-load-data-with-custom-pagination-in-react-native/
 ```
+
+
+npm test  -- --coverage --watchAll=false
+npm test  -- --coverage --watchAll=false mobileapp/__tests__/src/hooks/UseCustomFetch.test.tsx

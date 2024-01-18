@@ -1,16 +1,18 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image,Dimensions, Pressable } from 'react-native';
 import GlobalStyle from "../utils/GlobalStyle";
+import quiz from '../assets/img/quiz.png';
 import airplane from '../assets/img/airplane.png';
 import airplane2 from '../assets/img/airplane2.png';
 import glider from '../assets/img/glider.png';
 
 
 const tileImages = {
+    0: quiz,
     1: airplane,
     5: glider,
     6: airplane2,
-  }
+}
 
 interface HomeMenuTileProps {
     id: number;
@@ -29,7 +31,7 @@ const HomeMenuTile = ({id, name, onPress} : HomeMenuTileProps) => {
     const tileDimensions = calcTileDimensions(width, 2) 
 
     const handleClick = () => {
-        onPress(id,name);
+        onPress(id,name, id == 0);
     };
 
     return (

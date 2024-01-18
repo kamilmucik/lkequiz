@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, ActivityIndicator, SafeAreaView } from "react-native";
+import { StyleSheet, FlatList, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ const QuestionsScreen = ({ route }) => {
   const { categoryId } = route.params;
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const { loading, moreLoading, totalPage, data } = useCustomFetch(query, true);
+  const {moreLoading, totalPage, data } = useCustomFetch(query);
 
   const fetchData = async (page) => {
     setQuery(`question/${categoryId}/${page}/${PAGE_SIZE}/`);
@@ -38,11 +38,11 @@ const QuestionsScreen = ({ route }) => {
       paddingBottom: insets.bottom,
       alignItems: 'center'
     }]}>
-        {loading ? 
+        {/* {loading ? 
             <View>
               <ActivityIndicator size='large' />
             </View>
-          :
+          : */}
             <FlatList
               data={data}
               renderItem={ ({item}) => <QuestionListItem item={item} /> }
@@ -54,7 +54,7 @@ const QuestionsScreen = ({ route }) => {
               onEndReached={LoadMoreRandomData}
               ListFooterComponent={<ListFooter loading={moreLoading} />}
               />
-        }
+        {/* } */}
     </SafeAreaView>
   );
 };

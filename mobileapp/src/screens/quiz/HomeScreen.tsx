@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, ActivityIndicator, FlatList } from "react-native";
+import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,7 +11,8 @@ const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const {loading, moreLoading, data} = useCustomFetch(query, true);
+
+  const {moreLoading, data} = useCustomFetch(query, true, [{"id": 0, "name": "3 szybkie"}]);
 
   const fetchDepartments = async (page) => {
     setQuery(`department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);
@@ -25,11 +26,20 @@ const HomeScreen = ({ navigation }) => {
     setCurrentPage(1);
   }, []);
 
-  const onPressItemHandler = (id, name) => {
-    navigation.navigate('Category', {
-      departmentId: id,
-      departmentName: name,
-    })
+  const onPressItemHandler = (id, name, quiz = false) => {
+      if (quiz){
+        navigation.navigate('Quiz', {
+          quizCategoryName: '3 szybkie',
+          quizCategoryId: 0,
+          quizTimeLimit: 5,
+          quizQuestionLimit: 3
+        })
+      }else{
+        navigation.navigate('Category', {
+          departmentId: id,
+          departmentName: name,
+        })
+      }
   };
 
   return (
@@ -38,12 +48,8 @@ const HomeScreen = ({ navigation }) => {
         paddingBottom: insets.bottom,
         alignItems: 'center',
       }]}>
-      {loading ? 
-        <View>
-          <ActivityIndicator size='large' />
-        </View>
-        :
         <FlatList
+          testID={'flatListTestID'}
           data={data}
           renderItem={ ({item}) => {return ( <HomeMenuTile id={item.id} name={item.name} onPress={ onPressItemHandler } />) }}
           keyExtractor={item => item.id.toString()}
@@ -54,7 +60,6 @@ const HomeScreen = ({ navigation }) => {
           onEndReachedThreshold={0.2}
           ListFooterComponent={<ListFooter loading={moreLoading} />}
         />
-      }
     </SafeAreaView>
   );
 };
