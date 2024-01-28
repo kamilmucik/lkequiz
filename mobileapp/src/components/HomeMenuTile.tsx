@@ -31,11 +31,13 @@ const HomeMenuTile = ({id, name, onPress} : HomeMenuTileProps) => {
     const tileDimensions = calcTileDimensions(width, 2) 
 
     const handleClick = () => {
-        onPress(id,name, id == 0);
+        onPress(id,name);
     };
 
     return (
-        <Pressable testID={'homeMenuTileTestID'} onPress={handleClick}>
+        <Pressable 
+            testID={`homeMenuTileTestID-${id}`}
+            onPress={handleClick}>
             <View style={[styles.item, {width: tileDimensions.size, height: tileDimensions.size, marginHorizontal: 8.}]}>
                 <Image source={tileImages[id]} style={[{ width: '60%', height: '60%' }, styles.tileImg]} />
                 <Text style={[GlobalStyle.AppTextMainColor]}>{name}</Text>

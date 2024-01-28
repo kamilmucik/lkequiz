@@ -1,17 +1,16 @@
-import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { QUIZ_ID, PAGE_SIZE } from '../../config.tsx';
-import HomeMenuTile from '../../components/HomeMenuTile';
-import ListFooter from '../../components/ListFooter';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
+import CustomList from '../../components/CustomList';
+import HomeMenuTile from '../../components/HomeMenuTile';
 
 const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-
   const {moreLoading, data} = useCustomFetch(query, true, [{"id": 0, "name": "3 szybkie"}]);
 
   const fetchDepartments = async (page) => {
@@ -26,8 +25,8 @@ const HomeScreen = ({ navigation }) => {
     setCurrentPage(1);
   }, []);
 
-  const onPressItemHandler = (id, name, quiz = false) => {
-      if (quiz){
+  const onPressItemHandler = (id, name) => {
+      if (id == 0){
         navigation.navigate('Quiz', {
           quizCategoryName: '3 szybkie',
           quizCategoryId: 0,
@@ -42,25 +41,25 @@ const HomeScreen = ({ navigation }) => {
       }
   };
 
+  const renderItem = (item) => {
+    return <HomeMenuTile id={item.id} name={item.name} onPress={ onPressItemHandler } />
+  }
+
   return (
-    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
+    <CustomList 
+      data={data} 
+      moreLoading={moreLoading} 
+      horizontal={true}
+      numColumns={2}
+      viewStyle={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
         alignItems: 'center',
-      }]}>
-        <FlatList
-          testID={'flatListTestID'}
-          data={data}
-          renderItem={ ({item}) => {return ( <HomeMenuTile id={item.id} name={item.name} onPress={ onPressItemHandler } />) }}
-          keyExtractor={item => item.id.toString()}
-          horizontal={false}
-          numColumns={2} 
-          style={[styles.tileList]}
-          contentContainerStyle={[styles.tileListContent,GlobalStyle.AppScreenViewBackgroundColor]}
-          onEndReachedThreshold={0.2}
-          ListFooterComponent={<ListFooter loading={moreLoading} />}
-        />
-    </SafeAreaView>
+      }]}
+      listStyle={[styles.tileList]}
+      contentContainerStyle={[styles.tileListContent,GlobalStyle.AppScreenViewBackgroundColor]}
+      displayItem={({item}) => renderItem(item)} 
+      />
   );
 };
 

@@ -8,8 +8,12 @@ mvn clean
 
 watchman watch-del-all
 
-rm -rf node_modules && npm install
+rm -rf node_modules && npm install --reset-cache
 
-npm install
+# npm install  --reset-cache
 
 react-native run-android
+
+# cd ios
+# pod install
+#react-native run-ios

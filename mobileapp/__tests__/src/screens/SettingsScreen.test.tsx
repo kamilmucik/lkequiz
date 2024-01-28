@@ -15,6 +15,9 @@ jest.mock('react-native-safe-area-context', () => {
   };
 });
 
+// https://www.youtube.com/watch?v=VuNPrFH9H0E&t=1s
+// https://www.youtube.com/watch?v=_F9A7LqipRw
+
 
 beforeEach(() => {
   // windowFetchSpy = jest.spyOn(window, 'fetch').mockImplementation(mockFetch);

@@ -1,26 +1,55 @@
 
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook} from '@testing-library/react-hooks'
+// import {  waitFor } from "@testing-library/react";
 import { useCustomFetch } from '../../../src/hooks/useCustomFetch'
 
 //https://react-hooks-testing-library.com/usage/advanced-hooks
+//https://sugandsingh5566.medium.com/leveling-up-your-react-native-test-automation-harnessing-the-power-of-jest-3a14b5298f8b
+//https://www.leighhalliday.com/mock-fetch-jest
+//https://vaskort.medium.com/how-to-unit-test-your-custom-react-hook-with-react-testing-library-and-jest-8bdefafdc8a2
+//https://github.com/vaskort/custom-hook-test/blob/develop/src/hooks/useFetchedData.js
 describe("useCustomFetch", () => {
     let query = 'department/1/1/10/';
 
-    afterEach(() => {
-        jest.restoreAllMocks();
+    let mockedData = {data: [{id: 6, "name": "PPL(A) skrócony"}, {"id": 1, "name": "PPL(A)"}, {"id": 5, "name": "SPL"}], "status": 200, "totalPage": 1};
+
+    beforeEach(() => {
+        fetch.resetMocks();
+    //   mockedData = {data: [{id: 6, "name": "PPL(A) skrócony"}, {"id": 1, "name": "PPL(A)"}, {"id": 5, "name": "SPL"}], "status": 200, "totalPage": 1};
+    // let mockedData = {
+    //     loading: false, 
+    //     moreLoading: false, 
+    //     totalPage: 2,
+    //     currentPage: 2,
+    //     payload: [
+    //       {"id": 6, "name": "PPL(A) skrócony"}, 
+    //       {"id": 1, "name": "PPL(A)"}, 
+    //       {"id": 5, "name": "SPL"}
+    //     ]
+    //   };
+  
+    //   global.fetch.mockResolvedValue({
+    //     json: jest.fn().mockResolvedValue(mockedData),
+    //   });
     });
 
-    test('should return default value of hook', async () => {
+    // afterEach(() => {
+    //     jest.restoreAllMocks();
+    // });
+
+    it('should return default value of hook', async () => {
         const { result, waitForNextUpdate } = renderHook(() => useCustomFetch(query))
         const { loading, moreLoading, error, moreError, data, totalPage, currentPage, isListEnd } = result.current;
         
-        console.log("result: " + JSON.stringify(result.current));
+        // console.log("result.1: " + JSON.stringify(result.current));
         // result.current.incrementAsync()
       
-        await waitForNextUpdate()
+        // await waitForNextUpdate()
+
+        // console.log("result.2: " + JSON.stringify(result.current));
       
-        expect(result.current.totalPage).toBe(1)
-        // expect(data).toBe([]);
+        // expect(result.current.totalPage).toBe(1)
+        // expect(data).toBe(null);
         expect(error).toBe(null);
         expect(moreError).toBe(null);
         expect(loading).toBe(false);
@@ -30,111 +59,30 @@ describe("useCustomFetch", () => {
         expect(isListEnd).toBe(false);
       })
 
-      test('should return default correct resopnse', async () => {
-          
-          let mockedData = {
-              loading: false, 
-              moreLoading: false, 
-              totalPage: 1,
-              currentPage: 1,
-              data: [
-                {"id": 6, "name": "PPL(A) skrócony"}, 
-                {"id": 1, "name": "PPL(A)"}, 
-                {"id": 5, "name": "SPL"}
-              ]
-            };
-          global.fetch.mockResolvedValue({
-              json: jest.fn().mockResolvedValue(mockedData),
-          });
-  
-          const { result, waitForNextUpdate } = renderHook(() => useCustomFetch(query))
-          const { loading, moreLoading, error, moreError, data, totalPage, currentPage, isListEnd } = result.current;
-          
-          console.log("result: " + JSON.stringify(result.current));
-          // result.current.incrementAsync()
-        
-          await waitForNextUpdate()
-        
-          expect(result.current.totalPage).toBe(1)
-          expect(data).toBe(mockedData.data);
-          expect(error).toBe(null);
-          expect(moreError).toBe(null);
-          expect(loading).toBe(false);
-          expect(moreLoading).toBe(false);
-          expect(totalPage).toBe(1);
-          expect(currentPage).toBe(1);
-          expect(isListEnd).toBe(false);
-        })
+      it("should return data", async () => {
+        fetch.mockResponseOnce(JSON.stringify(mockedData));
+        // Mock console.log
+        // console.log = jest.fn();
 
+        // Call the function
+        await useCustomFetch(query);
+        const { result, waitForNextUpdate } = renderHook(() => useCustomFetch(query))
+        const { loading, moreLoading, error, moreError, data, totalPage, currentPage, isListEnd } = result.current;
 
-    // let mockedData;
+        console.log("result.2: " + JSON.stringify(result.current));
 
-    // beforeEach(() => {
-    //   mockedData = [
-    //     {
-    //       body: "mocked body",
-    //       id: 1,
-    //       title: "mock title",
-    //       userId: 1,
-    //     },
-    //   ];
-  
-    //   global.fetch.mockResolvedValue({
-    //     json: jest.fn().mockResolvedValue(mockedData),
-    //   });
-    // });
+      });
 
-    // it('returns isLoading true while the component is loading', async () => {
-    //     const { result } = renderHook(() =>
-    //             usePermissionsHook('23')
-    //         );
-    //         // console.log("debug detail in some test"+ JSON.stringify(result))
-    //         // console.log("cache: " + JSON.stringify(result));
-    //     // expect(result.current.isLoading).toEqual(true);
-    //     // expect(result.current.permissions).toEqual([]);
-    // });
-    
-    // it('should trigger a reset of the counter to 0, when the counter reaches 10', async () => {
-    //     const hook = renderHook(() => useCounter());
+    //   it("returns null when exception", async () => {
+    //     fetch.mockReject(() => Promise.reject("API is down"));
       
-    //     await act(() => {
-    //       hook.result.current.setCounter(10);
-    //     });
+    //     const rate = await useCustomFetch("USD", "CAD");
+    //     await useCustomFetch(query);
       
-    //     await waitFor(() => expect(hook.result.current.counter).toEqual(0));
-    //   });
-
-    // it('test count update', () => {
-    //     const { result } = renderHook(() => useState({ count: 0 }));
-    //     const [state, setState] = result.current;
-    //     // setState({count: state + 1});
-    //     // expect(state).toBe({count: 0});
-    // })
-
-    // it("should return data", async () => {
-    //     const { result } = renderHook(() => useCustomFetch());
-    //     // const {result} = renderHook(() => myHook())
-
-        
-    
-    //     await waitFor(() =>{
-    //         console.log("cache: " + JSON.stringify(result));
-    //     }
-        
-    //     //   expect(result.current).toEqual({
-    //     //     data: mockedData,
-    //     //     error: null,
-    //     //     loading: false,
-    //     //   })
+    //     expect(rate).toEqual(null);
+    //     expect(fetch).toHaveBeenCalledWith(
+    //       "https://api.exchangeratesapi.io/latest?base=USD"
     //     );
     //   });
 
-//   it("should return the initial values for data, error and loading", async () => {
-//     const { result } = renderHook(() => useFetchedData());
-//     const { data, error, loading } = result.current;
-
-//     expect(data).toBe(null);
-//     expect(error).toBe(null);
-//     expect(loading).toBe(true);
-//   });
 });

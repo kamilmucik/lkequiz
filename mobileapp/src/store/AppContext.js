@@ -1,16 +1,13 @@
 import React from 'react';
 
 const AppContext = React.createContext({
-  settingsURLValue: '',
-  settingsPortValue: '80',
+  cache: [],
   settingsFastQuizDepartment: {},
   settingsShowCorrectAnswerOnly: false,
-  isDebugMode: 0,
-  setSettingsURLValue: (val) => {},
-  setSettingsPortValue: (val) => {},
-  setIsDebugMode: (val) => {},
   setSettingsFastQuizDepartment: (val) => {},
   setSettingsOnlyCorrectValue: (val) => {},
+  existInCache: (val) => {},
+  addToCache: (val) => {},
 });
 
 export default AppContext;

@@ -1,31 +1,25 @@
-import { useEffect, useRef, useReducer } from 'react';
+import { useEffect, useContext, useReducer } from 'react';
 import { ACTION_TYPE } from './postActionTypes';
 import { INITIAL_STATE, postReducer } from './postReducer'
 import { BASE_API_URL, API_KEY } from '../config';
 import PackageJson from '../../package.json';
+import AppContext from "../store/AppContext";
 
 //https://jasonwatmore.com/post/2021/09/17/react-fetch-set-authorization-header-for-api-requests-if-user-logged-in
 //https://reactnative.dev/docs/network
-export const useCustomFetch = (query, cached = true, stataticData = []) => {
-  const cache = useRef([]);
+//https://greenonsoftware.com/articles/react/react-use-ref-hook/
+//https://blog.logrocket.com/implementing-component-visibility-sensor-react-native/
+export const useCustomFetch = (query: string, cached = true, stataticData = []) => {
+  const appCtx = useContext(AppContext);
   const [state, dispach] = useReducer(postReducer, INITIAL_STATE);
 
 	useEffect(() => {
 		if (!query || !query.trim()) return;
-
-    const fetchData = async () => {
-      // console.log("query", query)
-      if (state.loading || state.moreLoading || state.isListEnd) return;
-      dispach({type: ACTION_TYPE.FETCH_START});
-
-      console.log("cache: " + (cached?"t":"f") + " : " + query);
-
-      // if (cache.current[query] && cached ) {
-        
-      //     console.log("cache: " + (cached?"t":"f") + " : " + query);
-      //     const data = cache.current[query];
-      //     dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
-      // } else {
+    const fetchData = () => {
+      if (appCtx.existInCache(query) ) {
+          const data = appCtx.cache.current[query];
+          dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: [...data.data, ...stataticData], totalPage: data.totalPage});
+      } else {
         fetch(`${BASE_API_URL}/${query}`, {
             method: 'GET',
             headers: {
@@ -37,18 +31,16 @@ export const useCustomFetch = (query, cached = true, stataticData = []) => {
             return response.json();
           })
           .then( (data) => {
-            
-
             dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: [...data.data, ...stataticData], totalPage: data.totalPage});
-            // dispach({type: ACTION_TYPE.FETCH_SUCCESS, payload: data.data, totalPage: data.totalPage});
-            cache.current[query] = data; // set response in cache;
+            appCtx.addToCache(query, data.data);
           })
           .catch( (error) => {
-            // console.log("error: ", error);
+            console.log("error: ", error);
             dispach({type: ACTION_TYPE.FETCH_ERROR, error: error});
           });
-      // }
+      }
     }
+    
 
 		fetchData();
 	}, [query]);

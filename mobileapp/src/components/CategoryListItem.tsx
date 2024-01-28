@@ -15,7 +15,7 @@ const CategoryListItem = ({item, details, onPress} : CategoryListItemProps) => {
     };
 
     return (
-        <Pressable testID={'categoryListItemTestID'} style={[GlobalStyle.AppFlatListStyleItem]} onPress={handleClick}  >
+        <Pressable testID={`categoryListItemTestID-${item.id}`} style={[GlobalStyle.AppFlatListStyleItem]} onPress={handleClick}  >
             <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12,  marginTop:10, verticalAlign:'middle', flex: 1 }]} >
             {item.name}
             </Text>

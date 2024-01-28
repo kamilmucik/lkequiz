@@ -9,7 +9,7 @@ LKEQuiz3
 
 ### sprawdzanie kodu:
 
-- mvn clean install sonar:sonar -Psonar --settings=../settings.xml
+- mvn clean install sonar:sonar -Psonar --settings=../settings.xml -Dsonar.qualitygate.wait=true
 
 ### budowanie paczki javascript
 
