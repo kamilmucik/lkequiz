@@ -15,6 +15,8 @@ export const useCustomFetch = (query: string, cached = true, stataticData = []) 
 
 	useEffect(() => {
 		if (!query || !query.trim()) return;
+    dispach({type: ACTION_TYPE.FETCH_START, loading: true, moreLoading: true});
+
     const fetchData = () => {
       if (appCtx.existInCache(query) ) {
           const data = appCtx.cache.current[query];
@@ -35,7 +37,6 @@ export const useCustomFetch = (query: string, cached = true, stataticData = []) 
             appCtx.addToCache(query, data.data);
           })
           .catch( (error) => {
-            console.log("error: ", error);
             dispach({type: ACTION_TYPE.FETCH_ERROR, error: error});
           });
       }

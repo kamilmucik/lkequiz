@@ -24,7 +24,7 @@ describe('<HomeMenuTile />', () => {
 
       const { getByTestId } = render(<HomeMenuTile id={id} name={name} onPress={onPressItemMock} />)
 
-      fireEvent.press(getByTestId('homeMenuTileTestID'))
+      fireEvent.press(getByTestId('homeMenuTileTestID-1'))
       expect(onPressItemMock.mock.calls.length);
   });
 });

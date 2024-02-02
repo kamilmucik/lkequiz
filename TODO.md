@@ -27,6 +27,8 @@ LandingPage:
 - nginx(ssl/ http2/3, domena) + php8 + mysql
 - strona z policy dla google play/iOS
 - strona z release notes / plugin wordpress
+- domena (lkequiz.pl)
+- domena (qa.lkequiz.pl)
 
 Webapp:
 + dodonie css style bootstrap, buttony
@@ -46,18 +48,28 @@ Webapp:
 - obrazki/ikony
 -? wysyłanie headera requestID
 -? logi (moze z nginx)
+- domena (app.lkequiz.pl)
 
 Mobile:
 + Dodanie belki z Home,Quiz, Setting
 + Dodanie Quiz 
 + Dodanie bazy wiedzy
 + Dodanie ustawien
-- Poprawki SOLID 
-- Poprawki Sonar
++ Poprawki SOLID 
++ Poprawki Sonar
 + Poprawki CSS
-+ Deploy dla Android
+- Deploy
+    - przygotowanie obrazków
+    - przygotowanie opisu 
+    - wypełnienie formularzy aplikacji 
+- Deploy dla Android
 - Deploy dla iOS
-- Testy ?
+    - zmiana pakietu org.reactjs.native.example.mobileapp
+    - zmiana nazwy
+    - dodanie ikon/grafik
+    - dodanie dodanie ikon w zakładkach
+    - wykupienie konta developerskiego
++ Testy 
 + Ikony i obrazki
 + Poprawki paginacji in memo/cache
 + ładowanie strony i indicator
@@ -95,14 +107,16 @@ Backend:
 - wprowadzenie wersji w path 
 - wprowadzenie paraametru lastPage
 - zwraca listę albo obiekt. trzeba zwrobić eby zwracał listę opiektów
+- ssl http/2-3 tls1.3 (api.lkequiz.pl)
+- ssl http/2-3 tls1.3 (api.qa.lkequiz.pl)
 
 Tests:
-- unit
+- unit (wewnętrzne)
 - integration
 - smoke
-- load
-- perf
-- manual
+- load (jmeter)
+- perf (jmeter)
+- manual (postman, manually)
 
 Ci/CD
 - Jenkins script

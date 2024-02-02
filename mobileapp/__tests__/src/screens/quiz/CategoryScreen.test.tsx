@@ -15,17 +15,12 @@ const apiResponseMultiPage = {"status":200,"totalPage":2,
         {"id":37,"name":"Łączność ","department_id":1,"code":"PL099","time_limit":30,"question_limit":12,"max_question_limit":10}
       ]}
 
-// global.fetch = jest.fn(() =>
-//   Promise.resolve({
-//     json: () => Promise.resolve(apiResponse),
-//   })
-// );
 
 describe("<CategoryScreen />", () => {
 
-  // beforeEach(async () => {
-  // });
   beforeEach(cleanup);
+
+  afterEach(cleanup);
 
   it("should render the CategoryScreen", async () => {
     fetch = jest.fn(() =>

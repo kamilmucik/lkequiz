@@ -10,6 +10,7 @@ import renderer from 'react-test-renderer';
 
 
 const item = {
+    "id": 0,
     "name": "name",
     "code": "code",
     "time_limit": 15,
@@ -30,7 +31,7 @@ describe('<CategoryListItem />', () => {
 
     const { getByTestId } = render(<CategoryListItem item={item} details={true} onPress={onPressItemMock} />)
 
-    fireEvent.press(getByTestId('categoryListItemTestID'))
+    fireEvent.press(getByTestId('categoryListItemTestID-0'))
     expect(onPressItemMock.mock.calls.length);
   });
 
@@ -39,7 +40,7 @@ describe('<CategoryListItem />', () => {
 
     const { getByTestId } = render(<CategoryListItem item={item} details={false} onPress={onPressItemMock} />)
 
-    fireEvent.press(getByTestId('categoryListItemTestID'))
+    fireEvent.press(getByTestId('categoryListItemTestID-0'))
     expect(onPressItemMock.mock.calls.length);
   });
 });

@@ -24,7 +24,7 @@ const KnowlageMenuListElement = ({id, name, onPress} : KnowlageMenuListElementPr
     };
     
     return (
-        <Pressable testID={'knowlageMenuListElementTestID'} style={[GlobalStyle.AppFlatListStyleItem]} onPress={handleClick} >
+        <Pressable testID={`knowlageMenuListElementTestID-${id}`} style={[GlobalStyle.AppFlatListStyleItem]} onPress={handleClick} >
          <View style={[GlobalStyle.AppFlatListStyleItem,{ flexDirection: 'row' }]}>
             <Image source={tileImages[id]} style={[{ width: 48, height: 48, marginLeft:8 , marginTop:8  }]} />
             <Text style={[GlobalStyle.AppTextMainColor,{ fontSize: 18, paddingHorizontal: 12, verticalAlign:'middle', flex: 1}]} >

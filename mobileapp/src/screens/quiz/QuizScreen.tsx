@@ -131,6 +131,7 @@ const QuizScreen = ({navigation, route}) => {
         <View >
           <View style={[styles.questionContent,{ flexDirection: 'row' }]}>
           <FlatList
+              testID="questionListTestID"
               style={styles.flatList}
               data={data[currentQuestion].answers}
               renderItem={renderListItems}

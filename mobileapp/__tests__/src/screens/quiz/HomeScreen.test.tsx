@@ -1,15 +1,16 @@
 import React from 'react';
-import { render, cleanup, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, cleanup, fireEvent, waitFor, act } from '@testing-library/react-native';
 import HomeScreen from '../../../../src/screens/quiz/HomeScreen'
 
 
 const apiResponse = {"data": [{"id": 6, "name": "PPL(A) skrócony"}, {"id": 1, "name": "PPL(A)"}, {"id": 5, "name": "SPL"}], "status": 200, "totalPage": 1};
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve(apiResponse),
-  })
-);
+// global.fetch = jest.fn(() =>
+//   Promise.resolve({
+//     json: () => Promise.resolve(apiResponse),
+//   })
+  
+// );
 
 
 describe("<HomeScreen />", () => {
@@ -27,6 +28,12 @@ describe("<HomeScreen />", () => {
   }); 
 
   it("should navigate to fast quiz screen", async () => {
+    fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve(apiResponse),
+  })
+  
+);
     const navigateMock = {navigate:()=>jest.fn()};
 
     const { getByTestId, debug} = render(<HomeScreen navigation={navigateMock} />)
@@ -46,18 +53,37 @@ describe("<HomeScreen />", () => {
     // debug();
   }); 
 
-  // it("should show indicator", async () => {
-  //   // fetch.mockResponseOnce(JSON.stringify(apiResponse2));
-  //   // jest.mock('../../../../src/hooks/useCustomFetch', () => {
-  //   //   return jest.fn(() => (mockCustomFetching))
-  //   // })
-  //   // global.fetch = jest.fn(() => Promise.resolve({ json: () => ''}))
-  //   fetch.mockImplementationOnce(() => Promise.reject("API is down"));
+  it("should show refresh button", async () => {
 
-  //   const { getByTestId } = render(<HomeScreen />)
+fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve(apiResponse),
+  })
+  
+);
+    // global.fetch = jest.fn(() => Promise.resolve({ json: () => ''}))
+    fetch.mockImplementationOnce(() => Promise.reject("API is down"));
 
-  //   const indicator = getByTestId('homeIndicatorTestID');
-  //   expect(indicator).toBeTruthy();
-  // });
+    const { debug, getByTestId } = render(<HomeScreen />)
+
+    await act(async () => {
+      // const indicator = getByTestId('homeIndicatorTestID');
+      // expect(indicator).toBeTruthy();
+      // debug();
+    });
+  });
+
+
+  it("should show indicator", async () => {
+        fetch.mockImplementationOnce( () => new Promise((res) => setTimeout(() => res(apiResponse), 200)) );
+    
+        const { debug, getByTestId } = render(<HomeScreen />)
+    
+        await act(async () => {
+          // const indicator = getByTestId('homeIndicatorTestID');
+          // expect(indicator).toBeTruthy();
+          debug();
+        });
+      });
 
 });

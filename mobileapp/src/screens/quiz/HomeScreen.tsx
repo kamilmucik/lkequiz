@@ -10,6 +10,7 @@ import HomeMenuTile from '../../components/HomeMenuTile';
 const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState(1);
+  
   const [query, setQuery] = useState('');
   const {moreLoading, data} = useCustomFetch(query, true, [{"id": 0, "name": "3 szybkie"}]);
 

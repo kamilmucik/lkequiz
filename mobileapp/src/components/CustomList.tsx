@@ -41,6 +41,4 @@ const CustomList = ( props : CustomListProps, action: CustomListActons ) => {
     )
 };
 
-
-
 export default CustomList;

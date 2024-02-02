@@ -1,12 +1,11 @@
-import { StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PAGE_SIZE } from '../../config.tsx';
-import ListFooter from '../../components/ListFooter';
-import ItemSeparator from '../../components/ItemSeparator';
 import CategoryListItem from '../../components/CategoryListItem';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
+import CustomList from '../../components/CustomList';
 
 const CategoriesScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
@@ -33,30 +32,35 @@ const CategoriesScreen = ({ navigation, route }) => {
       categoryName: item.name,
     })
   };
+  const reloadHandler = () => {
+    fetchCategories(1);
+  }
 
-  const LoadMoreRandomData = () =>{
+  const loadMoreData = () =>{
     if (currentPage < totalPage) {
       setCurrentPage(currentPage + 1);
     }
   }
+
+  const renderItem = (item) => {
+    return <CategoryListItem item={item} onPress={ onPressItemHandler } />
+  }
   
   return (
-    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
-      paddingBottom: insets.bottom,
-      alignItems: 'center'
-    }]}>
-      <FlatList
-          data={data}
-          style={styles.flatList}
-          renderItem={ ({item}) => <CategoryListItem item={item} onPress={ onPressItemHandler } /> }
-          keyExtractor={ (item, index) => `${item.id}-${index}`}
-          contentContainerStyle={[styles.flatListItem,{}]}
-          ItemSeparatorComponent={<ItemSeparator />}
-          onEndReachedThreshold={0.2}
-          onEndReached={LoadMoreRandomData}
-          ListFooterComponent={<ListFooter loading={moreLoading} />}
-          />
-      </SafeAreaView>
+    <CustomList 
+      data={data} 
+      moreLoading={moreLoading} 
+      loadMoreData={ loadMoreData }
+      reloadHandler={ reloadHandler }
+      numColumns={1}
+      viewStyle={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
+        paddingBottom: insets.bottom,
+        alignItems: 'center',
+      }]}
+      listStyle={styles.flatList}
+      contentContainerStyle={[styles.flatListItem,{}]}
+      displayItem={({item}) => renderItem(item)} 
+    />
   );
 };
 

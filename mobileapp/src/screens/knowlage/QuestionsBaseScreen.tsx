@@ -1,13 +1,13 @@
-import { StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { QUIZ_ID, PAGE_SIZE } from '../../config.tsx';
 import KnowlageMenuListElement from '../../components/KnowlageMenuListElement';
-import ListFooter from '../../components/ListFooter';
-import ItemSeparator from '../../components/ItemSeparator';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
+import CustomList from '../../components/CustomList';
 
+//list of departments
 const QuestionsBaseScreen = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,30 +33,35 @@ const QuestionsBaseScreen = ({ navigation, route }) => {
     })
   };
 
-  const LoadMoreRandomData = () =>{
+  const reloadHandler = () => {
+    setCurrentPage(1);
+  }
+
+  const loadMoreData = () =>{
     if (currentPage < totalPage ) {
       setCurrentPage(currentPage + 1);
     }
   }
 
+  const renderItem = (item) => {
+    return <KnowlageMenuListElement id={item.id} name={item.name} onPress={ onPressItemHandler } />
+  }
+
   return (
-    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom,
-      alignItems: 'center'
-    }]}>
-        <FlatList
-            data={data}
-            style={styles.flatList}
-            renderItem={ ({item}) => <KnowlageMenuListElement id={item.id} name={item.name} onPress={ onPressItemHandler } /> }
-            keyExtractor={ (item, index) => `${item.id}-${index}`}
-            contentContainerStyle={[styles.flatListItem,{}]}
-            ItemSeparatorComponent={<ItemSeparator />}
-            onEndReached={LoadMoreRandomData}
-            onEndReachedThreshold={0.2}
-            ListFooterComponent={<ListFooter loading={moreLoading} />}
-            />
-    </SafeAreaView>
+    <CustomList 
+      data={data} 
+      moreLoading={moreLoading} 
+      loadMoreData={ loadMoreData }
+      reloadHandler={ reloadHandler }
+      numColumns={1}
+      viewStyle={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
+        paddingBottom: insets.bottom,
+        alignItems: 'center',
+      }]}
+      listStyle={styles.flatList}
+      contentContainerStyle={[styles.flatListItem,{}]}
+      displayItem={({item}) => renderItem(item)} 
+    />
   );
 };
 

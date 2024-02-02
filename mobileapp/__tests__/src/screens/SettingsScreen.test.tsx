@@ -1,33 +1,71 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, cleanup, fireEvent, waitFor, act } from '@testing-library/react-native';
 import SettingsScreen from '../../../src/screens/SettingsScreen';
+import  AsyncStorage  from '@react-native-async-storage/async-storage';
 
-jest.mock("@react-native-async-storage/async-storage", () => "AsyncStorage");
+// // jest.mock("@react-native-async-storage/async-storage", () => "AsyncStorage");
 jest.mock("react-native-select-dropdown", () => "SelectDropdown");
-jest.mock('react-native-safe-area-context', () => {
-  const inset = {top: 0, right: 0, bottom: 0, left: 0};
-  return {
-    ...jest.requireActual('react-native-safe-area-context'),
-    SafeAreaProvider: jest.fn(({children}) => children),
-    SafeAreaConsumer: jest.fn(({children}) => children(inset)),
-    useSafeAreaInsets: jest.fn(() => inset),
-    useSafeAreaFrame: jest.fn(() => ({x: 0, y: 0, width: 390, height: 844})),
-  };
-});
-
 // https://www.youtube.com/watch?v=VuNPrFH9H0E&t=1s
 // https://www.youtube.com/watch?v=_F9A7LqipRw
 
-
-beforeEach(() => {
-  // windowFetchSpy = jest.spyOn(window, 'fetch').mockImplementation(mockFetch);
-  // jest.spyOn(Dimensions, 'get').mockReturnValue({ width: 414, height: 818 });
-})
-
-afterEach(() => {
-  jest.restoreAllMocks();
+//https://www.tiaeastwood.com/how-to-mock-and-test-asyncstorage-in-react-native
+describe("<SettingsScreen />", () => {
+  beforeEach(() => {
+    AsyncStorage.clear();
+    // console.log(`after the data is being reset :`)
+    // console.log(AsyncStorage)
 });
 
-test('should render the label of the social link', async () => {
-    render(<SettingsScreen />)
+  afterEach(cleanup);
+
+  it("render default elements", async () => {
+    const {getAllByText, debug} = render(<SettingsScreen />)
+
+    expect(getAllByText("Zapisz").length).toBe(1);
+  }); 
+
+  //change InputSwitch value
+  //change InputSelect value
+  //press submit and save in storage
+  it("press submit and save in storage", async () => {
+
+    await AsyncStorage.setItem('@storage_lkequiz3', JSON.stringify({
+      correct: 1,
+      fastQuizDepartment: ""
+      } ))
+    // let usernamevalue = await AsyncStorage.getItem('username')
+
+    const {getByTestId, debug} = render(<SettingsScreen />)
+
+    // fireEvent.press(submitButton);
+    await act(async () => {
+      const submitButton = await waitFor(() => getByTestId('SettingsScreen.SubmitButton'));
+
+      fireEvent.press(submitButton);
+    });
+
+    // debug();
+  });
+
+
+  // it("press submit and save in storage", async () => {
+
+
+  //   const {getByTestId, findByText, debug} = render(<SettingsScreen />)
+
+  //   await act(async () => {
+  //     const selectDropDown = await waitFor(() => getByTestId('selectDropdownTestId'));
+  //     // const display = selectDropDown.children[0];
+
+  //     // fireEvent.press(selectDropDown);
+  //     fireEvent.scroll(selectDropDown, { key: "ArrowDown" });
+  //     const existingItem = await findByText('PPL(A) skrócony')
+
+  //     // const dropdownOptions = getAllByRole(selectDropDown, 'option');
+  //     console.log(existingItem);
+  //   });
+
+  //   debug();
+  // });
+
 });

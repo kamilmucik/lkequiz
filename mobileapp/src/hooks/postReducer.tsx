@@ -12,13 +12,8 @@ export const INITIAL_STATE = {
 export const postReducer = (state = INITIAL_STATE, action) => {
     switch(action.type){
         case "FETCH_START":
-            if (action.currentPage === 1) {
-                return { ...state, loading: true }
-            } else {
-                return { ...state, moreLoading: true, isListEnd: action.currentPage === state.totalPage }
-            }
+                return { ...state, loading: true, moreLoading: true }
         case "FETCH_SUCCESS":
-            
             return {
                 ...state,
                 data: [...state.data, ...action.payload],
@@ -31,13 +26,6 @@ export const postReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 error: action.error,
-                loading: false,
-                moreLoading: false
-            }
-        case 'FETCH_LIST_END':
-            return {
-                ...state,
-                isListEnd: true,
                 loading: false,
                 moreLoading: false
             }

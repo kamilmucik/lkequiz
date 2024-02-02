@@ -1,12 +1,11 @@
-import { StyleSheet, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalStyle from "../../utils/GlobalStyle";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PAGE_SIZE } from '../../config.tsx';
-import ListFooter from '../../components/ListFooter';
-import ItemSeparator from '../../components/ItemSeparator';
 import {useCustomFetch} from '../../hooks/useCustomFetch'
 import QuestionListItem from '../../components/QuestionListItem';
+import CustomList from '../../components/CustomList';
 
 const QuestionsScreen = ({ route }) => {
   const insets = useSafeAreaInsets();
@@ -19,7 +18,7 @@ const QuestionsScreen = ({ route }) => {
     setQuery(`question/${categoryId}/${page}/${PAGE_SIZE}/`);
   }
 
-  const LoadMoreRandomData = () =>{
+  const loadMoreData = () =>{
     if (currentPage < totalPage ) {
       setCurrentPage(currentPage + 1) ;
     }
@@ -33,29 +32,29 @@ const QuestionsScreen = ({ route }) => {
     setCurrentPage(1)
   }, []);
 
+  const renderItem = (item) => {
+    return <QuestionListItem item={item} />
+  }
+  
+  const reloadHandler = () => {
+    setCurrentPage(1);
+  }
+
   return (
-    <SafeAreaView style={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
-      paddingBottom: insets.bottom,
-      alignItems: 'center'
-    }]}>
-        {/* {loading ? 
-            <View>
-              <ActivityIndicator size='large' />
-            </View>
-          : */}
-            <FlatList
-              data={data}
-              renderItem={ ({item}) => <QuestionListItem item={item} /> }
-              style={styles.flatList}
-              contentContainerStyle={[styles.flatListItem,{}]}
-              keyExtractor={ (item, index) => `${item.id}-${index}`}
-              ItemSeparatorComponent={<ItemSeparator />}
-              onEndReachedThreshold={0.2}
-              onEndReached={LoadMoreRandomData}
-              ListFooterComponent={<ListFooter loading={moreLoading} />}
-              />
-        {/* } */}
-    </SafeAreaView>
+    <CustomList 
+      data={data} 
+      moreLoading={moreLoading} 
+      loadMoreData={ loadMoreData }
+      reloadHandler={ reloadHandler }
+      numColumns={1}
+      viewStyle={[GlobalStyle.AppContainer, GlobalStyle.AppScreenViewBackgroundColor,{
+        paddingBottom: insets.bottom,
+        alignItems: 'center',
+      }]}
+      listStyle={styles.flatList}
+      contentContainerStyle={[styles.flatListItem,{}]}
+      displayItem={({item}) => renderItem(item)} 
+    />
   );
 };
 
@@ -63,12 +62,10 @@ const styles = StyleSheet.create({
   
   flatList: {
     width: '100%',
-    padding: 5
   },
 
   flatListItem: {
     margin: 4,
-    
   }
 });
 
