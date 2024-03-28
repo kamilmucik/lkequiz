@@ -9,6 +9,7 @@ rm report*
 
 cd $MAIN_DIR/questions
 flyway -configFiles=questions.conf info
+flyway -configFiles=questions.conf clean
 flyway -configFiles=questions.conf migrate
 flyway -configFiles=questions.conf info
 rm report*

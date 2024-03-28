@@ -30,7 +30,7 @@ services:
       - '50055:50055'
   question_db:
     container_name: question_db
-    image: postgres:14.3-alpine
+    image: postgres:15-alpine
     restart: always
     environment:
       - POSTGRES_USER=question_user

@@ -29,6 +29,8 @@ LandingPage:
 - strona z release notes / plugin wordpress
 - domena (lkequiz.pl)
 - domena (qa.lkequiz.pl)
+- plugin do release list
+- strona z pobieraniem paczek (develop)
 
 Webapp:
 + dodonie css style bootstrap, buttony
@@ -58,6 +60,9 @@ Mobile:
 + Poprawki SOLID 
 + Poprawki Sonar
 + Poprawki CSS
+- usuniecie GlobalStyle
+- podział katalogów wg norm
+- przygotowanie konfiguracji do tworzenia branchy github
 - Deploy
     - przygotowanie obrazków
     - przygotowanie opisu 
@@ -100,11 +105,12 @@ Backend:
 - release i deploy wg mvn
 - poprawki sonar,
 - logi
+- docker healthcheck
 - błąd połączenia z bazą danych po kilkunastu połączeniach
 -? dodanie bazy dla droniarzy
 - wprowadzenie API_KEY
 - wprowadzenie versja
-- wprowadzenie wersji w path 
+- wprowadzenie wersji w url 
 - wprowadzenie paraametru lastPage
 - zwraca listę albo obiekt. trzeba zwrobić eby zwracał listę opiektów
 - ssl http/2-3 tls1.3 (api.lkequiz.pl)
