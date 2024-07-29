@@ -7,5 +7,5 @@ type Department struct {
 }
 
 func (Department) TableName() string {
-	return "lke_departments"
+	return "departments"
 }

@@ -12790,7 +12790,7 @@
 -- insert into lke_answers (id, question_id, answer, correct) values (9516, 2380, 'Jednakowej grubości warstwy ', '0');
 -- insert into lke_answers (id, question_id, answer, correct) values (9517, 2380, 'Jednakowego ciśnienia ', '0');
 -- insert into lke_answers (id, question_id, answer, correct) values (9518, 2380, 'Jednakowej prędkości wiatru', '0');
--- insert into lke_answers (id, question_id, answer, correct) values (9519, 2381, 'Cb ', '1');
+-- insert into lke_answers (id, question_id, answer, correct) values (9519, 2381, 'Cb, TCu ', '1');
 -- insert into lke_answers (id, question_id, answer, correct) values (9520, 2381, 'Ns ', '0');
 -- insert into lke_answers (id, question_id, answer, correct) values (9521, 2381, 'Cc ', '0');
 -- insert into lke_answers (id, question_id, answer, correct) values (9522, 2381, 'Sc', '0');

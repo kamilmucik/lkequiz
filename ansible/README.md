@@ -4,12 +4,13 @@ ansible-playbook docker_create_image.yml -i hosts.yml
 ansible-playbook docker_run.yml -i hosts.yml
 
 ansible-playbook bk_question_svc_create_img.yml -i hosts.yml --extra-vars "version=0.0.1"
-ansible-playbook bk_question_svc_create_img.yml -i hosts.yml -e "version=0.0.5"
+ansible-playbook bk_question_svc_create_img.yml -i hosts.yml -e "version=0.0.6"
 
-ansible-playbook bk_auth_svc_create_img.yml -i hosts.yml --extra-vars "version=0.0.1"
+ansible-playbook bk_auth_svc_create_img.yml -i hosts.yml --extra-vars "version=0.0.2"
+ansible-playbook bk_auth_svc_create_img.yml -i hosts.yml --extra-vars "version=0.0.12"
 
 ansible-playbook bk_gateway_create_img.yml -i hosts.yml -e "version=0.0.3"
-ansible-playbook bk_gateway_create_img.yml -i hosts.yml -e "version=0.0.10"
+ansible-playbook bk_gateway_create_img.yml -i hosts.yml -e "version=0.0.12"
 
 
 //Frontend update

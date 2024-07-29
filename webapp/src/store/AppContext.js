@@ -1,28 +1,23 @@
 import React from 'react';
 
 const AppContext = React.createContext({
-  settingsURLValue: '',
-  settingsPortValue: '',
-  quizCategoryId: '',
-  quizCategoryName: '',
-  quizCategoryCode: '',
-  quizTimeLimit: 0,
-  quizQuestionLimit: 0,
+  cache: [],
+  settingsFastQuizDepartment: {},
+  settingsShowCorrectAnswerOnly: false,
+
   isDebugMode: 0,
   showCorrectAnswerOnly: 0,
   showPageAnswer: 0,
-  setSettingsURLValue: (val) => {},
-  setSettingsPortValue: (val) => {},
 
-  setQuizCategoryId: (val) => {},
-  setQuizCategoryName: (val) => {},
-  setQuizCategoryCode: (val) => {},
-  setQuizTimeLimit: (val) => {},
-  setQuizQuestionLimit: (val) => {},
+  setSettingsFastQuizDepartment: (val) => {},
+  setSettingsOnlyCorrectValue: (val) => {},
+  existInCache: (val) => {},
+  addToCache: (val) => {},
 
   setIsDebugMode: (val) => {},
   setShowCorrectAnswerOnly: (val) => {},
   setShowPageAnswer: (val) => {},
+
 });
 
 export default AppContext;

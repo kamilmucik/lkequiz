@@ -18,7 +18,7 @@ func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient
 	routesSecured := r.Group("/department/secure")
 	routesSecured.Use(a.AuthRequired)
 	//routes.GET("/:id", svc.FindOne)
-	// routes.GET("/:id/", svc.FindAllQuestions)
+	routes.GET("/find/:query/", svc.FindAllQuestions)
 	routes.GET("/:categoryId/:currentPage/:pageSize/", svc.FindPaggedQuestions)
 }
 

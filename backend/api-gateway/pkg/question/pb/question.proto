@@ -37,7 +37,9 @@ message FindAnswerData {
   string correct = 3;
   int64 department_id = 4;
 }
-message FindAllQuestionsRequest { int64 id = 1; }
+message FindAllQuestionsRequest {
+  string query = 1;
+}
 
 message FindAllQuestionsResponse {
   int64 status = 1;

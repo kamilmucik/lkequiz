@@ -11,7 +11,7 @@ type Question struct {
 }
 
 func (question Question) TableName() string {
-	return "lke_questions"
+	return "questions"
 }
 
 func (question Question) ToString() string {

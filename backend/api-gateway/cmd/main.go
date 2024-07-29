@@ -33,7 +33,7 @@ func main() {
 	// 	AllowHeaders:     []string{"Access-Control-Allow-Origin","Access-Control-Allow-Headers","Content-Type","Authorization"},
 	// }))
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000","http://info.e-strix.pl","https://lke.e-strix.pl"},
+		AllowOrigins:     []string{"http://localhost:3000","http://localhost:3000/","http://info.e-strix.pl","https://lke.e-strix.pl"},
 		AllowMethods:     []string{"PUT", "GET", "POST", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Access-Control-Allow-Origin","Access-Control-Allow-Headers"},
 		// ExposeHeaders:    []string{"Content-Length"},

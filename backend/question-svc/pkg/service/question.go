@@ -18,7 +18,7 @@ func (s *QuestServer) FindAllQuestions(ctx context.Context, req *pb.FindAllQuest
 	var questions []model.Question
 	var list []*pb.FindQuestionData
 
-	rows, err := s.H.DB.Model(&model.Question{}).Preload("Answers").Find(&questions).Limit(8).Rows()
+	rows, err := s.H.DB.Model(&model.Question{}).Preload("Answers").Where("question_val LIKE ?", "%"+req.Query+"%").Find(&questions).Rows()
 	if err != nil {
 		return &pb.FindAllQuestionsResponse{
 			Status: http.StatusNotFound,

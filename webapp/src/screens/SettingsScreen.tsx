@@ -1,15 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import AppContext from '../store/AppContext';
-import packageJson from '../../package.json';import {
-  NumberInput,
-} from "react-router-dom";
+import packageJson from '../../package.json';
 
 const SettingsScreen = () => {
   const appCtx = useContext(AppContext);
-
-  const isDebugMode = appCtx.isDebugMode;
-  const settingsURLValue = appCtx.settingsURLValue;
-  const settingsPortValue = appCtx.settingsPortValue;
   
   const showCorrectAnswerOnly = appCtx.showCorrectAnswerOnly;
 

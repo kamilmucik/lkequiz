@@ -1,0 +1,6 @@
+projectKey=lkequiz-mobile
+serverUrl=http://localhost:9001
+serverVersion=9.9.2.77730
+dashboardUrl=http://localhost:9001/dashboard?id=lkequiz-mobile
+ceTaskId=AY9spXZVHPzGlluvuPEk
+ceTaskUrl=http://localhost:9001/api/ce/task?id=AY9spXZVHPzGlluvuPEk

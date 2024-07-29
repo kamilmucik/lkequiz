@@ -3,17 +3,17 @@ package routes
 import (
 	"context"
 	"net/http"
-	"strconv"
+	// "strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamilmucik/api-gateway/pkg/question/pb"
 )
 
 func FindAllQuestions(ctx *gin.Context, c pb.QuestionServiceClient) {
-	id, _ := strconv.ParseInt(ctx.Param("id"), 10, 32)
+	//id, _ := strconv.ParseInt(ctx.Param("id"), 10, 32) 
 
 	res, err := c.FindAllQuestions(context.Background(), &pb.FindAllQuestionsRequest{
-		Id: int64(id),
+		Query: ctx.Param("query"),
 	})
 
 	if err != nil {

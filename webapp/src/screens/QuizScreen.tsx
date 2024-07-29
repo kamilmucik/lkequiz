@@ -23,7 +23,7 @@ const QuizScreen = () => {
 
     const fetchQuestions = async (page) => {
         try {
-            const response = await fetch(`${appCtx.settingsURLValue}/api/quiz/${quizCategoryId}/1/${quizQuestionLimit}/`);
+            const response = await fetch(`${appCtx.settingsURLValue}/quiz/${quizCategoryId}/1/${quizQuestionLimit}/`);
             // console.log("response", response);
             const json = await response.json();
             // console.log("json", json);

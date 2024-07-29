@@ -12,5 +12,5 @@ type Category struct {
 }
 
 func (Category) TableName() string {
-	return "lke_categories"
+	return "categories"
 }
