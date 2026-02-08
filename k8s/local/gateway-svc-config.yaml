@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-svc-config
+data:
+  dev.env: |
+    PORT=:3000
+    AUTH_SVC_URL=auth-svc.lkequiz-local.svc.cluster.local:50051
+    DEPARTMENT_SVC_URL=question-svc.lkequiz-local.svc.cluster.local:50055

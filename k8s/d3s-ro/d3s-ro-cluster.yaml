@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: d3s-ro-svc
+  namespace: d3s-gaming-ro-32-ns-local
+spec:
+  selector:
+    matchLabels:
+      app: d3s-ro-svc
+  replicas: 1
+  serviceName: "d3s-ro-svc"
+  template:
+    metadata:
+      labels:
+        app: d3s-ro-svc
+    spec:
+      containers:
+        - name: d3s-ro-svc
+          image: "docker-snapshot.artifactory.parker.site/gaming/d3s/ro-32-server:5.0.32.11.89-SNAPSHOT"
+          env:
+            - name: DEBUG_APP # optional: enabled JPDA debug mode
+              value: 'true'
+          ports:
+            - containerPort: 8000
+            - containerPort: 8880
+            - containerPort: 9243
+          volumeMounts:
+            - mountPath: /opt/app/d3s/catalina/logs
+              name: "logs"
+            - mountPath: /opt/app/d3s/data
+              name: "safe"
+      volumes:
+        - name: "logs"
+          hostPath:
+            path: /Users/kamilmuc/ws/lkequiz/k8s/d3s-ro/logs
+            type: Directory
+        - name: "safe"
+          hostPath:
+            path: /Users/kamilmuc/ws/lkequiz/k8s/d3s-ro/data
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: d3s-ro-srv
+  namespace: d3s-gaming-ro-32-ns-local
+spec:
+  ports:
+    - name: nossl
+      port: 8880
+      targetPort: 8880
+      nodePort: 30080
+      protocol: "TCP"
+    - name: ssl
+      port: 9243
+      targetPort: 9243
+      nodePort: 30043
+      protocol: "TCP"
+    - name: jpda
+      port: 8000
+      targetPort: 8000
+      nodePort: 30008
+      protocol: "TCP"
+  type: LoadBalancer
+  selector:
+    app: d3s-ro-svc

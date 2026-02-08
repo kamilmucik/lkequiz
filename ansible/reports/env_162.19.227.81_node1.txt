@@ -1,14 +1,14 @@
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
 
 Database: jdbc:postgresql://localhost:5433/postgres (PostgreSQL 14.3)
-Successfully dropped pre-schema database level objects (execution time 00:00.001s)
-Successfully cleaned schema "public" (execution time 00:00.042s)
+Successfully dropped pre-schema database level objects (execution time 00:00.000s)
+Successfully cleaned schema "public" (execution time 00:00.033s)
 Successfully cleaned schema "public" (execution time 00:00.013s)
 Successfully dropped post-schema database level objects (execution time 00:00.000s)
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
@@ -24,7 +24,7 @@ Schema version: << Empty Schema >>
 +-----------+---------+--------------+------+--------------+---------+----------+
 
 A Flyway report has been generated here: /home/ubuntu/databases/lkequiz/users/report.html
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
@@ -36,9 +36,9 @@ Creating Schema History table "public"."flyway_schema_history" ...
 Current version of schema "public": << Empty Schema >>
 Migrating schema "public" to version "1.0.1 - Create users"
 DB: table "auth_svc" does not exist, skipping
-Successfully applied 1 migration to schema "public", now at version v1.0.1 (execution time 00:00.012s)
+Successfully applied 1 migration to schema "public", now at version v1.0.1 (execution time 00:00.006s)
 A Flyway report has been generated here: /home/ubuntu/databases/lkequiz/users/report.html
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
@@ -49,21 +49,21 @@ Schema version: 1.0.1
 +-----------+---------+--------------+------+---------------------+---------+----------+
 | Category  | Version | Description  | Type | Installed On        | State   | Undoable |
 +-----------+---------+--------------+------+---------------------+---------+----------+
-| Versioned | 1.0.1   | Create users | SQL  | 2024-06-27 15:57:33 | Success | No       |
+| Versioned | 1.0.1   | Create users | SQL  | 2024-08-08 18:11:44 | Success | No       |
 +-----------+---------+--------------+------+---------------------+---------+----------+
 
 A Flyway report has been generated here: /home/ubuntu/databases/lkequiz/users/report.html
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
 
 Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 15.5)
-Successfully dropped pre-schema database level objects (execution time 00:00.000s)
-Successfully cleaned schema "public" (execution time 00:00.049s)
-Successfully cleaned schema "public" (execution time 00:00.011s)
+Successfully dropped pre-schema database level objects (execution time 00:00.001s)
+Successfully cleaned schema "public" (execution time 00:00.063s)
+Successfully cleaned schema "public" (execution time 00:00.012s)
 Successfully dropped post-schema database level objects (execution time 00:00.000s)
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
@@ -87,10 +87,11 @@ Schema version: << Empty Schema >>
 | Versioned | 3.0.6   | Added Docker questions             | SQL  |              | Pending | No       |
 | Versioned | 3.0.7   | Added Kubernetes questions         | SQL  |              | Pending | No       |
 | Versioned | 3.0.8   | Own questions 01                   | SQL  |              | Pending | No       |
+| Versioned | 3.0.9   | Added lke store procedure          | SQL  |              | Pending | No       |
 +-----------+---------+------------------------------------+------+--------------+---------+----------+
 
 A Flyway report has been generated here: /home/ubuntu/databases/lkequiz/questions/report.html
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
@@ -98,17 +99,17 @@ See release notes here: https://rd.gt/416ObMi
 Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 15.5)
 Schema history table "public"."flyway_schema_history" does not exist yet
 Successfully dropped pre-schema database level objects (execution time 00:00.000s)
-Successfully cleaned schema "public" (execution time 00:00.028s)
-Successfully cleaned schema "public" (execution time 00:00.012s)
-Successfully dropped post-schema database level objects (execution time 00:00.001s)
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+Successfully cleaned schema "public" (execution time 00:00.026s)
+Successfully cleaned schema "public" (execution time 00:00.010s)
+Successfully dropped post-schema database level objects (execution time 00:00.000s)
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
 
 Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 15.5)
 Schema history table "public"."flyway_schema_history" does not exist yet
-Successfully validated 12 migrations (execution time 00:00.069s)
+Successfully validated 13 migrations (execution time 00:00.066s)
 Creating Schema History table "public"."flyway_schema_history" ...
 Current version of schema "public": << Empty Schema >>
 Migrating schema "public" to version "1.0.1 - Create departments"
@@ -155,31 +156,31 @@ Migrating schema "public" to version "3.0.5 - Added stored function"
 Migrating schema "public" to version "3.0.6 - Added Docker questions"
 Migrating schema "public" to version "3.0.7 - Added Kubernetes questions"
 Migrating schema "public" to version "3.0.8 - Own questions 01"
-Successfully applied 12 migrations to schema "public", now at version v3.0.8 (execution time 00:03.183s)
 A Flyway report has been generated here: /home/ubuntu/databases/lkequiz/questions/report.html
-WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.15.0: https://rd.gt/3rXiSlV
+WARNING: This version of Flyway is out of date. Upgrade to Flyway 10.17.0: https://rd.gt/3rXiSlV
 
 Flyway Community Edition 9.21.1 by Redgate
 See release notes here: https://rd.gt/416ObMi
 
 Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 15.5)
-Schema version: 3.0.8
+Schema version: 3.0.7
 
 +-----------+---------+------------------------------------+------+---------------------+---------+----------+
 | Category  | Version | Description                        | Type | Installed On        | State   | Undoable |
 +-----------+---------+------------------------------------+------+---------------------+---------+----------+
-| Versioned | 1.0.1   | Create departments                 | SQL  | 2024-06-27 15:57:40 | Success | No       |
-| Versioned | 1.0.2   | Create categories                  | SQL  | 2024-06-27 15:57:40 | Success | No       |
-| Versioned | 1.0.3   | Create questions and answers       | SQL  | 2024-06-27 15:57:40 | Success | No       |
-| Versioned | 1.0.4   | LKE data modifucation              | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.1   | Create quiz id                     | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.2   | Add new department                 | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.3   | Add categories for short departmet | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.4   | Change departmet name              | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.5   | Added stored function              | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.6   | Added Docker questions             | SQL  | 2024-06-27 15:57:43 | Success | No       |
-| Versioned | 3.0.7   | Added Kubernetes questions         | SQL  | 2024-06-27 15:57:44 | Success | No       |
-| Versioned | 3.0.8   | Own questions 01                   | SQL  | 2024-06-27 15:57:44 | Success | No       |
+| Versioned | 1.0.1   | Create departments                 | SQL  | 2024-08-08 18:11:51 | Success | No       |
+| Versioned | 1.0.2   | Create categories                  | SQL  | 2024-08-08 18:11:51 | Success | No       |
+| Versioned | 1.0.3   | Create questions and answers       | SQL  | 2024-08-08 18:11:51 | Success | No       |
+| Versioned | 1.0.4   | LKE data modifucation              | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.1   | Create quiz id                     | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.2   | Add new department                 | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.3   | Add categories for short departmet | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.4   | Change departmet name              | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.5   | Added stored function              | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.6   | Added Docker questions             | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.7   | Added Kubernetes questions         | SQL  | 2024-08-08 18:11:55 | Success | No       |
+| Versioned | 3.0.8   | Own questions 01                   | SQL  |                     | Pending | No       |
+| Versioned | 3.0.9   | Added lke store procedure          | SQL  |                     | Pending | No       |
 +-----------+---------+------------------------------------+------+---------------------+---------+----------+
 
 A Flyway report has been generated here: /home/ubuntu/databases/lkequiz/questions/report.html

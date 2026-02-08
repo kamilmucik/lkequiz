@@ -46,7 +46,7 @@ export const InputText = ({ label, description}) => {
 export const InputSwitch = ({ label, description, value, onChange}) => {
     const child = (value, onChange) =>{
       return (
-       <Switch style={{marginRight: 10}} onValueChange={onChange} value={value} /> 
+       <Switch style={{marginRight: 10, transform:[{ scaleX: 1.2 }, { scaleY: 1.2 }]}} onValueChange={onChange} value={value} /> 
       );
     }
     return (

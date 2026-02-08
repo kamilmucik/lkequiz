@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: question-postgres
+  namespace: lkequiz-local
+  labels:
+    app: question-postgres
+    group: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: question-postgres
+  template:
+    metadata:
+      labels:
+        app: question-postgres
+        type: db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: question-postgres-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: question-postgres-secret
+                  key: POSTGRES_PASSWORD
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

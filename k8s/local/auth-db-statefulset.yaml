@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: auth-postgres
+  namespace: lkequiz-local
+spec:
+  selector:
+    matchLabels:
+      app: auth-postgres
+  serviceName: "auth-postgres"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: auth-postgres
+    spec:
+      containers:
+      - name: auth-db
+        image: docker.io/bitnami/postgresql:15
+        ports:
+        - containerPort: 5432
+          name: postgres
+        env:
+          - name: POSTGRESQL_DATABASE
+            value: postgres
+          - name: POSTGRESQL_PASSWORD
+            value: postgres
+          - name: POSTGRESQL_USERNAME
+            value: user_db
+        # envFrom:
+        #   - configMapRef:
+        #       name: auth-postgres-config
+        # env:
+        #   - name: PGDATA
+        #     value: /var/lib/postgresql/data/pgdata
+        #   - name: POSTGRES_DB
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: auth-postgres-secret
+        #         key: POSTGRES_DB
+        #   - name: POSTGRES_USER
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: auth-postgres-secret
+        #         key: POSTGRES_USER
+        #   - name: POSTGRES_PASSWORD
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: auth-postgres-secret
+        #         key: POSTGRES_PASSWORD
+        # volumeMounts:
+        # - name: auth-postgres-data
+        #   mountPath: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+            - name: postgres-storage
+              mountPath: /bitnami/postgresql
+      volumes:
+        - name: postgres-storage
+          emptyDir: {}
+      # - name: auth-postgres-data
+      #   persistentVolumeClaim:
+      #     claimName: auth-postgres-data-pvc

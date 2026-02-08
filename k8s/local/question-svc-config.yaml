@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: question-svc-config
+data:
+  dev.env: |
+    PORT=:50055
+    DB_URL=postgresql://question_user:postgres@question-postgres.lkequiz-local.svc.cluster.local:5432/postgres

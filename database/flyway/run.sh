@@ -1,12 +1,12 @@
 #!/bin/bash
-MAIN_DIR=/home/ubuntu/databases/lkequiz
-# MAIN_DIR=/Users/kamilmuc/ws/lkequiz/database/flyway
-cd $MAIN_DIR/users
-flyway -configFiles=users.conf clean
-flyway -configFiles=users.conf info
-flyway -configFiles=users.conf migrate
-flyway -configFiles=users.conf info
-rm report*
+# MAIN_DIR=/home/ubuntu/databases/lkequiz
+MAIN_DIR=/Users/kamilmuc/ws/lkequiz/database/flyway
+# cd $MAIN_DIR/users
+# flyway -configFiles=users.conf clean
+# flyway -configFiles=users.conf info
+# flyway -configFiles=users.conf migrate
+# flyway -configFiles=users.conf info
+# rm report*
 # cd ..
 
 cd $MAIN_DIR/questions

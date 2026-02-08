@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dejavu
+spec:
+  selector:
+    matchLabels:
+      component: dejavu
+  template:
+    metadata:
+      labels:
+        component: dejavu
+    spec:
+      containers:
+      - name: dejavu
+        image: appbaseio/dejavu:3.2.3
+        ports:
+        - containerPort: 1358
+          name: http1
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dejavu
+  labels:
+    service: dejavu
+spec:
+  type: LoadBalancer
+  selector:
+    component: dejavu
+  ports:
+  - port: 1358
+    targetPort: 1358

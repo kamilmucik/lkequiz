@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-svc
+  namespace: lkequiz-local
+  labels:
+    app: front-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-svc
+  template:
+    metadata:
+      labels:
+        app: front-svc
+        type: svc
+    spec:
+      containers:
+        - name: front-svc
+          image: kamilmucik/lkequiz-frontend-svc:1.0
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+              readOnly: false
+      volumes:
+        - name: conf
+          configMap:
+            name: front-svc-config

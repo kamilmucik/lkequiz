@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: PersistentVolume
+metadata:
+  name: auth-postgres-data
+  namespace: lkequiz-local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /Users/kamilmuc/ws/lkequiz/k8s/pv/auth-db/Data

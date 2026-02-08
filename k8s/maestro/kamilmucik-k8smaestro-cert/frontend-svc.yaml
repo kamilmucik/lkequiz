@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-svc
+  namespace: kamilmucik-lkequiz-maestro
+spec:
+  selector:
+    app: front-svc
+  ports:
+   -  protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-svc-config
+data:
+  default.conf: |
+    server {
+      listen 80;
+      listen [::]:80;
+      server_name lkequiz.pl;
+
+      include       /etc/nginx/mime.types;
+      root   /usr/share/nginx/html;
+      index  index.html index.htm;
+
+      error_page 404 =200 /index.html;
+
+      # access_log /var/www/access.log;
+      # error_log /var/www/error.log;
+
+      location / {
+          try_files $uri $uri/ /index.html =404;
+          add_header Cache-Control "no-cache";
+      }
+
+      location /static {
+          expires 1y;
+          add_header Cache-Control "public";
+      }
+
+      # location /api/ {
+      #     proxy_pass http://gateway-svc.kamilmucik-lkequiz-maestro.svc.cluster.local:3000/;
+      # }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-svc-envs
+data:
+  APP_ENV: k8s
+  APP_ENV_API_URL: http://lkequiz.pl/api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-svc
+  namespace: kamilmucik-lkequiz-maestro
+  labels:
+    app: front-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-svc
+  template:
+    metadata:
+      labels:
+        app: front-svc
+        type: svc
+    spec:
+      containers:
+        - name: front-svc
+          image: kamilmucik/lkequiz-frontend-svc:1.0
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 80
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 80
+          env:
+          - name: APP_ENV
+            value: "k8s-maestro"
+          - name: APP_ENV_API_URL
+            value: "http://lkequiz.pl/api"
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 220Mi
+            limits:
+              cpu: 200m
+              memory: 450Mi
+      volumes:
+        - name: conf
+          configMap:
+            name: front-svc-config

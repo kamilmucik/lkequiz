@@ -19,6 +19,9 @@
 16. Mikroserwis heartbeat, który będzie sprawdzał kady serwis po gRPC 
 17. Sprawdzanie OWASP
 18. Generate OpenApi
+19. Helm
+20. Terraform
+21. Playwrite
 
 LandingPage:
 - WordPress - najnowszy z moliwie najnowszym php i acceleratorem CGI
@@ -123,6 +126,7 @@ Tests:
 - load (jmeter)
 - perf (jmeter)
 - manual (postman, manually)
+- 
 
 Ci/CD
 - Jenkins script

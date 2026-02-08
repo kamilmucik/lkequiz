@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-svc-config
+data:
+  # APP_ENV: kubernetes
+  # APP_ENV_API_URL: http://lkequiz.pl/api
+  default.conf: |
+    server {
+      listen 80;
+      listen [::]:80;
+      server_name lkequiz.pl;
+
+      include       /etc/nginx/mime.types;
+      root   /usr/share/nginx/html;
+      index  index.html index.htm;
+
+      error_page 404 =200 /index.html;
+
+      # access_log /var/www/access.log;
+      # error_log /var/www/error.log;
+
+      location / {
+          try_files $uri $uri/ /index.html =404;
+          add_header Cache-Control "no-cache";
+      }
+
+      location /static {
+          expires 1y;
+          add_header Cache-Control "public";
+      }
+
+      location /api/ {
+          proxy_pass http://gateway-svc.lkequiz-local.svc.cluster.local:3000/;
+      }
+    }

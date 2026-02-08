@@ -12,7 +12,8 @@ const HomeScreen = ({ navigation }) => {
   const [currentPage, setCurrentPage] = useState(1);
   
   const [query, setQuery] = useState('');
-  const {moreLoading, data} = useCustomFetch(query, true, [{"id": 0, "name": "3 szybkie"}]);
+  const {moreLoading, data} = useCustomFetch(query, true);
+  // const {moreLoading, data} = useCustomFetch(query, true, [{"id": 0, "name": "3 szybkie"}]);
 
   const fetchDepartments = async (page) => {
     setQuery(`department/${QUIZ_ID}/${page}/${PAGE_SIZE}/`);

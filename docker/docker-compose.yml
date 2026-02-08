@@ -1,16 +1,31 @@
 version: "3"
 services:
-  api-gateway:
-    container_name: gateway
-    image: api-gateway:0.0.1
+  frontend:
+    image: kamilmucik/lkequiz-frontend-svc:1.0
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - APP_ENV=dev
+      - APP_ENV_API_URL=http://lkequiz.pl/api
+    networks:
+      lkequiz-network: 
+        aliases:
+          - lkequiz.pl
+  api-gateway-svc:
+    container_name: gateway-svc
+    image: kamilmucik/lkequiz-gateway-srv:1.0
     restart: always
     volumes:
       - ./config/api-gateway/dev.env:/pkg/config/envs/dev.env
     ports:
-      - '3001:3000'
-  svc-auth:
-    container_name: auth
-    image: auth-svc:0.0.2
+      - '3000:3000'
+    networks:
+      lkequiz-network:
+  auth-svc:
+    container_name: auth-svc
+    image: kamilmucik/lkequiz-auth-srv:1.0
     restart: always
     volumes:
       - ./config/svc-auth/dev.env:/pkg/config/envs/dev.env
@@ -18,9 +33,11 @@ services:
       - 50051
     ports:
       - '50051:50051'
-  svc-question:
-    container_name: question
-    image: question-svc:0.0.2
+    networks:
+      lkequiz-network:
+  question-svc:
+    container_name: question-svc
+    image: kamilmucik/lkequiz-question-srv:1.0
     restart: always
     volumes:
       - ./config/svc-question/dev.env:/pkg/config/envs/dev.env
@@ -28,23 +45,35 @@ services:
       - 50055
     ports:
       - '50055:50055'
+    networks:
+      lkequiz-network:
   question_db:
     container_name: question_db
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     restart: always
+    platform: linux/amd64
     environment:
       - POSTGRES_USER=question_user
       - POSTGRES_PASSWORD=postgres
       - DATABASE_HOST=127.0.0.1
     ports:
       - '5432:5432'
-  user_db:
-    container_name: user_db
-    image: postgres:14.3-alpine
+    networks:
+      lkequiz-network:
+  user_db2:
+    container_name: user_db2
+    image: postgres:17-alpine
     restart: always
+    platform: linux/amd64
     environment:
       - POSTGRES_USER=user_db
       - POSTGRES_PASSWORD=postgres
       - DATABASE_HOST=127.0.0.1
     ports:
       - '5433:5432'
+    networks:
+      lkequiz-network:
+
+networks:
+  lkequiz-network:
+    driver: bridge

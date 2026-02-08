@@ -1,16 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"time"
-	category "github.com/kamilmucik/api-gateway/pkg/category"
-	department "github.com/kamilmucik/api-gateway/pkg/department"
-	question "github.com/kamilmucik/api-gateway/pkg/question"
-	quiz "github.com/kamilmucik/api-gateway/pkg/quiz"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/kamilmucik/api-gateway/pkg/auth"
+	category "github.com/kamilmucik/api-gateway/pkg/category"
 	"github.com/kamilmucik/api-gateway/pkg/config"
+	department "github.com/kamilmucik/api-gateway/pkg/department"
+	question "github.com/kamilmucik/api-gateway/pkg/question"
+	quiz "github.com/kamilmucik/api-gateway/pkg/quiz"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -19,6 +23,13 @@ func main() {
 	if err != nil {
 		log.Fatalln("Failed at config", err)
 	}
+
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		http.HandleFunc("/health", handler)
+		http.ListenAndServe(":8080", nil)
+	}()
+	fmt.Println("Question Svc HTTP on :8080")
 
 	r := gin.Default()
 	// CORS for https://foo.com and https://github.com origins, allowing:
@@ -33,24 +44,21 @@ func main() {
 	// 	AllowHeaders:     []string{"Access-Control-Allow-Origin","Access-Control-Allow-Headers","Content-Type","Authorization"},
 	// }))
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000","http://localhost:3000/","http://info.e-strix.pl","https://lke.e-strix.pl"},
-		AllowMethods:     []string{"PUT", "GET", "POST", "PATCH", "DELETE"},
-		AllowHeaders:     []string{"Access-Control-Allow-Origin","Access-Control-Allow-Headers"},
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:3000/", "http://info.e-strix.pl", "https://lke.e-strix.pl"},
+		AllowMethods: []string{"PUT", "GET", "POST", "PATCH", "DELETE"},
+		AllowHeaders: []string{"Access-Control-Allow-Origin", "Access-Control-Allow-Headers"},
 		// ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		// AllowOriginFunc: func(origin string) bool {
 		// return origin == "https://github.com"
 		// },
 		MaxAge: 12 * time.Hour,
-
 	}))
 
 	// config := cors.DefaultConfig()
 	// config.AllowOrigins = []string{"*"}
 	// r.Use(cors.New(config))
 	// r.Use(cors.Default())
-
-
 
 	authSvc := *auth.RegisterRoutes(r, &c)
 	department.RegisterRoutes(r, &c, &authSvc)
@@ -59,4 +67,8 @@ func main() {
 	quiz.RegisterRoutes(r, &c, &authSvc)
 
 	r.Run(c.Port)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "healthly")
 }

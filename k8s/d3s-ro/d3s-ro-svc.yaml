@@ -1,0 +1,124 @@
+# ---
+# # 1. Shared volume for logs
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: logs-volume
+#   namespace: d3s-ro-ns
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: d3s-ro-svc
+#   namespace: d3s-ro-ns
+# spec:
+#   selector:
+#     app: d3s-ro-svc
+#   type: LoadBalancer
+#   ports:
+#     - name: nossl
+#       port: 8880
+#       targetPort: 8880
+#       protocol: "TCP"
+#     - name: ssl
+#       port: 9243
+#       targetPort: 9243
+#       protocol: "TCP"
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: d3s-ro-cm
+# data:
+#   configure.properties_tmp: |
+#     PORT=:50051
+#     DB_URL=postgresql://user_db:postgres@auth-db.d3s-ro-ns.svc.cluster.local:5433/postgres
+#     JWT_SECRET_KEY=r43t18sc
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: promptail-d3s-cm
+#   namespace: d3s-ro-ns
+# data:
+#   promtail.yaml: |
+#       clients:
+#         - url: http://loki-svc.d3s-ro-ns.svc.cluster.local/loki/api/v1/push # URL from Loki
+#       scrape_configs:
+#         - job_name: "test-logger"
+#           static_configs:
+#             - targets:
+#                 - localhost
+#               labels:
+#                 app: "test-logger"
+#                 namespace: "d3s-ro-ns"
+#                 __path__: /opt/app/d3s/catalina/logs/log.log
+# ---
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: d3s-ro-svc
+#   namespace: d3s-ro-ns
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: d3s-ro-svc
+#   serviceName: "d3s-ro-svc"
+#   template:
+#     metadata:
+#       labels:
+#         app: d3s-ro-svc
+#     spec:
+#       terminationGracePeriodSeconds: 30
+#       containers:
+#         # - name: d3s-ro-svc
+#         # imagePullPolicy: "Always"
+#         #   image: "docker-snapshot.artifactory.parker.site/gaming/d3s/ro-32-server:5.0.32.11.89-SNAPSHOT"
+#         #   ports:
+#         #     - containerPort: 8880
+#         #     - containerPort: 9243
+#         #   volumeMounts:
+#         #     - mountPath: /opt/app/d3s/catalina/logs
+#         #       name: "logs"
+#         #     - mountPath: /opt/app/d3s/data
+#         #       name: "safe"
+#         #     - name: conf
+#         #       mountPath: /opt/app/d3s/
+#         #       readOnly: false
+#         - name: count
+#           image: busybox
+#           args: [/bin/sh, -c,
+#                   'i=0; while true; do echo "$i: $(date)" >> /opt/app/d3s/catalina/logs/log.log; i=$((i+1)); sleep 1; done']
+#           volumeMounts:
+#             - mountPath: /opt/app/d3s/catalina/logs
+#               name: "logs"
+#         - name: promtail
+#           image: grafana/promtail:master
+#           args:
+#             - "-config.file=/etc/promtail/promtail.yaml" # Found in the ConfigMap
+#           volumeMounts:
+#             - name: promtail-config
+#               mountPath: /etc/promtail
+#             - name: shared-logs # shared space monitored with Promtail
+#               mountPath: /var/log/
+#       volumes:
+#       - name: "logs"
+#         emptyDir: {}
+#       - name: "safe"
+#         emptyDir: {}
+#       - name: conf
+#         configMap:
+#           name: d3s-ro-cm
+#       - name: promtail-config
+#         configMap:
+#           name: promptail-d3s-cm
+#       - name: shared-logs 
+#         persistentVolumeClaim:
+#           claimName: shared

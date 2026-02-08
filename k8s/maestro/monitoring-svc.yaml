@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-svc
+  namespace: kamilmucik-lkequiz-maestro
+spec:
+  selector:
+    app: grafana-svc
+  type: LoadBalancer
+  ports:
+   -  protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-svc
+  namespace: kamilmucik-lkequiz-maestro
+  labels:
+    app: grafana-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-svc
+  template:
+    metadata:
+      labels:
+        app: grafana-svc
+        type: svc
+    spec:
+      containers:
+        - name: grafana-svc
+          image: grafana/grafana:8.2.6
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-svc
+  namespace: kamilmucik-lkequiz-maestro
+spec:
+  selector:
+    app: prometheus-svc
+  type: LoadBalancer
+  ports:
+   -  protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-svc
+  namespace: kamilmucik-lkequiz-maestro
+  labels:
+    app: prometheus-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-svc
+  template:
+    metadata:
+      labels:
+        app: prometheus-svc
+        type: svc
+    spec:
+      containers:
+        - name: prometheus-svc
+          image: prom/prometheus:v2.35.0
+          ports:
+            - containerPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki-svc
+  namespace: kamilmucik-lkequiz-maestro
+spec:
+  selector:
+    app: loki-svc
+  type: LoadBalancer
+  ports:
+   -  protocol: TCP
+      port: 3100
+      targetPort: 3100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki-svc
+  namespace: kamilmucik-lkequiz-maestro
+  labels:
+    app: loki-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki-svc
+  template:
+    metadata:
+      labels:
+        app: loki-svc
+        type: svc
+    spec:
+      containers:
+        - name: loki-svc
+          image: grafana/loki:2.3.0
+          ports:
+            - containerPort: 3100

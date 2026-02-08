@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-svc
+  namespace: lkequiz-local
+  labels:
+    app: auth-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-svc
+  template:
+    metadata:
+      labels:
+        app: auth-svc
+        type: svc
+    spec:
+      containers:
+        - name: auth-svc
+          image: kamilmucik/lkequiz-auth-srv:1.0
+          ports:
+            - containerPort: 50051
+          volumeMounts:
+            - name: conf
+              mountPath: /pkg/config/envs
+              readOnly: false
+      volumes:
+        - name: conf
+          configMap:
+            name: auth-svc-config

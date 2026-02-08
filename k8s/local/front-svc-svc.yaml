@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-svc
+  namespace: lkequiz-local
+spec:
+  selector:
+    app: front-svc
+  type: LoadBalancer
+  ports:
+   -  protocol: TCP
+      port: 80
+      targetPort: 80

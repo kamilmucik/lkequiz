@@ -8,6 +8,9 @@ go get github.com/gin-gonic/gin
 go get github.com/spf13/viper
 go get google.golang.org/grpc
 go get github.com/gin-contrib/cors
+go get github.com/prometheus/client_golang/prometheus
+go get github.com/prometheus/client_golang/prometheus/promauto
+go get github.com/prometheus/client_golang/prometheus/promhttp
 
 
 mkdir -p cmd pkg/config/envs pkg/auth/pb pkg/auth/routes pkg/deparment/pb pkg/deparment/routes pkg/category/pb pkg/category/routes pkg/question/pb pkg/question/routes
@@ -59,20 +62,20 @@ go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html
 
 
-docker build -t api-gateway-test1 -f Dockerfile.gateway .
-docker build -t svc-auth-test1 -f Dockerfile.auth .
-docker build -t svc-question-test1 -f Dockerfile.question .
+docker build -t kamilmucik/lkequiz-gateway-svc:1.0 -f Dockerfile.gateway .
+docker build -t kamilmucik/lkequiz-auth-svc:1.0 -f Dockerfile.auth .
+docker build -t kamilmucik/lkequiz-question-svc:1.0 -f Dockerfile.question .
 
 
 TODO:
 - serwis z autoryzacją i bez
-- relacje jeden do wielu (lista pytań z listą odpowiedzi w obiekcie)
++ relacje jeden do wielu (lista pytań z listą odpowiedzi w obiekcie)
 - osobny middleware dla mojego projektu
 - kopia serwisu autoryzującego
-- testy jednostkowe
++ testy jednostkowe
 - testy wydajnościowe
-- prometheus + grafana
-- budowa obrazu i odpalanie na docker
-- codecoverage
-- sonarqube
++ prometheus + grafana
++ budowa obrazu i odpalanie na docker
++ codecoverage
++ sonarqube
 - jenkins PR i release
