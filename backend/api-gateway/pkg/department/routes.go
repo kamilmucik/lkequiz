@@ -15,12 +15,13 @@ func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient
 	}
 
 	routes := r.Group("/department")
-	routesSecured := r.Group("/department/secure")
+	routesSecured := r.Group("/secured/department/")
 	routesSecured.Use(a.AuthRequired)
 	// routes.GET("/:id", svc.FindOne)
 	routes.GET("/", svc.FindAll)
-	routes.GET("/:quizId/", svc.FindAll) //zmiana na przyszłość
+	// routes.GET("/:quizId/", svc.FindAll) //zmiana na przyszłość
 	routes.GET("/:quizId/:currentPage/:pageSize/", svc.FindPagged)
+
 	routesSecured.GET("/:quizId/:currentPage/:pageSize/", svc.FindPagged)
 }
 

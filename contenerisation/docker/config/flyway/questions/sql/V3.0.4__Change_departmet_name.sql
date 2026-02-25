@@ -1,0 +1,2 @@
+UPDATE departments SET name = 'PPL(A)' WHERE name like 'Pytania LKE do licencji pilota samolotowego PPL(A)'; 
+UPDATE departments SET name = 'SPL' WHERE name like 'Pytania LKE do licencji pilota szybowcowego PL(G)'; 

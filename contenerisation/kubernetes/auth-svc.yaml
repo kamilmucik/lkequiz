@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-svc
+  namespace: kamilmucik-lkequiz-maestro
+spec:
+  selector:
+    app: auth-svc
+  ports:
+   -  protocol: TCP
+      port: 50051
+      targetPort: 50051
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-svc-config
+data:
+  dev.env: |
+    PORT=:50051
+    DB_URL=postgresql://user_db:postgres@auth-db.kamilmucik-lkequiz-maestro.svc.cluster.local:5433/postgres
+    JWT_SECRET_KEY=r43t18sc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-svc
+  namespace: kamilmucik-lkequiz-maestro
+  labels:
+    app: auth-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-svc
+  template:
+    metadata:
+      labels:
+        app: auth-svc
+        type: svc
+    spec:
+      containers:
+        - name: auth-svc
+          image: kamilmucik/lkequiz-auth-svc:1.0
+          ports:
+            - containerPort: 50051
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 8080
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 8080
+          volumeMounts:
+            - name: conf
+              mountPath: /pkg/config/envs
+              readOnly: false
+      volumes:
+        - name: conf
+          configMap:
+            name: auth-svc-config

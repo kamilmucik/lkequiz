@@ -74,3 +74,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 npm install react-router-dom 
 npm install react-bootstrap bootstrap
+
+
+
+
+docker build -t kamilmucik/lkequiz-frontend-svc:1.0 -f Dockerfile .

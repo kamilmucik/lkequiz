@@ -1,11 +1,13 @@
 ############################
 # STEP 1 build executable binary
 ############################
-FROM golang:alpine AS builder
+FROM golang:1.23-alpine AS builder
 # Install git.
 # Git is required for fetching the dependencies.
 RUN apk update && apk add --no-cache git
-ENV APP_HOME /go/src/app
+ENV APP_HOME=/go/src/app
+ENV GOOS=linux 
+ENV GOARCH=amd64
 
 RUN mkdir -p /go/target
 WORKDIR $APP_HOME
