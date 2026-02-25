@@ -1,1 +1,0 @@
-INSERT INTO departments (id, own_id, name, active, update_date, quiz_id) VALUES (nextval('departments_id_seq'), 6, 'PPL(A) skrócony', '1', 1531913998138, 1);

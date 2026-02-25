@@ -51,6 +51,61 @@ touch Makefile cmd/main.go pkg/config/envs/dev.env pkg/config/config.go
 touch pkg/pb/product.proto pkg/db/db.go pkg/models/stock_decrease_log.go pkg/models/product.go pkg/services/product.go
 
 
+
+
+https://dev.to/neelp03/building-a-file-upload-service-in-go-34fj
+```bash
+mkdir -p storage-svc
+cd storage-svc
+go mod init github.com/kamilmucik/storage-svc
+go get github.com/spf13/viper
+go get google.golang.org/grpc
+go get gorm.io/gorm
+go get gorm.io/driver/postgres
+
+
+mkdir -p cmd
+touch cmd/main.go
+mkdir -p pkg/config
+touch pkg/config/config.go
+mkdir -p pkg/config/envs
+touch pkg/config/envs/dev.env
+mkdir -p pkg/db
+touch pkg/db/db.go
+mkdir -p pkg/model
+touch pkg/model/profil.go
+mkdir -p pkg/pb
+touch pkg/pb/profil.proto
+mkdir -p pkg/service
+touch pkg/service/profil.go
+touch Makefile
+```
+```bash
+mkdir -p user-svc
+cd user-svc
+go mod init github.com/kamilmucik/user-svc
+go get github.com/spf13/viper
+go get google.golang.org/grpc
+go get gorm.io/gorm
+go get gorm.io/driver/postgres
+
+mkdir -p cmd
+touch cmd/main.go
+mkdir -p pkg/config
+touch pkg/config/config.go
+mkdir -p pkg/config/envs
+touch pkg/config/envs/dev.env
+mkdir -p pkg/db
+touch pkg/db/db.go
+mkdir -p pkg/model
+touch pkg/model/profil.go
+mkdir -p pkg/pb
+touch pkg/pb/profil.proto
+mkdir -p pkg/service
+touch pkg/service/profil.go
+touch Makefile
+```
+
 make proto
 
 
@@ -58,26 +113,37 @@ Test and code coverage
 go test -coverprofile=coverage.out ./...         
 go tool cover -html=coverage.out -o coverage.html
 
+```bash
+docker build -t kamilmucik/api-gateway-svc:1.4.2-SNAPSHOT -f Dockerfile.gateway .
+docker build -t kamilmucik/auth-svc:1.4.2-SNAPSHOT -f Dockerfile.auth .
+docker build -t kamilmucik/question-svc:1.4.1-SNAPSHOT -f Dockerfile.question .
+docker build -t kamilmucik/user-svc:1.4.2-SNAPSHOT -f Dockerfile.user .
+docker build -t kamilmucik/storage-svc:1.4.2-SNAPSHOT -f Dockerfile.storage .
+```
 
-docker build -t api-gateway-svc:1.1-SNAPSHOT -f Dockerfile.gateway .
-docker build -t auth-svc:1.1-SNAPSHOT -f Dockerfile.auth .
-docker build -t question-svc:1.1-SNAPSHOT -f Dockerfile.question .
+```bash
+docker build --platform linux/amd64 -t kamilmucik/api-gateway-svc:1.4.1-SNAPSHOT -f Dockerfile.gateway .
+docker build --platform linux/amd64 -t kamilmucik/auth-svc:1.4.1-SNAPSHOT -f Dockerfile.auth .
+docker build --platform linux/amd64 -t kamilmucik/question-svc:1.4.1-SNAPSHOT -f Dockerfile.question .
+docker build --platform linux/amd64 -t kamilmucik/user-svc:1.4.1-SNAPSHOT -f Dockerfile.user .
+docker build --platform linux/amd64 -t kamilmucik/storage-svc:1.4.1-SNAPSHOT -f Dockerfile.storage .
+```
 
-
-
-docker build --platform linux/amd64 -t kamilmucik/api-gateway-svc:1.1 -f Dockerfile.gateway .
-docker build --platform linux/amd64 -t kamilmucik/auth-svc:1.1 -f Dockerfile.auth .
-docker build --platform linux/amd64 -t kamilmucik/question-svc:1.1 -f Dockerfile.question .
-
-docker push kamilmucik/api-gateway-svc:1.1
-docker push kamilmucik/auth-svc:1.1
+```bash
+docker push kamilmucik/api-gateway-svc:1.3
+docker push kamilmucik/auth-svc:1.2
 docker push kamilmucik/question-svc:1.1
+```
+
+```bash
+docker  build -t kamilmucik/api-gateway-svc:1.4-SNAPSHOT -f Dockerfile.gateway --push .
+docker  build -t kamilmucik/auth-svc:1.4-SNAPSHOT -f Dockerfile.auth --push .
 
 
 docker buildx build --platform linux/amd64,linux/arm64 -t kamilmucik/api-gateway-svc:latest -f Dockerfile.gateway --push .
 docker buildx build --platform linux/amd64,linux/arm64 -t kamilmucik/auth-svc:latest -f Dockerfile.auth --push .
 docker buildx build --platform linux/amd64,linux/arm64 -t kamilmucik/question-svc:latest -f Dockerfile.question --push .
-
+```
 
 TODO:
 - serwis z autoryzacją i bez

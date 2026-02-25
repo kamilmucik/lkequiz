@@ -2,13 +2,13 @@ package question
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kamilmucik/api-gateway/pkg/auth"
 	"github.com/kamilmucik/api-gateway/pkg/config"
+	"github.com/kamilmucik/api-gateway/pkg/middleware"
 	"github.com/kamilmucik/api-gateway/pkg/question/routes"
 )
 
-func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient) {
-	a := auth.InitAuthMiddleware(authSvc)
+func RegisterRoutes(r *gin.Engine, c *config.Config, middlewareSvc *middleware.ServiceClient) {
+	middleware := middleware.InitMiddleware(middlewareSvc)
 
 	svc := &ServiceClient{
 		Client: InitServiceClient(c),
@@ -16,7 +16,7 @@ func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient
 
 	routes := r.Group("/question")
 	routesSecured := r.Group("/department/secure")
-	routesSecured.Use(a.AuthRequired)
+	routesSecured.Use(middleware.AuthRequired)
 	//routes.GET("/:id", svc.FindOne)
 	routes.GET("/find/:query/", svc.FindAllQuestions)
 	routes.GET("/:categoryId/:currentPage/:pageSize/", svc.FindPaggedQuestions)

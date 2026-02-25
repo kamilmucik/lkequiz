@@ -1,24 +1,28 @@
 version: "3"
 services:
-  frontend:
-    image: kamilmucik/lkequiz-frontend-svc:1.0
-    container_name: frontend
+  lkequiz-web-svc:
+    image: kamilmucik/lkequiz-web-svc:1.4.2-SNAPSHOT
+    container_name: lkequiz-web-svc
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     environment:
-      - APP_ENV=dev
-      - APP_ENV_API_URL=http://lkequiz.pl/api
+      - PUBLIC_API_KEY=dev
+      - APP_ENV_API_URL=lkequiz.pl/api
+    volumes:
+      - ./data/storage:/www/media/storage
     networks:
       lkequiz-network: 
         aliases:
           - lkequiz.pl
   api-gateway-svc:
     container_name: api-gateway-svc
-    image: api-gateway-svc:1.1-SNAPSHOT
+    image: kamilmucik/api-gateway-svc:1.4.2-SNAPSHOT
     restart: always
     volumes:
       - ./config/api-gateway/dev.env:/pkg/config/envs/dev.env
+      - ./data/api-gateway/:/tmp/
     ports:
       - '3000:3000'
     networks:
@@ -27,7 +31,7 @@ services:
           - svc.api-gateway.lkequiz.pl
   auth-svc:
     container_name: auth-svc
-    image: auth-svc:1.1-SNAPSHOT
+    image: kamilmucik/auth-svc:1.4.2-SNAPSHOT
     restart: always
     volumes:
       - ./config/svc-auth/dev.env:/pkg/config/envs/dev.env
@@ -38,10 +42,39 @@ services:
     networks:
       lkequiz-network:
         aliases:
-          - svc.auth.lkequiz.pl
+          - svc.auth.lkequiz.pl 
+  profile-svc:
+    container_name: profile-svc
+    image: kamilmucik/user-svc:1.4.2-SNAPSHOT
+    restart: always
+    volumes:
+      - ./config/svc-user/dev.env:/pkg/config/envs/dev.env
+    expose:
+      - 50052
+    ports:
+      - '50052:50052'
+    networks:
+      lkequiz-network:
+        aliases:
+          - svc.user.lkequiz.pl
+  storage-svc:
+    container_name: storage-svc
+    image: kamilmucik/storage-svc:1.4.2-SNAPSHOT
+    restart: always
+    volumes:
+      - ./config/svc-storage/dev.env:/pkg/config/envs/dev.env
+      - ./data/storage/:/opt/app/uploads/
+    expose:
+      - 50053
+    ports:
+      - '50053:50053'
+    networks:
+      lkequiz-network:
+        aliases:
+          - svc.storage.lkequiz.pl
   question-svc:
     container_name: question-svc
-    image: question-svc:1.1-SNAPSHOT
+    image: question-svc:latest
     restart: always
     volumes:
       - ./config/svc-question/dev.env:/pkg/config/envs/dev.env

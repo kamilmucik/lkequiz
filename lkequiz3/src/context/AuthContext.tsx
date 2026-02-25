@@ -1,11 +1,14 @@
 import { supabase } from "@/lib/supabase/client";
+// import { HTTPService } from "@/lib/api/httpservice";
+// import { Endpoint } from "@/lib/api/endpoint";
+import { ownapi } from "@/lib/api/client";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 export interface User {
     id: string;
-    name: string;
-    email: string;
-    username: string;
+    name?: string;
+    email?: string;
+    username?: string;
     profileImage?: string;
     onboardingCompleted?: boolean;
 }
@@ -27,38 +30,34 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     }, []);
 
     const checkSession = async () => {
-        try {
-            const {
-                data: {session},
-            } = await supabase.auth.getSession();
+        // try {
+        //     const {
+        //         data: {session},
+        //     } = await supabase.auth.getSession();
 
-            if (session?.user) {
-                const profile = await fetchUserProfile(session.user.id);
-                setUser(profile);
-            } else {
-                setUser(null);
-            }
-        } catch (error) {
-            console.error("Error checking session", error);
-            setUser(null);
-        }
-    }
-
-    function delay(time: number) {
-        return new Promise(resolve => setTimeout(resolve, time));
+        //     if (session?.user) {
+        //         const profile = await fetchUserProfile(session.user.id);
+        //         setUser(profile);
+        //     } else {
+        //         setUser(null);
+        //     }
+        // } catch (error) {
+        //     console.error("Error checking session", error);
+        //     setUser(null);
+        // }
     }
     
     const fetchUserProfile = async (userId: string): Promise<User | null> => {
         try {
             console.info("userId: " + userId);
-            delay(5000).then(() => console.log('ran after 5 second1 passed'));
 
-            const {data, error} = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", userId)
-            .single();
+            // const {data, error} = await supabase
+            // .from("profiles")
+            // .select("*")
+            // .eq("id", userId)
+            // .single();
             
+            const {data, error} = await ownapi.user.getDetails({userId});
 
             console.info("fetchUserProfile.data", data);
             console.info("fetchUserProfile.error", error);
@@ -72,46 +71,70 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
                 return null;
             }
 
-            const authUser = await supabase.auth.getUser();
-            if (!authUser.data.user) {
-                console.error("No auth user found");
-                return null;
-            }
+            // const authUser = await supabase.auth.getUser();
+            // if (!authUser.data.user) {
+            //     console.error("No auth user found");
+            //     return null;
+            // }
 
-            return {
-                id: data.id,
-                name: data.name,
-                username: data.username,
-                email: authUser.data.user.email || "",
-                profileImage: data.prfile_image_url,
-                onboardingCompleted: data.onboarding_completed,
-            }
+            const user: User = {
+                id: data.id ? String(data.id) : userId,
+                name: (data as any).fullname ?? undefined,
+                username: (data as any).username ?? undefined,
+                email: (data as any).email ?? undefined,
+                profileImage: (data as any).profile_image_url ?? undefined,
+                onboardingCompleted:
+                    (data as any).onboarding_complete === true ||
+                    (data as any).onboarding_complete === 'true' ||
+                    (data as any).onboarding_complete === '1',
+            };
+
+            return user;
+            // return {
+            //     id: data.id,
+            //     name: data.name,
+            //     username: data.username,
+            //     email: authUser.data.user.email || "",
+            //     profileImage: data.prfile_image_url,
+            //     onboardingCompleted: data.onboarding_completed,
+            // }
         }catch (error) {
             console.error("Error in fetch user profile", error);
             return null;
         }
+
+        // return null;
     }
 
     const signIn = async (email: string, password: string) => {
-        // const {data, error} = await supabase.auth.signInWithPassword({
-        //     email,
-        //     password
-        // } )
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
+        const {data, error} = await ownapi.auth.signInWithPassword({email, password});
         console.info("signIn.data", data);
-        console.info("signIn.error", data);
         if (error) throw error;
         if (data.user){
             const profile = await fetchUserProfile(data.user.id);
             setUser(profile);
         } 
+
+        // const { data, error } = await supabase.auth.signInWithPassword({
+        //     email,
+        //     password,
+        // });
+
+        // console.info("signIn.data", data);
+        // if (error) throw error;
+        // if (data.user){
+        //     const profile = await fetchUserProfile(data.user.id);
+        //     setUser(profile);
+        // } 
     }
+
     const signUp = async (email: string, password: string) => {
-        const {data, error} = await supabase.auth.signUp({
+        console.info("signUp.email: " + email);
+        // const {data, error} = await supabase.auth.signUp({
+        //     email,
+        //     password
+        // } );
+        const {data, error} = await ownapi.auth.signUp({
             email,
             password
         } );
@@ -126,26 +149,30 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         } 
     }
     const updateUser = async (userData: Partial<User>) => {
-        if (!user) return;
+        // if (!user) return;
 
-        try {
-            const updateData: any = {};
-            if (userData.name !== undefined) updateData.name = userData.name;
-            if (userData.username !== undefined) updateData.username = userData.username;
-            if (userData.profileImage !== undefined) updateData.profile_image_url = userData.profileImage;
-            if (userData.onboardingCompleted !== undefined) updateData.onboarding_completed = userData.onboardingCompleted;
-            const {error} = await supabase.from("profiles").update(updateData).eq("id", user.id);
-            if (error) throw error;
-        } catch (error) {
-            console.error("Error updating user", error);
-            throw error;
+        // try {
+        //     const updateData: any = {};
+        //     if (userData.name !== undefined) updateData.name = userData.name;
+        //     if (userData.username !== undefined) updateData.username = userData.username;
+        //     if (userData.profileImage !== undefined) updateData.profile_image_url = userData.profileImage;
+        //     if (userData.onboardingCompleted !== undefined) updateData.onboarding_completed = userData.onboardingCompleted;
+        //     const {error} = await supabase.from("profiles").update(updateData).eq("id", user.id);
+        //     if (error) throw error;
+        // } catch (error) {
+        //     console.error("Error updating user", error);
+        //     throw error;
 
-        }
+        // }
 
         // if (error) throw error;
         // if (data.user){
         //     console.log(data.user);
         // } 
+    }
+
+    const logout =  () => {
+
     }
 
     return <AuthContext.Provider value={{user, signUp, updateUser, signIn}}>{children}</AuthContext.Provider>

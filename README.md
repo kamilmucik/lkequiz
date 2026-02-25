@@ -28,18 +28,50 @@ nvm use node 25
 npx create-expo-app@latest --template default@next
 echo n | npm run reset-project
 npx expo install expo-dev-client
-npm i @react-native-community/async-storage
+
+<!-- npm i @react-native-community/async-storage -->
 <!-- npm i @react-native-async-storage/async-storage -->
-npm i @supabase/supabase-js
-npm i expo-image-picker
+<!-- npm i @supabase/supabase-js -->
+npx expo install expo-image-picker
 npx expo install expo-file-system
+<!-- npx expo install axios -->
+npx expo install react-native-mmkv  react-native-nitro-modules
+npx expo install expo-build-properties
 
 <!-- npm install react-native-session-storage -->
-npx expo install expo-native-storage
+<!-- npx expo install expo-native-storage -->
 npx expo prebuild --clean
 
-npm ls @react-native-community/cli
+npx expo run:android
 
+npm install @react-native-community/cli
+
+
+
+info
+https://www.youtube.com/watch?v=RdJhqaOIWn0
+https://github.com/machadop1407/react-native-app-course/blob/main/src/lib/date-helper.ts
+https://github.com/machadop1407/react-native-app-course/blob/main/src/lib/supabase/storage.ts
+https://github.com/machadop1407/react-native-app-course/blob/main/src/context/AuthContext.tsx
+https://github.com/machadop1407/react-native-app-course/blob/main/src/lib/date-helper.ts
+
+
+
+## BUILD bundle
+
+### Android
+
+npx expo optimize
+npx react-native build-android --mode=release
+sshpass -p 'xxx' scp android/app/build/outputs/apk/release/app-release.apk ubuntu@e-strix.pl:/home/ubuntu/wp/releases/lkequiz/0.0.1/lkequiz.apk
+
+### Web
+
+mv .env .env-tmp
+mv .env-web .env
+npx expo export --platform web
+mv .env .env-web
+mv .env-tmp .env
 
 
 

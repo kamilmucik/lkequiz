@@ -2,13 +2,13 @@ package category
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kamilmucik/api-gateway/pkg/auth"
 	"github.com/kamilmucik/api-gateway/pkg/category/routes"
 	"github.com/kamilmucik/api-gateway/pkg/config"
+	"github.com/kamilmucik/api-gateway/pkg/middleware"
 )
 
-func RegisterRoutes(r *gin.Engine, c *config.Config, authSvc *auth.ServiceClient) {
-	// a := auth.InitAuthMiddleware(authSvc)
+func RegisterRoutes(r *gin.Engine, c *config.Config, middlewareSvc *middleware.ServiceClient) {
+	// middleware := middleware.InitMiddleware(middlewareSvc)
 
 	svc := &ServiceClient{
 		Client: InitServiceClient(c),

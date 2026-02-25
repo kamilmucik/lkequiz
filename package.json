@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "react-native-table-component": "^1.2.2"
+    "react-native-mmkv": "^3.3.3"
   }
 }

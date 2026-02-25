@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package storage;
+
+option go_package = "./pkg/pb";
+
+service StorageService { 
+
+  rpc FindOne(FindOneRequest) returns (FindOneResponse);
+  rpc Upload(UploadRequest) returns (UploadResponse) {}
+}
+
+message FindOneRequest { 
+  int64 user_id = 1; 
+  string url = 2;
+}
+
+message FindOneResponse {
+  int64 status = 1;
+  string error = 2;
+  bytes file = 3;
+  string fileName = 4;
+  int64 fileSize = 5;
+  string fileContentType = 6;
+}
+
+// Upload
+message UploadRequest {
+  string filename = 1;
+  int64 user_id = 2;
+  bytes file = 3;
+  string fileExtention = 4;
+}
+
+message UploadResponse {
+  int64 status = 1;
+  string error = 2;
+  string url_path = 3;
+}
