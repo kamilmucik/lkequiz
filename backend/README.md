@@ -59,9 +59,24 @@ go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out -o coverage.html
 
 
-docker build -t api-gateway-test1 -f Dockerfile.gateway .
-docker build -t svc-auth-test1 -f Dockerfile.auth .
-docker build -t svc-question-test1 -f Dockerfile.question .
+docker build -t api-gateway-svc:1.1-SNAPSHOT -f Dockerfile.gateway .
+docker build -t auth-svc:1.1-SNAPSHOT -f Dockerfile.auth .
+docker build -t question-svc:1.1-SNAPSHOT -f Dockerfile.question .
+
+
+
+docker build --platform linux/amd64 -t kamilmucik/api-gateway-svc:1.1 -f Dockerfile.gateway .
+docker build --platform linux/amd64 -t kamilmucik/auth-svc:1.1 -f Dockerfile.auth .
+docker build --platform linux/amd64 -t kamilmucik/question-svc:1.1 -f Dockerfile.question .
+
+docker push kamilmucik/api-gateway-svc:1.1
+docker push kamilmucik/auth-svc:1.1
+docker push kamilmucik/question-svc:1.1
+
+
+docker buildx build --platform linux/amd64,linux/arm64 -t kamilmucik/api-gateway-svc:latest -f Dockerfile.gateway --push .
+docker buildx build --platform linux/amd64,linux/arm64 -t kamilmucik/auth-svc:latest -f Dockerfile.auth --push .
+docker buildx build --platform linux/amd64,linux/arm64 -t kamilmucik/question-svc:latest -f Dockerfile.question --push .
 
 
 TODO:
@@ -76,3 +91,10 @@ TODO:
 - codecoverage
 - sonarqube
 - jenkins PR i release
+
+
+docker-compose up --force-recreate -d --build user_db
+docker-compose up --force-recreate -d --build question_db
+docker-compose up --force-recreate -d --build question-svc
+docker-compose up --force-recreate -d --build auth-svc
+docker-compose up --force-recreate -d --build api-gateway-svc

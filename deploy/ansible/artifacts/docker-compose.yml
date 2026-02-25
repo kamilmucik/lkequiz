@@ -1,0 +1,116 @@
+version: "3"
+services:
+  frontend:
+    image: kamilmucik/lkequiz-frontend-svc:1.0
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - APP_ENV=dev
+      - APP_ENV_API_URL=http://lkequiz.e-strix.pl/api
+    networks:
+      lkequiz-network: 
+        aliases:
+          - lkequiz.e-strix.pl
+  api-gateway-svc:
+    container_name: api-gateway-svc
+    image: kamilmucik/api-gateway-svc:1.1
+    restart: always
+    volumes:
+      - ./config/api-gateway/dev.env:/pkg/config/envs/dev.env
+    ports:
+      - '3000:3000'
+    networks:
+      lkequiz-network:
+        aliases:
+          - svc.api-gateway.lkequiz.e-strix.pl
+  auth-svc:
+    container_name: auth-svc
+    image: kamilmucik/auth-svc:1.1
+    restart: always
+    volumes:
+      - ./config/svc-auth/dev.env:/pkg/config/envs/dev.env
+    expose:
+      - 50051
+    ports:
+      - '50051:50051'
+    networks:
+      lkequiz-network:
+        aliases:
+          - svc.auth.lkequiz.e-strix.pl
+  question-svc:
+    container_name: question-svc
+    image: kamilmucik/question-svc:1.1
+    restart: always
+    volumes:
+      - ./config/svc-question/dev.env:/pkg/config/envs/dev.env
+    expose:
+      - 50055
+    ports:
+      - '50055:50055'
+    networks:
+      lkequiz-network:
+        aliases:
+          - svc.question.lkequiz.e-strix.pl
+  question-db-svc:
+    container_name: question-db-svc
+    image: postgres:17-alpine
+    restart: always
+    platform: linux/amd64
+    environment:
+      - POSTGRES_USER=question_user
+      - POSTGRES_PASSWORD=postgres
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_DB=questions
+    volumes:
+      - question-db-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - '5432:5432'
+    networks:
+      lkequiz-network:
+        aliases:
+          - db.questions.lkequiz.e-strix.pl
+  user-db-svc:
+    container_name: user-db-svc
+    image: postgres:17-alpine
+    restart: always
+    platform: linux/amd64
+    environment:
+      - POSTGRES_USER=user_db
+      - POSTGRES_PASSWORD=postgres
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_DB=users
+    volumes:
+      - user-db-data3:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - '5433:5432'
+    networks:
+      lkequiz-network:
+        aliases:
+          - db.users.lkequiz.e-strix.pl
+  flyway:
+    container_name: flyway
+    image: flyway/flyway:latest
+    entrypoint: ["sh", "/tmp/entrypoint.sh"]
+    depends_on:
+     - user-db-svc
+     - question-db-svc
+    volumes:
+      - ./config/flyway:/tmp/
+    networks:
+      lkequiz-network:
+        aliases:
+          - flyway.lkequiz.pl
+
+networks:
+  lkequiz-network:
+    driver: bridge
+
+volumes:
+  user-db-data3: {}
+  question-db-data: {}

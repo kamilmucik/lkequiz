@@ -20,12 +20,64 @@ LKEQuiz3
 - mvn -B -DdevelopmentVersion="0.0.2-SNAPSHOT" -DreleaseVersion="0.0.1" -Dresume=false release:prepare release:perform
 
 ## mobileapp
- 
-### tworzenie nowej aplikacji:
 
-- npx react-native@0.71.8 init mobileapp
+## Nowe podejście
 
-### synchronizacja wersji mvn i npm
+### Frontend/Mobile
+nvm use node 25
+npx create-expo-app@latest --template default@next
+echo n | npm run reset-project
+npx expo install expo-dev-client
+npm i @react-native-community/async-storage
+<!-- npm i @react-native-async-storage/async-storage -->
+npm i @supabase/supabase-js
+npm i expo-image-picker
+npx expo install expo-file-system
 
-- npm run sync-pom-version
-- npm i cors
+<!-- npm install react-native-session-storage -->
+npx expo install expo-native-storage
+npx expo prebuild --clean
+
+npm ls @react-native-community/cli
+
+
+
+
+
+
+
+
+
+###
+alter table public.profile enable row level security;
+
+create policy "User can insert their own profile "
+on public.profiles
+for insert
+to authenticated
+with check (auth.uid() = id);
+
+create policy "User can update their own profile "
+on public.profiles
+for update
+to authenticated
+using (auth.uid() = id)
+with check (auth.uid() = id);
+
+create policy "User can select their own profile "
+on public.profiles
+for update
+to authenticated
+using (auth.uid() = id);
+
+create policy "User can select others profile "
+on public.profiles
+for update
+to authenticated
+using (auth.uid() <> id);
+
+###
+CREATE TRIGGER on_auth_user_created
+AFTER INSERT ON auth.users
+FOR EACH ROW 
+EXECUTE FUNCTION public.handle_new_user;

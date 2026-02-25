@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: question-svc
+  namespace: kamilmucik-lkequiz-maestro
+spec:
+  selector:
+    app: question-svc
+  ports:
+   -  protocol: TCP
+      port: 50055
+      targetPort: 50055
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: question-svc-config
+data:
+  dev.env: |
+    PORT=:50055
+    DB_URL=postgresql://question_user:postgres@question-db.kamilmucik-lkequiz-maestro.svc.cluster.local:5432/postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: question-svc
+  namespace: kamilmucik-lkequiz-maestro
+  labels:
+    app: question-svc
+    group: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: question-svc
+  template:
+    metadata:
+      labels:
+        app: question-svc
+        type: svc
+    spec:
+      containers:
+        - name: question-svc
+          image: kamilmucik/lkequiz-question-svc:1.0
+          ports:
+            - containerPort: 50055
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 8080
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 8080
+          volumeMounts:
+            - name: conf
+              mountPath: /pkg/config/envs
+              readOnly: false
+      volumes:
+        - name: conf
+          configMap:
+            name: question-svc-config

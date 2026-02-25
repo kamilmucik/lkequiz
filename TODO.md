@@ -132,3 +132,6 @@ Ci/CD
 - Sprawdzenie OWASP
 - smoke test
 - sample test
+
+########################
+- react native expo -> AsyncStorage dla Web nie działa, znaleźć lib (https://www.youtube.com/watch?v=s_tBTjQzlSg)
